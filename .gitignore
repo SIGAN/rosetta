@@ -67,3 +67,10 @@ temporary/
 *.temp
 tools/test-remote-*.sh
 refsrc/
+
+# Jekyll / GitHub Pages
+docs/web/_site/
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/

@@ -5,9 +5,8 @@ permalink: /
 ---
 
 <section class="hero">
-  <img src="{{ '/assets/brand/Rosetta-Icon-With-Text.png' | relative_url }}" alt="Rosetta" style="max-width: 220px; width: 100%; height: auto; margin-bottom: .7rem;">
   <h1>Rosetta</h1>
-  <p>A control plane for AI-agent behavior and shared engineering context.</p>
+  <p>Rosetta is a control plane for AI coding agents that governs behavior and manages engineering knowledge at the organization level. It packages proven workflows, guardrails, and best practices so teams can execute consistently with project-specific context. Instead of isolated prompts, Rosetta enables verified, reusable, and tool-agnostic agent execution.</p>
 </section>
 
 <section class="grid">
@@ -17,7 +16,7 @@ permalink: /
   </article>
   <article class="card">
     <h3>What This Covers</h3>
-    <p>Rules-as-code, request classification, MCP-driven context loading, and release-based governance for instructions.</p>
+    <p>instructions-as-code, request classification, MCP-driven context loading, and release-based governance for instructions.</p>
   </article>
 </section>
 
@@ -41,4 +40,3 @@ permalink: /
     </ol>
   </article>
 </div>
-
