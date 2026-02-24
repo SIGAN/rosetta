@@ -6,25 +6,54 @@ permalink: /roadmap/
 
 <section class="hero">
   <h1>Roadmap</h1>
-  <p>High-level execution plan from baseline, architecture, implementation status, and R2R-to-RAGFlow migration artifacts.</p>
+  <p>High-level product direction focused on modernization, adoption, and quality. This roadmap lists priorities and status only, without delivery estimates.</p>
 </section>
 
-## Track A: Rules Modernization
+## Current Goals
 
-1. **Unify instruction model:** standardize structure for agents, workflows, skills, and rules.
-2. **Strengthen classification:** reduce routing ambiguity and keep workflows mutually exclusive.
-3. **Validation hardening:** enforce explicit assumptions, evidence references, and approval gates.
-4. **Authoring quality:** improve prompt assets through reusable review/validation criteria.
+### Q1 2026
 
-## Track B: RAGFlow Adoption
+- Future-proof the solution by moving to actively maintained foundations.
+- Expand RAGFlow-centered datasets, knowledge graph usage, and co-authoring.
+- Align with modern coding-agent capabilities: skills, rules, subagents, workflows, templates.
+- Improve adoption with usage dashboards and role-specific assets for engineers and managers.
+- Tighten quality and reliability through prompt hierarchy cleanup, refactoring, and validation pipelines.
+- Maintain OSS and enterprise alignment, with natural support for customization.
 
-1. **Platform baseline:** API-key auth, dataset naming by release, environment standardization.
-2. **Publishing reliability:** keep deterministic IDs, metadata parity, and hash-based skip logic.
-3. **Retrieval quality:** combine server keyword filtering with client metadata precision filtering.
-4. **Operations:** verify/publish/parse/list/cleanup workflows with explicit status visibility.
+### Q2 2026
 
-## Outcomes
+- Enable safer community contribution to prompts and flows.
+- Adopt useful field patterns (self-healing, memory/feedback capture, spec/task/validation formats).
+- Expand AI-assisted authoring for prompts and flows with HITL checkpoints.
+- Continue advanced prompt refactoring and add common delivery flows.
+- Publish usage patterns, best practices, and self-hosting guidance.
 
-- More predictable AI behavior across tools and teams.
-- Faster and safer instruction evolution using release tracks.
-- Lower retrieval noise and better grounding of generated outputs.
+## Done
+
+- RAGFlow service deployment.
+- IMS tooling for RAGFlow publishing pipelines.
+- Usage dashboard baseline.
+- Presentation and video assets for engineers.
+
+## In Progress
+
+- Rosetta MCP integration for RAGFlow.
+- Main prompt refactoring.
+- Slides and videos for managers.
+- Adoption rollout across R&D and tools.
+
+## Planned
+
+- GitHub Pages public site.
+- Core prompting support for authoring and validation of Rosetta prompts.
+- Instructions validation pipeline (static validation baseline).
+
+## Backlog
+
+- Instructions validation pipeline with comparative test-case evaluation.
+- Advanced prompt refactoring and advanced prompting support.
+- Environment setup guidance for folder/file responsibilities.
+- Tooling and MCP support for updated instructions structure and tagging.
+- Additional flows: Playwright self-healing, infrastructure-as-code, reverse engineering for FR/NFR extraction and template generation.
+- Usage best practices for composite workspaces and templates.
+- Self-hosting product guidance.

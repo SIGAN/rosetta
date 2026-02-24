@@ -20,23 +20,15 @@ permalink: /
   </article>
 </section>
 
-## High-Level Plan
+## Why Teams Adopt Rosetta
 
 <div class="grid">
-  <article class="card">
-    <h3>Rules Modernization</h3>
-    <ol>
-      <li>Normalize and simplify instruction taxonomy (agents, workflows, skills, rules).</li>
-      <li>Keep progressive disclosure and classification-first flow as defaults.</li>
-      <li>Harden guardrails and validation criteria for predictable execution quality.</li>
-    </ol>
-  </article>
-  <article class="card">
-    <h3>RAGFlow Adoption</h3>
-    <ol>
-      <li>Standardize on RAGFlow datasets and API-key auth.</li>
-      <li>Keep metadata and hash-based publishing for fast incremental updates.</li>
-      <li>Use two-stage filtering for precise retrieval in MCP tools.</li>
-    </ol>
-  </article>
+  <article class="card"><h3>For Engineers</h3><p>Standardized expert-prepared workflows with human-in-the-loop checkpoints, faster onboarding, and less prompt-engineering overhead to become productive.</p></article>
+  <article class="card"><h3>For Managers</h3><p>One shared setup across projects, extensible local customization, and built-in guardrails that reduce AI slop and common execution mistakes.</p></article>
+  <article class="card"><h3>For Directors</h3><p>Department-wide governance, adoption visibility, and curated technical and business knowledge for consistent delivery quality.</p></article>
+  <article class="card"><h3>For Leadership</h3><p>Better outcomes with lower risk, stronger governance and IP posture, and future-proofing as models, tools, and workflows evolve.</p></article>
+</div>
+
+<div class="note">
+  See <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a> for current priorities and status.
 </div>
