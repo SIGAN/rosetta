@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Environment files
+*.env*
+!env.template
+!tools/local.env
+!tools/remote.env
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/mcp.json
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+.AppleDouble
+.LSOverride
+
+# Project-specific
+server_output.log
+tools/server_output.log
+
+# Local data directories
+business/
+confluence-docs/
+
+# Temporary files
+temporary/
+*.tmp
+*.temp
+tools/test-remote-*.sh
+refsrc/
