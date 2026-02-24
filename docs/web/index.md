@@ -6,7 +6,7 @@ permalink: /
 
 <section class="hero">
   <h1>Rosetta</h1>
-  <p>Rosetta is a control plane for AI coding agents that governs behavior and manages engineering knowledge at the organization level. It packages proven workflows, guardrails, and best practices so teams can execute consistently with project-specific context. Instead of isolated prompts, Rosetta enables verified, reusable, and tool-agnostic agent execution.</p>
+  <p>Rosetta is a control plane for AI coding agents that governs behavior and manages engineering knowledge at the organization level. It uses a meta-prompting approach to package proven workflows, guardrails, and best practices so teams can execute consistently with project-specific context. Rosetta does not require sharing your source code or proprietary IP with Rosetta itself.</p>
 </section>
 
 <section class="grid">
