@@ -1,5 +1,6 @@
-title: Rosetta Docs
-description: Rosetta documentation website
+title: Rosetta
+seo_title: Rosetta - Enterprise AI Coding Agents Control Plane and Best Practices
+description: Enterprise AI coding agents control plane and best practices
 markdown: kramdown
 theme: null
 plugins: []
