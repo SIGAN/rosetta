@@ -3,18 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>{% if page.url == '/' %}{{ site.seo_title | default: site.title }}{% elsif page.title %}{{ page.title }} | {{ site.seo_title | default: site.title }}{% else %}{{ site.seo_title | default: site.title }}{% endif %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
-  <link rel="icon" type="image/png" href="{{ '/assets/brand/Rosetta-Icon-Only.png' | relative_url }}">
-  <link rel="apple-touch-icon" href="{{ '/assets/brand/Rosetta-Icon-Only.png' | relative_url }}">
+  <link rel="icon" type="image/png" href="{{ '/assets/brand/rosetta-favicon.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/brand/rosetta-favicon.png' | relative_url }}">
 </head>
 <body>
 {% include nav.html %}
 <main>
 {{ content }}
 </main>
+<footer>
+  <div class="footer-wrap">
+    <span>&copy; Grid Dynamics &mdash; Rosetta</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="{{ '/overview/' | relative_url }}">Overview</a>
+<a href="{{ '/usage/' | relative_url }}">Usage</a>
+      <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a>
+      <a href="{{ '/contribute/' | relative_url }}">Contribute</a>
+      <a href="https://github.com/griddynamics/rosetta" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+</footer>
 </body>
 </html>
