@@ -7,7 +7,6 @@ permalink: /
 <!-- ===== HERO ===== -->
 <section class="hero-main">
   <img src="{{ '/assets/brand/rosetta-logo-full-color-white.png' | relative_url }}" alt="Rosetta logo" class="hero-logo">
-  <h1>Rosetta</h1>
   <p class="hero-tagline">Control plane for AI coding agents. Governs behavior, packages proven workflows, and delivers consistent engineering quality across your entire organization.</p>
   <div class="hero-actions">
     <a href="#quick-start" class="button">Get Started</a>
