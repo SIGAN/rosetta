@@ -7,17 +7,16 @@ permalink: /
 <!-- ===== HERO ===== -->
 <section class="hero-main">
   <img src="{{ '/assets/brand/rosetta-logo-full-color-white.png' | relative_url }}" alt="Rosetta logo" class="hero-logo">
-  <h1>Rosetta</h1>
   <p class="hero-tagline">Control plane for AI coding agents. Governs behavior, packages proven workflows, and delivers consistent engineering quality across your entire organization.</p>
   <div class="hero-actions">
-    <a href="{{ '/install/' | relative_url }}" class="button">Get Started</a>
+    <a href="#quick-start" class="button">Get Started</a>
     <a href="{{ '/overview/' | relative_url }}" class="button-ghost">Learn More</a>
     <a href="https://github.com/griddynamics/rosetta" class="button-ghost" target="_blank" rel="noopener noreferrer">GitHub</a>
   </div>
 </section>
 
 <!-- ===== QUICK START ===== -->
-<section class="section">
+<section class="section" id="quick-start">
   <div class="qs-panel">
     <h2 class="with-marker">Quick Start</h2>
     <p class="qs-sub">Add Rosetta MCP to your AI coding client in minutes. No source code sharing required.</p>
@@ -110,35 +109,21 @@ permalink: /
 })();
 </script>
 
-<!-- ===== WHAT ROSETTA DOES ===== -->
+<!-- ===== KEY FEATURES ===== -->
 <section class="section">
-  <h2 class="with-marker">What Rosetta Does</h2>
-  <div class="grid features-grid">
-    <article class="card">
-      <h3>Classification First</h3>
-      <p>Every request maps to an explicit workflow — coding, QA, research, modernization, or help — for predictable, consistent execution.</p>
-    </article>
-    <article class="card">
-      <h3>Meta-Prompting</h3>
-      <p>Adapts prompts and rules to project-specific context instead of relying on static, one-off prompt snippets spread across teams.</p>
-    </article>
-    <article class="card">
-      <h3>Agent-Agnostic</h3>
-      <p>Works consistently across Cursor, Claude Code, GitHub Copilot, Codex, Windsurf, and any MCP-capable coding tool.</p>
-    </article>
-    <article class="card">
-      <h3>Unified Knowledge Hub</h3>
-      <p>Business context, architecture, requirements, and rules organized in one retrievable system via RAGFlow and MCP tools.</p>
-    </article>
-    <article class="card">
-      <h3>Built-in Guardrails</h3>
-      <p>Approval gates, risk controls, and human-in-the-loop checkpoints reduce AI slop and costly execution mistakes.</p>
-    </article>
-    <article class="card">
-      <h3>Release Governance</h3>
-      <p>r1/r2/r3 release tracks provide safe instruction evolution, rollback capability, and adoption visibility across teams.</p>
-    </article>
-  </div>
+  <h2 class="with-marker">Key Features</h2>
+  <ul class="features-list">
+    <li>Based on SOTA Meta-Prompting technology</li>
+    <li>Project-specific, dynamically composed context</li>
+    <li>Replaces static, one-size-fits-all rule sets</li>
+    <li>Progressive disclosure</li>
+    <li>Air gap security — no source code is transferred</li>
+    <li>MCP-based: one-line installation &amp; centralized management</li>
+    <li>Agent agnostic: Claude Code, Cursor, Codex, and more</li>
+    <li>Rich dynamic context with rules, workflows, skills, and sub-agents</li>
+    <li>Continuously updated centralized knowledge base</li>
+    <li>Cloud, on-prem, open source, and enterprise editions</li>
+  </ul>
 </section>
 
 
