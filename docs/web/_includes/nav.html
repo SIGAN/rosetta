@@ -1,14 +1,13 @@
 <header class="site-header">
   <div class="nav-wrap">
     <div class="brand">
-      <img src="{{ '/assets/brand/Rosetta-Icon-Only.png' | relative_url }}" alt="Rosetta icon">
+      <img src="{{ '/assets/brand/rosetta-favicon.png' | relative_url }}" alt="Rosetta icon">
       <span>{{ site.title }}</span>
     </div>
     <nav>
       <ul>
         <li><a href="{{ '/' | relative_url }}" class="{% if page.url == '/' %}active{% endif %}">Home</a></li>
         <li><a href="{{ '/overview/' | relative_url }}" class="{% if page.url == '/overview/' %}active{% endif %}">Overview</a></li>
-        <li><a href="{{ '/install/' | relative_url }}" class="{% if page.url == '/install/' %}active{% endif %}">Install</a></li>
         <li><a href="{{ '/usage/' | relative_url }}" class="{% if page.url == '/usage/' %}active{% endif %}">Usage</a></li>
         <li><a href="{{ '/roadmap/' | relative_url }}" class="{% if page.url == '/roadmap/' %}active{% endif %}">Roadmap</a></li>
         <li><a href="{{ '/contribute/' | relative_url }}" class="{% if page.url == '/contribute/' %}active{% endif %}">Contribute</a></li>
