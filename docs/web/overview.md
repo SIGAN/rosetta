@@ -6,17 +6,14 @@ permalink: /overview/
 
 <section class="hero">
   <h1>Overview</h1>
-  <p>Rosetta provides shared prompts and rules that stay consistent across IDEs, coding agents, and models. It uses a classification-first and meta-prompting approach so teams can run project-specific workflows with predictable quality.</p>
+  <p>Rosetta is a control plane for AI coding agents that automates context setup, enforces consistent workflows, and manages engineering knowledge at the organization level — without sharing your source code. It solves the core problems teams face with AI-assisted development:</p>
+  <ul>
+    <li>Fragmented adoption and inconsistent execution across teams and tools</li>
+    <li>Missing business and technical context in day-to-day AI-assisted development</li>
+    <li>Weak governance, low visibility, and avoidable risk in AI-enabled SDLC</li>
+    <li>Reinvented workflows and slow onboarding between projects</li>
+  </ul>
 </section>
-
-## What Rosetta Solves
-
-Modern AI coding agents require externalized, persistent context to maintain stable behavior across sessions and tasks. Creating and maintaining this context is typically manual, error-prone, and slow. Rosetta automates the initialization and ongoing maintenance of AI coding agent context for new and existing codebases — providing agent rules, skills, workflows, sub-agents, and instructions as explicit, versioned artifacts, managed centrally via MCP so teams across the organization can share and evolve agent context consistently.
-
-- Fragmented adoption and inconsistent execution across teams and tools.
-- Missing business and technical context in day-to-day AI-assisted development.
-- Weak governance, low visibility, and avoidable risk in AI-enabled SDLC.
-- Reinvented workflows and slow onboarding between projects.
 
 ## Benefits By Role
 
@@ -51,19 +48,6 @@ Modern AI coding agents require externalized, persistent context to maintain sta
   <article class="card"><h3>Meta-Prompting</h3><p>Adapts prompts and rules to project context rather than relying on static one-off prompt snippets.</p></article>
   <article class="card"><h3>Evidence Based</h3><p>Ground outputs in documented context, assumptions, and explicit validation steps.</p></article>
   <article class="card"><h3>Release Driven</h3><p>Evolve safely with release-based governance and rollback-friendly instruction management.</p></article>
-</div>
-
-## Key Features
-
-<div class="grid">
-  <article class="card"><h3>Unified Knowledge Hub</h3><p>Business context, architecture, requirements, and rules are organized in one retrievable system.</p></article>
-  <article class="card"><h3>RAGFlow Integration</h3><p>Publishes instruction artifacts for semantic retrieval via MCP tools in coding sessions.</p></article>
-  <article class="card"><h3>Smart Metadata and Incremental Updates</h3><p>Uses tags and hash-based change detection to publish only modified files.</p></article>
-  <article class="card"><h3>Built-in Guardrails</h3><p>Includes approval gates, risk controls, and validation checkpoints for safer execution.</p></article>
-  <article class="card"><h3>Reference SDLC</h3><p>Provides a complete lifecycle by default with opt-out flexibility and room for controlled process experiments.</p></article>
-  <article class="card"><h3>Adoption Visibility</h3><p>Supports usage tracking by capability and helps identify promoters, blockers, and high-value rollout patterns.</p></article>
-  <article class="card"><h3>Single-Command Onboarding</h3><p>Supports fast initialization, upgrades, and project-level customization.</p></article>
-  <article class="card"><h3>Community-Friendly</h3><p>Open-source workflow with contribution paths for improvements to rules and guidance.</p></article>
 </div>
 
 ## Architecture Snapshot
