@@ -237,7 +237,3 @@ permalink: /
     <span class="integration-tag">Any MCP Client</span>
   </div>
 </section>
-
-<div class="note">
-  See <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a> for current priorities and status. &nbsp;·&nbsp; <a href="{{ '/overview/' | relative_url }}">Read the full overview →</a>
-</div>
