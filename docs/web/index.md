@@ -66,10 +66,10 @@ permalink: /
         <pre class="qs-code"><span class="qs-prompt">$</span> claude mcp add --transport stdio KnowledgeBase \
     --env R2R_API_BASE=https://ims-r2r-dev.evergreen.gcp.griddynamics.net/ \
     --env R2R_COLLECTION=aia-r2 \
-    --env R2R_EMAIL=***REMOVED*** \
-    --env R2R_PASSWORD=***REMOVED*** \
+    --env R2R_EMAIL=<span class="qs-comment">&lt;your-email&gt;</span> \
+    --env R2R_PASSWORD=<span class="qs-comment">&lt;your-password&gt;</span> \
     -- uvx ims-mcp</pre>
-        <button class="qs-copy" data-copy="claude mcp add --transport stdio KnowledgeBase --env R2R_API_BASE=https://ims-r2r-dev.evergreen.gcp.griddynamics.net/ --env R2R_COLLECTION=aia-r2 --env R2R_EMAIL=***REMOVED*** --env R2R_PASSWORD=***REMOVED*** -- uvx ims-mcp">Copy</button>
+        <button class="qs-copy" data-copy="claude mcp add --transport stdio KnowledgeBase --env R2R_API_BASE=https://ims-r2r-dev.evergreen.gcp.griddynamics.net/ --env R2R_COLLECTION=aia-r2 --env R2R_EMAIL=<your-email> --env R2R_PASSWORD=<your-password> -- uvx ims-mcp">Copy</button>
       </div>
       <p class="qs-step-label">Step 3 — Initialize your repository</p>
       <div class="qs-code-wrap">
@@ -101,8 +101,8 @@ permalink: /
       "env": {
         "R2R_API_BASE": "https://ims-r2r-dev.evergreen.gcp.griddynamics.net/",
         "R2R_COLLECTION": "aia-r2",
-        "R2R_EMAIL": "***REMOVED***",
-        "R2R_PASSWORD": "***REMOVED***"
+        "R2R_EMAIL": "&lt;your-email&gt;",
+        "R2R_PASSWORD": "&lt;your-password&gt;"
       }
     }
   }
@@ -133,8 +133,8 @@ permalink: /
       "env": {
         "R2R_API_BASE": "https://ims-r2r-dev.evergreen.gcp.griddynamics.net/",
         "R2R_COLLECTION": "aia-r2",
-        "R2R_EMAIL": "***REMOVED***",
-        "R2R_PASSWORD": "***REMOVED***"
+        "R2R_EMAIL": "&lt;your-email&gt;",
+        "R2R_PASSWORD": "&lt;your-password&gt;"
       }
     }
   }
@@ -166,8 +166,8 @@ permalink: /
       "env": {
         "R2R_API_BASE": "https://ims-r2r-dev.evergreen.gcp.griddynamics.net/",
         "R2R_COLLECTION": "aia-r2",
-        "R2R_EMAIL": "***REMOVED***",
-        "R2R_PASSWORD": "***REMOVED***"
+        "R2R_EMAIL": "&lt;your-email&gt;",
+        "R2R_PASSWORD": "&lt;your-password&gt;"
       }
     }
   }
