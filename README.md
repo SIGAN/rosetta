@@ -73,8 +73,8 @@ Works with any MCP-compatible tool.
 | I want to... | Read |
 |---|---|
 | Understand what Rosetta is and how to think about it | [OVERVIEW.md](OVERVIEW.md) |
-| Set up Rosetta | [Quick Start](QUICKSTART.md) |
-| Understand the system architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| Set up Rosetta | [QUICKSTART.md](QUICKSTART.md) |
+| Understand the system architecture | [ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | Navigate the codebase | [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) |
 | Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Debug a problem | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |

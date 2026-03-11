@@ -229,7 +229,7 @@ Dataset names auto-generated from template `aia-{release}`.
 
 **Metadata per document:** tags, domain, release, content_hash (MD5), resource_path, sort_order, frontmatter, original_path, line_count.
 
-For RAGFlow internals, see [docs/RAGFLOW.md](RAGFLOW.md).
+For RAGFlow internals, see [RAGFLOW.md](RAGFLOW.md).
 
 ---
 
@@ -262,7 +262,7 @@ The CLI (`tools/ims_cli.py`) publishes instructions from the instructions reposi
 
 **Environment:** `local.env` (Docker) or `remote.env` (production). Switch with `cp <config>.env .env`.
 
-For full CLI reference, see [docs/TOOLS.md](TOOLS.md).
+For full CLI reference, see [TOOLS.md](TOOLS.md).
 
 ---
 

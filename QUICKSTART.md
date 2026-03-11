@@ -207,7 +207,7 @@ The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CO
 
 - [OVERVIEW.md](OVERVIEW.md) for the mental model and terminology
 - [CONTRIBUTING.md](CONTRIBUTING.md) to make your first contribution
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system internals
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) for system internals
 
 ## Video Tutorials
 
