@@ -13,17 +13,23 @@
 
 ## Core Mental Model
 
-Rosetta is a **control plane for AI coding agents**. It delivers versioned instructions via MCP (Model Context Protocol) so every agent behaves consistently from day one.
+Rosetta is a **consulting control plane for AI coding agents**. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge — from day one.
 
 Design principles:
 
-**Agent-agnostic.** Works across Cursor, Claude Code, VS Code, Windsurf, JetBrains AI, GitHub Copilot, and any MCP-compatible IDE. Adopts agent-specific features where available, simulates them where not.
+**Agent-agnostic.** Works across Cursor, Claude Code, VS Code, Windsurf, JetBrains (Copilot, Junie), GitHub Copilot, Codex, Antigravity, OpenCode, and any MCP-compatible IDE. Adopts agent-specific features where available, simulates them where not.
 
 **Progressive disclosure.** Instructions load in stages (bootstrap, classification, workflow-specific, sub-instructions) to prevent context overflow. The agent gets only what it needs for the current task.
 
 **Classification-first.** Every request is auto-classified into a workflow type before any work begins. Classification drives which instructions, skills, and rules load. Provided workflows are used as templates.
 
 **Release-based versioning.** Instructions are organized by release (r1, r2, r3). New instructions can be developed without breaking agents on stable versions. Rollback is always possible.
+
+**Rules-as-code.** AI behavior is authored, versioned, reviewed, and approved through standard engineering workflows. Same rigor as application code.
+
+**Security by design.** No source code transfer. Air-gap capable. Runs inside the organization's perimeter. See [Context — Design Philosophy](docs/CONTEXT.md#design-philosophy) for the full set.
+
+**Batteries included.** Ships proven defaults from real-world projects. Makes the right thing the easy thing.
 
 ## Key Concepts
 
@@ -52,11 +58,11 @@ These terms are defined here and referenced everywhere else.
 
 Your IDE and coding agent ask Rosetta for instructions on each request.
 
-**Request types.** Ten workflow types cover the SDLC: coding, automated QA, test generation, research, initialization, modernization, external library onboarding, code analysis, help, and ad-hoc.
+**Request types.** Twelve workflow types cover the SDLC: coding, requirements authoring, automated QA, test generation, research, initialization, modernization, external library onboarding, code analysis, coding agents prompting, help, and ad-hoc. See the [Usage Guide — Workflows](USAGE_GUIDE.md#workflows) for details on each.
 
 **Standard pattern (P-RPA).** Every workflow follows Prepare, Research, Plan, Act. Each phase can involve subagents, skills, and HITL approval gates.
 
-**Prepare** is executed once during repository initialization and maintained automatically by AI. It reverse-engineers business context, 
+**Prepare** is executed once during repository initialization and maintained automatically by AI. It reverse-engineers business context, architecture, tech stack, and coding patterns into workspace files that every subsequent workflow uses. See [Usage Guide — Init Workspace](USAGE_GUIDE.md#workflows) for the full phase breakdown.
 
 **Scaling by size:**
 

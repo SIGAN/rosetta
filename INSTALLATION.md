@@ -13,7 +13,7 @@
 | | HTTP (recommended) | STDIO | Plugin | Offline |
 |---|---|---|---|---|
 | Setup | Single URL, OAuth automatic | Env vars, API key per user | CLI marketplace commands (installs HTTP MCP) | Download zip, copy files |
-| Local dependencies | None | Python 3.10+, uvx | None | None |
+| Local dependencies | None | Python 3.12+, uvx | None | None |
 | Auth | OAuth via browser | API key from Rosetta Server | OAuth via browser (HTTP MCP) | None |
 | Network | Requires internet | Requires internet | Requires internet | No network needed (with local models) |
 | Best for | Most users | Custom configs, controlled environments | Claude Code, Cursor | Air-gapped or highly regulated environments |
@@ -390,7 +390,7 @@ Add to `opencode.json`:
 
 #### Environment Variables Reference
 
-All variables are optional unless noted.
+Required for STDIO transport. Optional otherwise.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -482,13 +482,16 @@ Run once per repository after installation:
 Initialize this repository using Rosetta
 ```
 
-The agent runs a five-phase workflow:
+The agent runs an eight-phase workflow (see [Usage Guide — Init Workspace](USAGE_GUIDE.md#workflows) for details):
 
-1. **Quick Analysis** - tech stack, dependencies, project structure, existing docs
-2. **Agent Rules Setup** (optional) - agent configuration, subagents, commands, workflows
-3. **Documentation Generation** - creates TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md
-4. **Clarifying Questions** - prompts for project-specific details
-5. **Verification** - validates generated documentation
+1. **Context** — detect workspace mode and build file inventory
+2. **Shells** — generate IDE/agent shell files from KB schemas
+3. **Discovery** — produce TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md
+4. **Rules** (optional) — configure local agent rules
+5. **Patterns** — extract recurring coding and architectural patterns
+6. **Documentation** — create CONTEXT.md, ARCHITECTURE.md, IMPLEMENTATION.md, ASSUMPTIONS.md
+7. **Questions** — clarifying questions about gaps and assumptions
+8. **Verification** — completeness check and catch-up for missed artifacts
 
 > [!NOTE]
 > **Composite workspaces:** init each repository separately, then init at the workspace level with "This is composite workspace" appended.
@@ -506,7 +509,7 @@ After initialization, Rosetta maintains these files in your repository:
 - `docs/TECHSTACK.md` - tech stack of all modules
 - `docs/DEPENDENCIES.md` - dependencies of all modules
 - `docs/CODEMAP.md` - code map of workspace
-- `docs/REVIEW.md` - improvements, suggestions, TODOs (created when needed)
+- `docs/TODO.md` - improvements, feature requests, TODOs (created when needed)
 - `docs/ASSUMPTIONS.md` - assumptions and unknowns (created when needed)
 - `docs/REQUIREMENTS/*` - original requirements with INDEX.md (optional)
 - `docs/PATTERNS/*` - coding and architectural patterns with INDEX.md (optional)

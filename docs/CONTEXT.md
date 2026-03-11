@@ -22,7 +22,7 @@ Read the [README](../README.md) first. For technical details, see [Architecture]
 
 ## What Rosetta Is
 
-Rosetta is a control plane for AI coding agents. It delivers versioned, expert-prepared instructions so every agent behaves consistently regardless of IDE, model, or team.
+Rosetta is a consulting control plane for AI coding agents. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge — regardless of IDE, model, or team.
 
 It comes preloaded with battle-tested best practices from real-world projects.
 
@@ -85,6 +85,7 @@ Not reactive like gateways. Not static like prompt libraries. Verified, project-
 - Organization-wide rollout from a single instructions repository
 - Release-based versioning (r1, r2, r3) for safe evolution and rollback
 - Layered customization: core baseline + organization overrides + project-specific tweaks
+- Plugin distribution via IDE marketplaces (Claude Code, Cursor) for instant installation across projects. See [Installation — Plugin-Based Installation](../INSTALLATION.md#plugin-based-installation)
 
 ### Governance
 
@@ -98,14 +99,14 @@ Not reactive like gateways. Not static like prompt libraries. Verified, project-
 - Preloaded with proven patterns from real-world engagements
 - Evaluation and judge pipelines for instruction quality
 - Consistent agent behavior reduces hallucinations and rework
-- 2x productivity improvement observed in coding tasks with Rosetta vs. manual prompting
+- Observed time savings per coding task: with Rosetta, ~5 min to type, ~5 min to review, ~15 min for AI to execute (25 min total). Without Rosetta, ~30 min to type, ~15 min back-and-forth in planning mode, ~15 min to execute, ~15 min to catch up (75 min total). In practice, we see productivity scale to 3x-5x, though individual results vary by task complexity
 
 ## Domain and Operating Context
 
 - Rosetta operates across the full Software Development Lifecycle: planning, requirements, implementation, QA, release, and operations
-- Agent-agnostic: works with Cursor, Claude Code, VS Code, Windsurf, JetBrains AI, GitHub Copilot, Codex, and any MCP-compatible IDE
+- Agent-agnostic: works with Cursor, Claude Code, VS Code, Windsurf, JetBrains (Copilot, Junie), GitHub Copilot, Codex, Antigravity, OpenCode, and any MCP-compatible IDE
 - Integrates via Model Context Protocol (MCP), the standard transport for AI agent instructions
-- Security model: Rosetta serves knowledge to agents. It never sees source code. No code leaves the organization's perimeter.
+- Security model: Rosetta serves knowledge to agents. It never sees source code. No code leaves the organization's perimeter. No IP is shared with Rosetta by default. Project datasets and plan_manager (shared execution state) are opt-in features that must be enabled explicitly.
 - Grounded in production experience, not theory. Active feedback loop from real projects.
 
 ## Target State
@@ -122,7 +123,7 @@ Not reactive like gateways. Not static like prompt libraries. Verified, project-
 - **OSS Edition:** Fully open-source, complete source code, self-hosted, community-driven. Includes core agents, workflows, skills, rules, and templates.
 - **Enterprise Edition:** Everything in OSS plus advanced capabilities: automated QA, modernization tools, cross-project knowledge sharing, specialized agents, and dedicated support.
 
-Decision guide for choosing the right edition is available in reference documentation.
+For a comparison of installation modes (HTTP, STDIO, Plugin, Offline), see the [Installation — Choose Your Mode](../INSTALLATION.md#choose-your-mode) table.
 
 ## Design Philosophy
 

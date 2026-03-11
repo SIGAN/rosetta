@@ -26,6 +26,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
 ┌─────────────────────────────────────────────────────────┐
 │              Target Repository + IDE                    │
 │  Cursor · Claude Code · VS Code · JetBrains · Codex     │
+│  Windsurf · Antigravity · OpenCode                      │
 │                         │                               │
 │                    MCP Protocol                         │
 │             (Streamable HTTP + OAuth)                   │
@@ -72,7 +73,7 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 
 ## Rosetta MCP
 
-The MCP server is the interface between IDEs and the knowledge base. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Designed to be close to AI agent logic: it speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
+The MCP server is the consulting layer between IDEs and the knowledge base. It does not just proxy requests: it transforms, bundles, and contextualizes instructions so agents know how to do things right. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
 
 **Endpoint:** `https://rosetta.evergreen.gcp.griddynamics.net/mcp`
 
@@ -262,7 +263,7 @@ The CLI (`tools/ims_cli.py`) publishes instructions from the instructions reposi
 - **Domain** (`core`), **release** (`r2`), **collection** (`aia-r2`): derived from folder structure.
 - **Title:** `[r2][core][skills][planning] SKILL.md` (tag-in-title format).
 
-**Environment:** `local.env` (Docker) or `remote.env` (production). Switch with `cp <config>.env .env`.
+**Environment:** `.env.dev` (dev RAGFlow) or `.env.prod` (production). Switch with `cp .env.dev .env`.
 
 For deployment details, see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md).
 
@@ -312,7 +313,7 @@ Rosetta initializes and maintains a standard file structure in **target reposito
 **Project documentation (`docs/`):**
 - `CONTEXT.md` — business context, target state (no technical details, no changelog)
 - `ARCHITECTURE.md` — architecture, technical requirements, modules, workspace structure
-- `REVIEW.md` — improvements, suggestions, large TODOs
+- `TODO.md` — improvements, feature requests, large TODOs
 - `ASSUMPTIONS.md` — assumptions and unknowns
 - `TECHSTACK.md` — tech stack of all modules
 - `DEPENDENCIES.md` — dependencies of all modules
@@ -382,7 +383,7 @@ python ims_cli.py publish ../instructions
 
 `refsrc/fastmcp-3.0.2` contains source code of FastMCP v3.
 `refsrc/python-sdk-1.26.0` contains source code of MCP Python SDK.
-`refsrc/ragflow-0.24.0` contains source code of ragflow python sdk.
+`refsrc/ragflow` contains source code of RAGFlow Python SDK (v0.23.1+).
 
 This is for reference purposes only: do not change, do not copy.
 
@@ -419,7 +420,7 @@ Website: builds the Jekyll website from `docs/web/`, deploys to GitHub Pages.
 **Plugin distribution.** Three packages via marketplace:
 
 | Plugin | Contents, Footprint |
-|---|---|---|
+|---|---|
 | `core@rosetta` | Full OSS foundation |
 | `grid@rosetta` | Enterprise extensions |
 | `rosetta@rosetta` | Bootstrap rule + MCP definition only, (fetches via MCP) |

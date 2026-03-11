@@ -48,13 +48,16 @@ Instructions run locally without MCP. Copy them into a target repository and poi
   ```
 2. Copy the `instructions/r2/core/rules/local-files-mode.md` bootstrap file to your IDE config location:
 
-  | IDE                      | Destination                                       |
-  | ------------------------ | ------------------------------------------------- |
-  | Cursor                   | `.cursor/rules/local.mdc` (keep YAML frontmatter) |
-  | Claude Code              | `.claude/claude.md`                               |
-  | VS Code / GitHub Copilot | `.github/copilot-instructions.md`                 |
-  | Windsurf                 | `.windsurf/AGENTS.md`                             |
-  | JetBrains Junie          | `.junie/guidelines.md`                            |
+  | IDE                        | Destination                                                           |
+  | -------------------------- | --------------------------------------------------------------------- |
+  | Cursor                     | `.cursor/rules/local.mdc` (keep YAML frontmatter)                     |
+  | Claude Code                | `.claude/claude.md`                                                   |
+  | VS Code / GitHub Copilot   | `.github/copilot-instructions.md`                                     |
+  | GitHub Copilot (JetBrains) | `.github/copilot-instructions.md`                                     |
+  | JetBrains Junie            | `.junie/guidelines.md`                                                |
+  | Windsurf                   | `.windsurf/AGENTS.md`                                                 |
+  | Antigravity                | `.agent/rules/agents.md` (keep YAML frontmatter, `trigger: always_on`)|
+  | OpenCode                   | `AGENTS.md`                                                           |
 
 3. Open your IDE in the target repo. The agent will execute prep steps from local files instead of calling MCP.
 
@@ -146,6 +149,8 @@ codex mcp add Rosetta \
 ```
 
 **API key:** Get yours from the RAGFlow UI. The dataset you test against must be **owned by user of this API key**.
+
+**VERSION:** Set explicitly here for local development testing. In production, do not set `VERSION` — the server controls it (see [INSTALLATION.md — Environment Variables](INSTALLATION.md#environment-variables-reference)). Always test with both `VERSION=r1` and `VERSION=r2`.
 
 **Pre-release builds:** Version suffixes like `b00` trigger automatic pre-release publishing. Use `--prerelease=allow` with uvx to pull these builds.
 

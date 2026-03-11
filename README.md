@@ -3,7 +3,7 @@
     <source media="(prefers-color-scheme: dark)" srcset="docs/web/assets/brand/rosetta-logo-full-color-white-text.png">
     <img src="docs/web/assets/brand/rosetta-logo-full-color-black-text.png" alt="Rosetta" width="200">
   </picture>
-  <p><strong>Control plane for AI coding agents</strong></p>
+  <p><strong>Consulting control plane for AI coding agents</strong></p>
   <p>
     <a href="https://pypi.org/project/ims-mcp/"><img src="https://img.shields.io/pypi/v/ims-mcp.svg" alt="PyPI"></a>
     <a href="https://pypi.org/project/ims-mcp/"><img src="https://img.shields.io/pypi/dm/ims-mcp.svg" alt="Downloads"></a>
@@ -13,7 +13,7 @@
 
 ## What is Rosetta
 
-Rosetta gives AI coding agents access to your organization's rules, conventions, and knowledge. It works across IDEs through the MCP protocol, runs locally, and keeps instructions versioned as code.
+Rosetta is a consulting control plane for AI coding agents. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge. Works across IDEs, runs locally, and keeps instructions versioned as code.
 
 Every AI interaction follows four phases: **Prepare** (load guardrails and context), **Research** (search the knowledge base), **Plan** (produce a reviewable plan), **Act** (execute with full context).
 
@@ -28,7 +28,7 @@ Every AI interaction follows four phases: **Prepare** (load guardrails and conte
 
 ## How it works
 
-Your IDE connects to the Rosetta MCP server. The server provides semantic search over a knowledge base containing workflows, guardrails, coding conventions, and project context. The coding agent receives instructions from Rosetta and applies them to your code.
+Your IDE connects to the Rosetta MCP server. The server transforms, bundles, and contextualizes knowledge from workflows, guardrails, coding conventions, and project context. The coding agent receives structured instructions from Rosetta and applies them to your code.
 
 Rosetta never sees your source code. It only serves knowledge and instructions to the agent. The agent loads only what it needs per request (progressive disclosure) and follows your organization's workflows.
 

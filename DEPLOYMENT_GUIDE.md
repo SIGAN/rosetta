@@ -163,7 +163,7 @@ Check the admin panel at `https://<your-host>/admin`. Verify document upload and
 
 ## Part 2: Rosetta MCP
 
-Rosetta MCP is the MCP server that IDE agents connect to. It proxies requests to RAGFlow, manages sessions via Redis, and handles OAuth authentication.
+Rosetta MCP is the consulting layer between IDEs and the knowledge base. It transforms, bundles, and contextualizes instructions for AI coding agents, manages sessions via Redis, and handles OAuth authentication. See [Architecture — Rosetta MCP](docs/ARCHITECTURE.md#rosetta-mcp) for capabilities.
 
 ### Docker Compose
 
