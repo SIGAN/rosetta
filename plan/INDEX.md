@@ -63,7 +63,7 @@ Voice, tone, writing constraints, banned phrases, and review tests live in the `
 | `TROUBLESHOOTING.md`   | 2     | —      | repo root | Anyone blocked                            | Symptom-first diagnosis                                  |
 | `USAGE_GUIDE.md`       | 2     | —      | repo root | All users of Rosetta (engineers/leads)    | How to use Rosetta, flows, and expected user actions     |
 | `DEPLOYMENT_GUIDE.md`  | 2     | —      | repo root | Engineers deploying rosetta to their orgs | How to deploy RAGFlow, MCP, Helm Charts, Helm Values     |
-| `INSTALLATION.md`      | 3     | —      | repo root | Users with complex setups                 | Full setup reference                                     |
+| `INSTALLATION.md`      | 3     | done   | repo root | Users with complex setups                 | Full setup reference                                     |
 
 
 ---
