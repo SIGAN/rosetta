@@ -173,7 +173,7 @@ It should use Rosetta MCP to retrieve agents, guardrails, and instructions:
 <img src="docs/images/Rosetta-ProperResponse1.png" alt="Rosetta proper response" width="355"/> <img src="docs/images/Rosetta-ProperResponse2.png" alt="Rosetta proper response" width="300"/>
 
 > [!WARNING]
-> If it does not work or works unreliably, download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instructions/r1/bootstrap.md?plain=1) and add it to your IDE's instruction file:
+> If it does not work or works unreliably, download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1) and add it to your IDE's instruction file:
 > - **Cursor:** `.cursor/rules/bootstrap.mdc` (keep YAML frontmatter)
 > - **Claude Code:** `.claude/claude.md`
 > - **Windsurf:** `AGENTS.md` (project root) or `.windsurf/AGENTS.md`

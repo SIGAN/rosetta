@@ -60,7 +60,7 @@ Voice, tone, writing constraints, banned phrases, and review tests live in the `
 | `QUICKSTART.md`        | 2     | done   | repo root | New users                                 | Zero to working setup                                    |
 | `OVERVIEW.md`          | 2     | done   | repo root | New technical readers                     | Mental model, terminology, non-goals                     |
 | `docs/CONTEXT.md`      | 2     | done   | docs/     | Contributors                              | Business requirements, references, decisions, philosophy |
-| `TROUBLESHOOTING.md`   | 2     | —      | repo root | Anyone blocked                            | Symptom-first diagnosis                                  |
+| `TROUBLESHOOTING.md`   | 2     | done   | repo root | Anyone blocked                            | Symptom-first diagnosis                                  |
 | `USAGE_GUIDE.md`       | 2     | done   | repo root | All users of Rosetta (engineers/leads)    | How to use Rosetta, flows, and expected user actions     |
 | `DEPLOYMENT_GUIDE.md`  | 2     | done   | repo root | Engineers deploying rosetta to their orgs | How to deploy RAGFlow, MCP, Helm Charts, Helm Values     |
 | `INSTALLATION.md`      | 3     | done   | repo root | Users with complex setups                 | Full setup reference                                     |
