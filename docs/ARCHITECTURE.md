@@ -225,7 +225,9 @@ RAGFlow is the document storage and retrieval engine. Rosetta uses it for ingest
 | `aia-r2` | R2 release (current) |
 | `project-*` | Per-repository collections in target repos (per OAuth policy) |
 
-Dataset names auto-generated from template `aia-{release}`.
+Instruction dataset names auto-generated from template `aia-{release}`.
+
+All prefixes are internal only, it must not be exposed or received. This prevents cross-dataset security issues. Any user of MCP must not be aware of those existence.
 
 **Metadata per document:** tags, domain, release, content_hash (MD5), resource_path, sort_order, frontmatter, original_path, line_count.
 
@@ -262,7 +264,7 @@ The CLI (`tools/ims_cli.py`) publishes instructions from the instructions reposi
 
 **Environment:** `local.env` (Docker) or `remote.env` (production). Switch with `cp <config>.env .env`.
 
-For full CLI reference, see [TOOLS.md](TOOLS.md).
+For deployment details, see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md).
 
 ---
 
@@ -453,11 +455,14 @@ After adding or changing instructions, publish with the CLI to make them availab
 - **Command aliases over direct tool calls.** Portable across IDEs, decoupled from MCP API changes. An indirection layer contributors must learn.
 - **Full-folder publishing only.** Prevents broken metadata extraction. Change detection keeps incremental publishes fast.
 - **Layered customization over multi-tenancy.** Org folders extend core, not replace it. Requires unique filenames across the tree.
+- **Subagent/Skills/Commands Shells.** Create small proxies with proper frontmatters. Proxies use `ACQUIRE FROM KB` commands to load actual content. Coding agents expect Subagents/Skills/Commands in specific format in specific locations in the repository. Copying to repo make them stale. Not copying - native features of coding agents don't work. Shells resolve that. Plugins resolve this issue as well, but it only works in claude code.
 
 ---
 
 ## Related Docs
 
-- [DEVELOPER_GUIDE.md](../DEVELOPER_GUIDE.md) — repo navigation, where to change what
-- [CONTRIBUTING.md](../CONTRIBUTING.md) — fastest path to a merged PR
-- [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) — symptom-first diagnosis
+- [Developer Guide](../DEVELOPER_GUIDE.md) — repo navigation, where to change what
+- [Contributing](../CONTRIBUTING.md) — fastest path to a merged PR
+- [Usage Guide](../USAGE_GUIDE.md) — how to use Rosetta flows
+- [Deployment Guide](../DEPLOYMENT_GUIDE.md) — RAGFlow, MCP, Helm deployment
+- [Troubleshooting](../TROUBLESHOOTING.md) — symptom-first diagnosis

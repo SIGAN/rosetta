@@ -19,11 +19,12 @@ Every AI interaction follows four phases: **Prepare** (load guardrails and conte
 
 ## Why use it
 
-- **Agents miss context.** They don't know your conventions, architecture, or business rules. Rosetta delivers that context before the agent starts working.
-- **Instructions don't transfer.** Every IDE has different formats. Rosetta is agent-agnostic: write once, use everywhere.
-- **No governance at scale.** Organizations have no visibility into how AI agents behave. Rosetta adds guardrails, approval gates, and consistency.
-- **Onboarding takes too long.** New developers start from scratch. Rosetta onboards a repository in one command.
-- **Knowledge stays in people's heads.** Proven patterns aren't shared. Rosetta makes them searchable and reusable across projects.
+- **Context engineering, not prompt hacking.** Agents receive your conventions, architecture, and business rules automatically — structured, versioned, and ready before the first line of code.
+- **Write once, run everywhere.** Agent-agnostic design adapts to any IDE and any tech stack. No per-tool maintenance.
+- **Guardrails built in.** Approval gates, risk assessment, and data protection ensure consistent AI behavior across teams.
+- **Cross-project intelligence.** Publish business and technical context from every project into a shared knowledge base. Agents see the system, not just one repo — trace flows across services, catch breaking API changes before they ship, and assess blast radius of any change across the portfolio.
+- **One-command onboarding.** New repo, new developer — productive immediately with best practices baked in.
+- **Instructions as code.** Prompts version-controlled with release management — single source of truth for all teams.
 
 ## How it works
 
@@ -74,6 +75,8 @@ Works with any MCP-compatible tool.
 |---|---|
 | Understand what Rosetta is and how to think about it | [OVERVIEW.md](OVERVIEW.md) |
 | Set up Rosetta | [QUICKSTART.md](QUICKSTART.md) |
+| Learn how to use Rosetta flows | [USAGE_GUIDE.md](USAGE_GUIDE.md) |
+| Deploy Rosetta for my organization | [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) |
 | Understand the system architecture | [ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | Navigate the codebase | [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) |
 | Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |

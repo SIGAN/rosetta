@@ -205,9 +205,11 @@ The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CO
 
 ## Next Steps
 
-- [OVERVIEW.md](OVERVIEW.md) for the mental model and terminology
-- [CONTRIBUTING.md](CONTRIBUTING.md) to make your first contribution
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) for system internals
+- [Usage Guide](USAGE_GUIDE.md) — how to use Rosetta flows
+- [Overview](OVERVIEW.md) — mental model and terminology
+- [Deployment Guide](DEPLOYMENT_GUIDE.md) — org-wide deployment
+- [Contributing](CONTRIBUTING.md) — make your first contribution
+- [Architecture](docs/ARCHITECTURE.md) — system internals
 
 ## Video Tutorials
 
@@ -216,6 +218,3 @@ The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CO
 - [Initialize with Antigravity](https://drive.google.com/file/d/1BcloxAXzrvdY1Uc5rNF6b_g1MzePLYpn/view?usp=drive_link) — project initialization
 - [Subagents and Workflows in Claude Code](https://drive.google.com/file/d/1GnFLr6ljAV29e4lHPDj0u6qYNQat0CDk/view?usp=drive_link) — advanced configuration
 
----
-
-**Related docs:** [README](README.md) | [INSTALLATION](INSTALLATION.md) | [TROUBLESHOOTING](TROUBLESHOOTING.md)

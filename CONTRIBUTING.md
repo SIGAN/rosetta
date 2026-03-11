@@ -84,27 +84,24 @@ Before requesting review:
 - [ ] Local validation passes (build, lint, relevant checks)
 - [ ] PR description explains *why*, not just *what*
 
-## Where to Find Deeper Docs
-
-| Question | Go to |
-|---|---|
-| How is the repo organized? | [Developer Guide](DEVELOPER_GUIDE.md) |
-| How does the system work? | [Architecture](docs/ARCHITECTURE.md) |
-| What do reviewers check? | [Review Standards](docs/REVIEW.md) |
-| How does context flow? | [Context](docs/CONTEXT.md) |
-| Tooling and integrations? | [Tools](docs/TOOLS.md) |
-| Something is broken? | [Troubleshooting](TROUBLESHOOTING.md) |
-
 ## Community
 
 This project is licensed under [Apache-2.0](LICENSE).
 
-Treat every interaction with respect. No gatekeeping, no condescension.
+Please treat every interaction with respect. No gatekeeping, no condescension.
+
+## Legal
+
+By contributing to this project, you agree to the [Developer Certificate of Origin (DCO) 1.1](https://developercertificate.org/), certifying that you have the right to submit your contribution under the project’s license; confirm this by adding a `Signed-off-by` trailer to every commit (e.g., `git commit -s`).
 
 ---
 
-**Related docs:** 
+## Related Docs
 
-- [README](README.md)
-- [Developer Guide](DEVELOPER_GUIDE.md)
-- [Review Standards](docs/REVIEW.md)
+- [README](README.md) — what Rosetta is, where to start
+- [Developer Guide](DEVELOPER_GUIDE.md) — repo navigation, where to change what
+- [Architecture](docs/ARCHITECTURE.md) — system structure, components, data flow
+- [Review Standards](REVIEW.md) — what reviewers verify, what authors provide
+- [Context](docs/CONTEXT.md) — requirements and decisions
+- [Usage Guide](USAGE_GUIDE.md) — how to use Rosetta flows
+- [Troubleshooting](TROUBLESHOOTING.md) — symptom-first diagnosis
