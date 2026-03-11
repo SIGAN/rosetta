@@ -28,7 +28,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
 │  Cursor · Claude Code · VS Code · JetBrains · Codex     │
 │                         │                               │
 │                    MCP Protocol                         │
-│                   (HTTP + OAuth)                        │
+│             (Streamable HTTP + OAuth)                   │
 └────────────────────────┬────────────────────────────────┘
                          │
               ┌──────────▼──────────┐
@@ -72,15 +72,15 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 
 ## Rosetta MCP
 
-The MCP server is the interface between IDEs and the knowledge base. Published on PyPI as `ims-mcp`. Designed to be close to AI agent logic: it speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
+The MCP server is the interface between IDEs and the knowledge base. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Designed to be close to AI agent logic: it speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
 
 **Endpoint:** `https://rosetta.evergreen.gcp.griddynamics.net/mcp`
 
 **Transport options:**
-- **HTTP with OAuth** (default). Zero local dependencies. Cursor, Claude Code, and Codex connect directly.
+- **Streamable HTTP with OAuth** (default). Stateful: the server holds session state and can issue callbacks to the IDE. Zero local dependencies. Cursor, Claude Code, and Codex connect directly. When scaling to multiple replicas, sticky sessions are required (see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md)).
 - **STDIO** for air-gapped environments. Runs `uvx ims-mcp` locally with API key auth.
 
-**Authentication:** HTTP uses OAuth via Keycloak (cached token introspection). STDIO uses `ROSETTA_API_KEY`. Policy-based authorization: `aia-*` read-only, `project-*` configurable.
+**Authentication:** HTTP uses OAuth 2.1 via [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) (supports any provider: Keycloak, GitHub, Google, Azure). Cached token introspection. STDIO uses `ROSETTA_API_KEY`. Policy-based authorization: `aia-*` read-only, `project-*` configurable.
 
 ### VFS and Tags
 
@@ -456,6 +456,12 @@ After adding or changing instructions, publish with the CLI to make them availab
 - **Full-folder publishing only.** Prevents broken metadata extraction. Change detection keeps incremental publishes fast.
 - **Layered customization over multi-tenancy.** Org folders extend core, not replace it. Requires unique filenames across the tree.
 - **Subagent/Skills/Commands Shells.** Create small proxies with proper frontmatters. Proxies use `ACQUIRE FROM KB` commands to load actual content. Coding agents expect Subagents/Skills/Commands in specific format in specific locations in the repository. Copying to repo make them stale. Not copying - native features of coding agents don't work. Shells resolve that. Plugins resolve this issue as well, but it only works in claude code.
+- **Single API key as dataset owner.** `ROSETTA_API_KEY` must belong to the owner of all datasets. Simplifies access control (one key sees everything), but that key is a high-value secret. Rotate it through your secrets manager.
+- **Server-controlled VERSION.** `VERSION` is not set by clients. The server decides which release (r1, r2) to serve. Enables managed rollouts and prevents version drift across teams.
+- **Streamable HTTP as default transport.** Stateful connections allow server-to-IDE callbacks and richer interaction. Requires sticky sessions when scaling horizontally. STDIO remains the escape hatch for air-gapped or single-user setups.
+- **OAuthProxy over direct provider integration.** Bridges any OAuth provider to MCP's Dynamic Client Registration expectation. Adds a layer, but avoids coupling to a specific identity provider. `offline_access` scope enables authenticate-once behavior via refresh tokens.
+- **FERNET_KEY for token encryption at rest.** OAuth tokens in Redis are encrypted, not stored plain. Adds a required secret for production, but prevents token theft if Redis is compromised.
+- **Default model provisioning in RAGFlow.** Model API keys configured server-side via `local.service_conf.yaml`. Users get working models out of the box without individual setup. Centralizes API key management but means the server holds all provider credentials.
 
 ---
 
