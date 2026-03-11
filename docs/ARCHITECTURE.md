@@ -100,7 +100,7 @@ Eight tools and one resource exposed to agents:
 | `query_project_context` | Search project-specific docs in a target repo dataset |
 | `store_project_context` | Create or update a document in a project dataset |
 | `discover_projects` | List readable project datasets |
-| `plan_manager` | Manage execution plans with phases, steps, dependencies, status. Has a `help` command for plan creators (subagents don't need it) |
+| `plan_manager` | Manage execution plans with phases, steps, dependencies, status. Has a `help` command for plan creators (subagents don't need it). Stores plan in REDIS. |
 | `submit_feedback` | Auto-submit structured feedback on agent sessions |
 
 **Resource:** `rosetta://{path}` reads bundled instruction documents by VFS resource path.
@@ -352,22 +352,75 @@ Instructions Repo ──► CLI (publish) ──► RAGFlow ──► Rosetta MC
 
 ---
 
+## Development
+
+### Prerequisites
+
+- Python 3.12 (virtual environment at `tools/venv`)
+
+### MCP and Server
+
+MUST use the same venv in both cases: `tools/venv`.
+There are `tools/.env.dev` and `tools/.env.prod`.
+MUST not read any .env files.
+
+### Publishing Instructions
+
+Publish instructions to remote IMS server:
+
+```bash
+cd tools
+source venv/bin/activate
+cp .env.dev .env
+python ims_cli.py verify
+python ims_cli.py publish ../instructions
+```
+
+### Reference Sources (readonly)
+
+`refsrc/fastmcp-3.0.2` contains source code of FastMCP v3.
+`refsrc/python-sdk-1.26.0` contains source code of MCP Python SDK.
+`refsrc/ragflow-0.24.0` contains source code of ragflow python sdk.
+
+This is for reference purposes only: do not change, do not copy.
+
+# Rosetta MCP (IMS MCP)
+
+MUST validate MCP changes using `.env.dev` and `ims-mcp-server/validation/verify_mcp.py` (testing harness of MCP itself).
+Integrate new features to this testing harness if needed and easy.
+Entire `verify_mcp.py` and ALL tests must work.
+Always run `verify_mcp.py`: with R1 and R2.
+If REDIS-dependent feature is affected RUN verify_mcp.py with and without REDIS_URL.
+Must run `./validate-types.sh` if code was changed.
+Do not tail or limit output of `verify_mcp.py`, it is short already.
+Read first 100 lines of `verify_mcp.py` to get instructions ON HOW exactly it should all be done.
+
+Validation notes discovered during real runs:
+- Main MCP unit suite from repo root: `tools/venv/bin/pytest ims-mcp-server/tests`
+- Tools test suite from `tools/`: `PYTHONPATH=. venv/bin/pytest tests`
+- `verify_mcp.py` flat-list validation must allow plain filenames for `r1` and hierarchical paths for `r2`.
+
+# RAGFlow
+
+RAGFlow is constantly updating, AI knowledge is stale.
+Grep TOC, read, and keep updated `docs/RAGFLOW.md` if task involves coding for it.
+
+---
+
 ## Pipelines
 
-**GitHub Actions (`.github/workflows/pages.yml`):**
-- Triggers on push to `main` (changes in `docs/web/`) or manual dispatch
-- Builds the Jekyll website from `docs/web/`
-- Deploys to GitHub Pages
+We use `.github/workflows` pipelines to build and release: MCP PyPi package, Docker Image, Publish Instructions, Publish website.
+Triggers on push to `main` or manual dispatch.
 
-**Publishing pipeline (manual or CI).** `python ims_cli.py publish ../instructions` from `tools/`. `RAGFLOW_API_KEY` secret for production. Idempotent.
+Website: builds the Jekyll website from `docs/web/`, deploys to GitHub Pages.
 
 **Plugin distribution.** Three packages via marketplace:
 
-| Plugin | Contents | Footprint |
+| Plugin | Contents, Footprint |
 |---|---|---|
-| `core@rosetta` | 20 skills, 7 agents, 4 workflows, 9 rules | Full OSS foundation |
-| `grid@rosetta` | 4 skills, 2 agents, 2 workflows, 2 rules | Enterprise extensions |
-| `rosetta@rosetta` | Bootstrap rule + MCP definition only | Minimal (fetches via MCP) |
+| `core@rosetta` | Full OSS foundation |
+| `grid@rosetta` | Enterprise extensions |
+| `rosetta@rosetta` | Bootstrap rule + MCP definition only, (fetches via MCP) |
 
 Plugins point to source folders in the instructions repository. No local file duplication.
 
@@ -396,7 +449,7 @@ After adding or changing instructions, publish with the CLI to make them availab
 - **Release-based versioning over branch-based.** Releases (r1, r2) coexist in the same repo. Enables A/B testing and rollback, but folder structure carries the version.
 - **RAGFlow as the knowledge layer.** Chunking, embedding, and search out of the box. Adds a deployment dependency (Docker or hosted). STDIO transport partially mitigates this.
 - **Tags as primary access, not search.** ACQUIRE by tag is faster and more precise than keyword search. But requires the auto-tagging scheme to produce useful tags from folder structure.
-- **XML bundling with threshold.** Structured `<rosetta:file>` output with metadata attributes. The threshold of 5 prevents context overflow by switching to listing mode. Requires agents to make follow-up requests for specific files.
+- **XML bundling with threshold.** Structured `<rosetta:file>` output with metadata attributes. The threshold of 5 prevents context overflow by switching to listing mode. Requires agents to make follow-up requests for specific files. Plus `<rosetta:folder>`
 - **Command aliases over direct tool calls.** Portable across IDEs, decoupled from MCP API changes. An indirection layer contributors must learn.
 - **Full-folder publishing only.** Prevents broken metadata extraction. Change detection keeps incremental publishes fast.
 - **Layered customization over multi-tenancy.** Org folders extend core, not replace it. Requires unique filenames across the tree.
