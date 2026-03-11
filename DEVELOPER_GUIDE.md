@@ -63,7 +63,7 @@ Instructions run locally without MCP. Copy them into a target repository and poi
 
 No server, no API key, no network. Edit instructions, reload, test.
 
-Alternative source: use the published version from [releases](https://github.com/griddynamics/rosetta/releases/latest).
+Alternative source: use the published version from [releases](https://github.com/griddynamics/rosetta/releases/latest). See also [Installation — Offline Installation](INSTALLATION.md#offline-installation-no-mcp).
 
 ---
 
@@ -303,7 +303,7 @@ python ims_cli.py list-collection --collection aia-r2
 | Documentation          | `docs/`, repo root `.md` files                        | Review against [plan/INDEX.md](plan/INDEX.md) |
 
 
-Always publish the **entire** `/instructions` folder. Never subfolders or single files (breaks tag extraction).
+Always publish the **entire** `/instructions` folder. Never subfolders or single files (breaks tag extraction). See [Architecture — Rosetta CLI](docs/ARCHITECTURE.md#rosetta-cli) for details on auto-tagging and change detection.
 
 ---
 

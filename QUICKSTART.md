@@ -191,7 +191,7 @@ Ask the agent:
 Initialize this repository using Rosetta
 ```
 
-The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md), and ask clarifying questions.
+The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md), and ask clarifying questions. Read more about [workspace files](INSTALLATION.md#workspace-files-created) and [all workflows](USAGE_GUIDE.md#workflows).
 
 > [!NOTE]
 > **Composite workspaces:** init each repository separately, then init at the workspace level with "This is composite workspace" appended.
@@ -199,9 +199,9 @@ The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CO
 
 ## Common Issues
 
-- **OAuth prompt does not appear:** restart your IDE and retry the connection.
-- **Agent ignores Rosetta tools:** confirm the MCP server shows as connected in your IDE's MCP settings. Add a [bootstrap rule](INSTALLATION.md) if the agent still skips Rosetta.
-- **Slow or empty responses:** check your network can reach `rosetta.evergreen.gcp.griddynamics.net`. See [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+- **OAuth prompt does not appear:** restart your IDE and retry the connection. Read more in [Troubleshooting — Connection & Authentication](TROUBLESHOOTING.md#connection--authentication).
+- **Agent ignores Rosetta tools:** confirm the MCP server shows as connected in your IDE's MCP settings. Add a [bootstrap rule](INSTALLATION.md) if the agent still skips Rosetta. Read more in [Troubleshooting — Agent Not Using Rosetta](TROUBLESHOOTING.md#agent-not-using-rosetta).
+- **Slow or empty responses:** check your network can reach `rosetta.evergreen.gcp.griddynamics.net`. See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#slow-or-empty-responses).
 
 ## Next Steps
 

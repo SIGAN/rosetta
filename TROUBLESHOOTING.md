@@ -56,6 +56,8 @@ Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better. Avoi
 
 ## For Contributors
 
+For full local development setup, see the [Developer Guide](DEVELOPER_GUIDE.md).
+
 ### Local Development Setup
 
 **"OPENAI_API_KEY not set" or missing environment variables**
@@ -67,6 +69,8 @@ Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better. Avoi
 - Kill the process: `kill <PID>`
 
 ### Publishing
+
+Read more about CLI commands and change detection in [Architecture — Rosetta CLI](docs/ARCHITECTURE.md#rosetta-cli).
 
 **"No changes detected"**
 - Files are unchanged since last publish. This is working as intended

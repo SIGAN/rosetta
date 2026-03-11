@@ -403,7 +403,7 @@ Required for STDIO transport. Optional otherwise.
 | `IMS_DEBUG` | disabled | Enable debug logs (`1`, `true`, `yes`, `on`) |
 | `POSTHOG_API_KEY` | (built-in) | Set to `""` to disable usage analytics |
 
-Do not set `VERSION`. It uses a server-controlled default for managed upgrades.
+Do not set `VERSION`. It uses a server-controlled default for managed upgrades. See [Architecture — Tradeoffs](docs/ARCHITECTURE.md#tradeoffs) for rationale.
 
 ### Plugin-Based Installation
 
@@ -413,6 +413,8 @@ Two modes:
 
 - **Lightweight (recommended):** bootstrap rule and MCP server definition only. Smallest footprint, behavior driven by MCP.
 - **Full:** core (20 skills, 7 agents, 4 workflows, bootstrap rules) plus optional grid enterprise extensions. Requires core 2.0.0+ for grid.
+
+Read more about plugin contents and capabilities in the [Usage Guide — Plugins](USAGE_GUIDE.md#plugins).
 
 #### Claude Code
 
@@ -499,7 +501,7 @@ The agent runs an eight-phase workflow (see [Usage Guide — Init Workspace](USA
 
 ### Workspace Files Created
 
-After initialization, Rosetta maintains these files in your repository:
+After initialization, Rosetta maintains these files in your repository. Read more about their purpose in [Architecture — Workspace Files](docs/ARCHITECTURE.md#workspace-files).
 
 **Committed to SCM:**
 

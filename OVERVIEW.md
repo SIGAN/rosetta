@@ -19,13 +19,13 @@ Design principles:
 
 **Agent-agnostic.** Works across Cursor, Claude Code, VS Code, Windsurf, JetBrains (Copilot, Junie), GitHub Copilot, Codex, Antigravity, OpenCode, and any MCP-compatible IDE. Adopts agent-specific features where available, simulates them where not.
 
-**Progressive disclosure.** Instructions load in stages (bootstrap, classification, workflow-specific, sub-instructions) to prevent context overflow. The agent gets only what it needs for the current task.
+**Progressive disclosure.** Instructions load in stages (bootstrap, classification, workflow-specific, sub-instructions) to [prevent context overflow](docs/ARCHITECTURE.md#context-overflow-prevention). The agent gets only what it needs for the current task.
 
-**Classification-first.** Every request is auto-classified into a workflow type before any work begins. Classification drives which instructions, skills, and rules load. Provided workflows are used as templates.
+**Classification-first.** Every request is auto-classified into a [workflow type](USAGE_GUIDE.md#workflows) before any work begins. Classification drives which instructions, skills, and rules load. Provided workflows are used as templates.
 
-**Release-based versioning.** Instructions are organized by release (r1, r2, r3). New instructions can be developed without breaking agents on stable versions. Rollback is always possible.
+**Release-based versioning.** Instructions are organized by release (r1, r2, r3). New instructions can be developed without breaking agents on stable versions. Rollback is always possible. See [Architecture — Tradeoffs](docs/ARCHITECTURE.md#tradeoffs) for rationale.
 
-**Rules-as-code.** AI behavior is authored, versioned, reviewed, and approved through standard engineering workflows. Same rigor as application code.
+**Rules-as-code.** AI behavior is authored, versioned, reviewed, and approved through standard engineering workflows. Same rigor as application code. See [Contributing — Prompt Changes](CONTRIBUTING.md#prompt-changes) for the authoring process.
 
 **Security by design.** No source code transfer. Air-gap capable. Runs inside the organization's perimeter. See [Context — Design Philosophy](docs/CONTEXT.md#design-philosophy) for the full set.
 
@@ -72,6 +72,8 @@ Your IDE and coding agent ask Rosetta for instructions on each request.
 
 ## Session Lifecycle
 
+Read more about the [bootstrap flow](docs/ARCHITECTURE.md#bootstrap-flow) in the Architecture doc.
+
 ```
 1. Start       Agent starts, loads rules/skills/commands
                 ↓
@@ -94,7 +96,7 @@ Instructions are organized in three layers that merge at runtime:
 - **Organization** — your company's conventions and policies
 - **Project** — local repo docs and configs
 
-Layers at the same resource path get bundled together. This is layered customization, not multi-tenancy. See [Architecture](docs/ARCHITECTURE.md) for component details and data flow.
+Layers at the same resource path get [bundled together](docs/ARCHITECTURE.md#bundler). This is layered customization, not multi-tenancy. See [Architecture](docs/ARCHITECTURE.md) for component details and data flow.
 
 ## What Rosetta Does Not Do
 

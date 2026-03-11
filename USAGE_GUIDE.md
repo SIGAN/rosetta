@@ -12,12 +12,12 @@ For terminology and mental model, see [OVERVIEW.md](OVERVIEW.md). For setup, see
 
 Describe what you need in plain language. Rosetta handles the rest.
 
-1. Your AI coding agent loads Rosetta's bootstrap rules automatically
+1. Your AI coding agent loads Rosetta's [bootstrap rules](docs/ARCHITECTURE.md#bootstrap-flow) automatically
 2. Rosetta classifies your request (coding, research, init, etc.)
 3. The matching workflow, skills, and guardrails load into context
 4. The agent executes with the right instructions, approval gates, and safety constraints
 
-No special syntax. No commands to memorize. Progressive disclosure keeps context clean: only what the current task needs gets loaded.
+No special syntax. No commands to memorize. [Progressive disclosure](OVERVIEW.md#core-mental-model) keeps context clean: only what the current task needs gets loaded.
 
 ## Workflows
 
@@ -264,9 +264,9 @@ Specialized workflow for authoring and adapting prompts for AI coding agents. Bu
 
 Every request benefits from these regardless of workflow.
 
-- **Execution policies** enforce plan-driven work, incremental validation, and memory-based self-learning. The agent consults `agents/MEMORY.md` during planning and records lessons learned.
+- **Execution policies** enforce plan-driven work, incremental validation, and memory-based self-learning. The agent consults `agents/MEMORY.md` during planning and records lessons learned. See [Architecture — Workspace Files](docs/ARCHITECTURE.md#workspace-files) for the full file list.
 - **HITL and questioning rules** govern how the agent interacts with you. Questions are batched (5-10 per round), prioritized by impact, each targeting a single decision. If something is unclear, Rosetta stops and asks.
-- **Subagent orchestration** defines how work gets delegated. Subagents start with fresh context, receive explicit scope boundaries, and return concise results. Independent work runs in parallel.
+- **[Subagent orchestration](docs/ARCHITECTURE.md#rosetta-mcp)** defines how work gets delegated. Subagents start with fresh context, receive explicit scope boundaries, and return concise results. Independent work runs in parallel.
 
 ## Customization
 
@@ -280,7 +280,7 @@ The single most effective way to improve AI output. These files tell the AI what
 - **`docs/ARCHITECTURE.md`** (the how) — system structure, component relationships, data flow, deployment
 - **`docs/TECHSTACK.md`** (the what) — technologies, frameworks, tools, and reasoning behind each choice
 
-The more your team invests in these three files, the fewer follow-up questions Rosetta asks and the better the output gets.
+The more your team invests in these three files, the fewer follow-up questions Rosetta asks and the better the output gets. See [Installation — Workspace Files Created](INSTALLATION.md#workspace-files-created) for the full list of files Rosetta manages.
 
 ### Custom Rules
 
@@ -474,7 +474,7 @@ Rosetta is distributed as plugins for Claude Code and Cursor.
 - **grid** — 4 skills, 2 agents, 2 workflows, 2 rules. Enterprise extensions (requires core).
 - **rosetta** — bootstrap rule and MCP connection only. Smallest footprint, all instructions loaded from MCP on demand.
 
-See [INSTALLATION.md](INSTALLATION.md) for install commands and plugin details.
+See [INSTALLATION.md — Plugin-Based Installation](INSTALLATION.md#plugin-based-installation) for install commands.
 
 ## Best Practices
 

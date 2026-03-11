@@ -22,7 +22,7 @@ Rosetta MCP connects to RAGFlow as its backend. Deploy RAGFlow first.
 
 ## Part 1: Rosetta Server (RAGFlow)
 
-RAGFlow provides document storage, embedding, retrieval, and the admin UI. It runs with Elasticsearch, Redis, and MinIO as supporting services, backed by an external MySQL database.
+RAGFlow provides document storage, embedding, retrieval, and the admin UI. It runs with Elasticsearch, Redis, and MinIO as supporting services, backed by an external MySQL database. For RAGFlow's role in the system, see [Architecture — RAGFlow](docs/ARCHITECTURE.md#ragflow-rosetta-server).
 
 Upstream docs: [Configuration](https://ragflow.io/docs/dev/configurations) | [Helm Chart](https://github.com/infiniflow/ragflow/tree/main/helm) | [Build Docker Image](https://ragflow.io/docs/dev/build_docker_image) | [Admin UI](https://ragflow.io/docs/admin_ui) | [GitHub](https://github.com/infiniflow/ragflow)
 
@@ -204,7 +204,7 @@ Rosetta MCP uses the Evergreen shared Helm chart (v1.17.x). Configuration is val
 
 **Deployment strategy:** RollingUpdate (maxSurge: 1, maxUnavailable: 0). Single replica by default, HPA available (2-10 replicas, 70% CPU / 80% memory targets).
 
-**Session affinity:** MCP uses Streamable HTTP (stateful). The server holds session state and can call back the IDE. When running multiple replicas, every request from a client must reach the same pod. Configure sticky sessions on the Kubernetes Service:
+**Session affinity:** MCP uses [Streamable HTTP](docs/ARCHITECTURE.md#rosetta-mcp) (stateful). The server holds session state and can call back the IDE. When running multiple replicas, every request from a client must reach the same pod. Configure sticky sessions on the Kubernetes Service:
 
 ```yaml
 # Recommended: Service-level ClientIP affinity

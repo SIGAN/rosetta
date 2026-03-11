@@ -76,7 +76,7 @@ Not reactive like gateways. Not static like prompt libraries. Verified, project-
 
 - One-command installation for any supported IDE
 - No local dependencies beyond a standard development environment
-- Progressive disclosure: agents load only what they need, when they need it
+- [Progressive disclosure](../OVERVIEW.md#core-mental-model): agents load only what they need, when they need it
 - Works with existing tools and workflows, no process overhaul required
 
 ### Scale
@@ -105,7 +105,7 @@ Not reactive like gateways. Not static like prompt libraries. Verified, project-
 
 - Rosetta operates across the full Software Development Lifecycle: planning, requirements, implementation, QA, release, and operations
 - Agent-agnostic: works with Cursor, Claude Code, VS Code, Windsurf, JetBrains (Copilot, Junie), GitHub Copilot, Codex, Antigravity, OpenCode, and any MCP-compatible IDE
-- Integrates via Model Context Protocol (MCP), the standard transport for AI agent instructions
+- Integrates via [Model Context Protocol (MCP)](ARCHITECTURE.md#rosetta-mcp), the standard transport for AI agent instructions
 - Security model: Rosetta serves knowledge to agents. It never sees source code. No code leaves the organization's perimeter. No IP is shared with Rosetta by default. Project datasets and plan_manager (shared execution state) are opt-in features that must be enabled explicitly.
 - Grounded in production experience, not theory. Active feedback loop from real projects.
 
@@ -131,7 +131,7 @@ These principles shape every product and architectural decision:
 
 - **Agent-agnostic.** Never lock users into one IDE or AI model.
 - **Progressive disclosure.** Load instructions in stages. Prevent context overflow. Give agents only what the current task requires.
-- **Classification-first.** Every request is auto-classified before work begins. Classification drives what loads.
+- **Classification-first.** Every request is auto-classified before work begins. Classification drives what loads. See [Usage Guide — Workflows](../USAGE_GUIDE.md#workflows) for available request types.
 - **Release-based versioning.** Develop new instructions without breaking agents on stable versions.
 - **Rules-as-code.** AI behavior is authored, versioned, reviewed, and approved through standard engineering workflows.
 - **Security by design.** No source code transfer. Air-gap capable. Runs inside the organization's perimeter.

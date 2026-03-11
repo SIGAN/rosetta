@@ -47,7 +47,7 @@ fork/clone → branch → edit → validate → push → PR
 
 Rosetta is a prompt engineering system. Prompt changes have outsized impact and need extra care.
 
-**Use the prompting flow.** The `coding-agents-prompting-flow` with `coding-agents-prompt-authoring` skill helps you author, design, refactor, harden, and modernize prompt families (agents, skills, workflows, workflow phases, rules). It understands Rosetta internals. Use it with Opus 4.6 model.
+**Use the prompting flow.** The [`coding-agents-prompting-flow`](USAGE_GUIDE.md#workflows) with `coding-agents-prompt-authoring` skill helps you author, design, refactor, harden, and modernize prompt families (agents, skills, workflows, workflow phases, rules). It understands Rosetta internals. Use it with Opus 4.6 model.
 
 **What to include in the PR:**
 
@@ -80,7 +80,7 @@ Before requesting review:
 - [ ] No duplicate rules or ambiguous wording introduced
 - [ ] Safety, privacy, and approval checkpoints preserved
 - [ ] Prompt changes include a brief, examples, and validation evidence
-- [ ] Architecture changes update `docs/ARCHITECTURE.md` in the same changeset
+- [ ] Architecture changes update [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) in the same changeset
 - [ ] Local validation passes (build, lint, relevant checks)
 - [ ] PR description explains *why*, not just *what*
 
