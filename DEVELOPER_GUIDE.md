@@ -179,7 +179,7 @@ codex mcp add Rosetta \
 
 **API key:** Get yours from the RAGFlow UI. The dataset you test against must be **owned by user of this API key**.
 
-**VERSION:** Set explicitly here for local development testing. In production, do not set `VERSION` — the server controls it (see [INSTALLATION.md — Environment Variables](INSTALLATION.md#environment-variables-reference)). Always test with both `VERSION=r1` and `VERSION=r2`.
+**VERSION:** Set explicitly here for local development testing. Always test with both `VERSION=r1` and `VERSION=r2`.
 
 **Pre-release builds:** Version suffixes like `b00` trigger automatic pre-release publishing. Use `--prerelease=allow` with uvx to pull these builds.
 
