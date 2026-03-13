@@ -7,15 +7,15 @@
 
 ## Overall Development Flow
 
-1. **Prepare repository.**
+1. **Prepare local Rosetta repository.**
    - Fork repository entirely and work in the `main` branch
    - Clone and create feature branch from the `main` branch
    - Rosetta uses `main` as target branch for PR
    - See [Contributing Workflow](CONTRIBUTING.md#contributing-workflow) for git-related info
 
-2. **Develop using claude code / codex / cursor** or **Use the prompting flow.**
-   - Development: existing rules will kick in, we use HTTP MCP.
-   - Prompting: use the [`coding-agents-prompting-flow`](CONTRIBUTING.md#prompt-changes) to author, refactor, or harden prompts.
+2. **Develop Rosetta using claude code / codex / cursor** or **Use the prompting flow.**
+   - Development: existing rules will kick in, we use HTTP MCP, everything is preconfigured using claude standards.
+   - Prompting: use the [`coding-agents-prompting-flow` (description + examples)](CONTRIBUTING.md#prompt-changes) to author, refactor, or harden prompts.
 
 3. **Check your output.**
    - [General Review Criteria](REVIEW.md#general-review-criteria)
@@ -24,8 +24,12 @@
    - [Instruction Review Criteria](REVIEW.md#instruction-review-criteria)
 
 4. **Test locally on a target repo.**
+   - Disable Rosetta MCP
    - Set up [Local Instructions Mode](#local-development-instructions) on **target** repository.
-   - Test your prompts against a real codebase.
+   - Test your prompts against on a real codebase.
+   - Modify your prompts in `instructions` in **target** repository
+   - Restart coding agents or new sessions after changes made
+   - Copy back changed files to the Rosetta repository
 
 5. **Test on DEV environment.**
    - Uninstall `local-files-mode.md` from target repository

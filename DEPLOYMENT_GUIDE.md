@@ -258,9 +258,10 @@ Environment overrides:
 - `ROSETTA_OAUTH_INTROSPECTION_ENDPOINT`
 - `ROSETTA_OAUTH_REVOCATION_ENDPOINT`
 - `ROSETTA_OAUTH_BASE_URL`
-- `ROSETTA_OAUTH_SCOPE` (default: `openid email offline_access`)
+- `ROSETTA_OAUTH_SCOPE` — valid scopes advertised in `.well-known/oauth-authorization-server` (default: `openid email offline_access`)
+- `ROSETTA_OAUTH_EXTRA_SCOPES` — scopes forwarded to upstream IdP authorization endpoint via `extra_authorize_params` (optional)
 
-The `offline_access` scope is critical: it enables refresh tokens so users authenticate once instead of re-authenticating daily. Your OAuth provider must be configured to allow this scope.
+The `offline_access` scope is critical: it enables refresh tokens so users authenticate once instead of re-authenticating daily. Your OAuth provider must be configured to allow this scope. Include it in `ROSETTA_OAUTH_EXTRA_SCOPES` to forward it to the upstream IdP.
 
 **Secrets** (use ESO, Vault, or manual Kubernetes secrets):
 

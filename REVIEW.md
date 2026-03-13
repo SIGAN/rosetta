@@ -65,6 +65,7 @@ Instructions (skills, agents, workflows, rules, templates) define how AI agents 
 - **No IDE-specific logic.** Instructions work across Cursor, Claude Code, VS Code, JetBrains, Codex, and any MCP-compatible agent. If a PR introduces IDE-specific behavior, it must be justified and isolated. Target models: Sonnet, Opus, GPT-5.3-codex, GPT-5.4, Gemini-3.1-Pro.
 - **No hardcoded paths or env vars.** Unless the instruction explicitly manages configuration, paths and environment details belong in setup docs or deployment config.
 - **Flexible over rigid.** Prefer solutions that adapt to task complexity. Avoid brittle assumptions about project structure, language, or toolchain.
+- **User experience.** Verify user experience is nice and expected: AI asks questions, helps to get better information, does not bombard with tool approval requests, etc.
 
 ### Quality and Form
 
