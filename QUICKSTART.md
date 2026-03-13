@@ -198,6 +198,7 @@ Initialize this repository using Rosetta
 The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md), and ask clarifying questions. Read more about [workspace files](INSTALLATION.md#workspace-files-created) and [all workflows](USAGE_GUIDE.md#workflows).
 
 > [!NOTE]
+> **Prefer medium models:** High reasoning and Opus models consume too much token on reasoning.
 > **Composite workspaces:** init each repository separately, then init at the workspace level with "This is composite workspace" appended.
 > **Dead code or existing specs:** mention their location in the prompt to save time.
 
