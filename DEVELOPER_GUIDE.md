@@ -13,7 +13,7 @@
    - Rosetta uses `main` as target branch for PR
    - See [Contributing Workflow](CONTRIBUTING.md#contributing-workflow) for git-related info
 
-2. **Develop using claude code / codex / cursor** or **Use the prompting flow.**
+2. **Develop Rosetta using claude code / codex / cursor** or **Use the prompting flow.**
    - Development: existing rules will kick in, we use HTTP MCP.
    - Prompting: use the [`coding-agents-prompting-flow`](CONTRIBUTING.md#prompt-changes) to author, refactor, or harden prompts.
 
