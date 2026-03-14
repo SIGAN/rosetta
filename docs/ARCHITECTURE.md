@@ -88,7 +88,35 @@ The MCP server is the consulting layer between IDEs and the knowledge base. It d
 - **Streamable HTTP with OAuth** (default). Stateful: the server holds session state and can issue callbacks to the IDE. Zero local dependencies. Cursor, Claude Code, and Codex connect directly. When scaling to multiple replicas, sticky sessions are required (see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md)).
 - **STDIO** for air-gapped environments. Runs `uvx ims-mcp` locally with API key auth.
 
-**Authentication:** HTTP uses OAuth 2.1 via [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) (supports any provider: Keycloak, GitHub, Google, Azure). Cached token introspection. STDIO uses `ROSETTA_API_KEY`. Policy-based authorization: `aia-*` read-only, `project-*` configurable.
+**Authentication:** HTTP uses OAuth 2.1 via FastMCP's proxy layer (supports any provider: Keycloak, GitHub, Google, Azure). STDIO uses `ROSETTA_API_KEY`. Policy-based authorization: `aia-*` read-only, `project-*` configurable. For the two-leg proxy architecture, scope separation, and token lifecycle details, see [AUTHENTICATION.md](AUTHENTICATION.md).
+
+Two OAuth modes controlled by `ROSETTA_OAUTH_MODE`:
+
+| Mode | Env var | How it works |
+|---|---|---|
+| `oauth` (default) | Requires `ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT`, `TOKEN_ENDPOINT`, `INTROSPECTION_ENDPOINT` | Upstream IdP issues opaque tokens; Rosetta introspects them on each request via `IntrospectionTokenVerifier`. Cached 15 min. |
+| `oidc` | Requires `ROSETTA_OAUTH_OIDC_CONFIG_URL` (IdP discovery doc URL) | Rosetta fetches IdP endpoints automatically from the discovery doc; tokens are JWTs verified locally via JWKS. No per-request introspection calls. |
+
+Both modes issue FastMCP JWTs to MCP clients and store upstream tokens in Redis (encrypted with `FERNET_KEY`). MCP clients never see IdP tokens; the IdP never sees FastMCP JWTs.
+
+### Redis Schema Migrations
+
+`ims_mcp/migrations.py` runs sequential schema migrations against Redis on every server startup via the FastMCP lifespan hook. Migrations are numbered methods (`_migrate_to_N`); only those ahead of the stored version run.
+
+**Key details:**
+- Version tracked in `rosetta:redis-schema-version` (plain integer)
+- Distributed lock (`rosetta:migration-lock`, 60 s TTL) prevents concurrent runs across pods on rolling deploys
+- Each migration runs exactly once; safe to deploy to multiple replicas simultaneously
+- All migration activity logged at `INFO` level under `ims_mcp.migrations`
+
+**Current migrations:**
+
+| Version | What it does |
+|---|---|
+| 1 | Baseline no-op — marks pre-migration deployments as version 1 |
+| 2 | Flushes `mcp-oauth-proxy-clients:*` keys so DCR/CIMD clients re-register with correct `required_scopes` |
+
+**Adding a migration:** add `_migrate_to_N`, bump `LATEST_REDIS_SCHEMA_VERSION = N`, deploy.
 
 ### VFS and Tags
 
@@ -386,9 +414,9 @@ python ims_cli.py verify
 python ims_cli.py publish ../instructions
 ```
 
-### Reference Sources (readonly)
+### Reference Sources (readonly, packages currently used)
 
-`refsrc/fastmcp-3.0.2` contains source code of FastMCP v3.
+`refsrc/fastmcp-3.1.0` contains source code of FastMCP v3.
 `refsrc/python-sdk-1.26.0` contains source code of MCP Python SDK.
 `refsrc/ragflow` contains source code of RAGFlow Python SDK (v0.23.1+).
 
@@ -475,6 +503,7 @@ After adding or changing instructions, publish with the CLI to make them availab
 
 ## Related Docs
 
+- [Authentication](AUTHENTICATION.md) — two-leg OAuth proxy, scope architecture, token lifecycle, WARNING: very large document
 - [Developer Guide](../DEVELOPER_GUIDE.md) — repo navigation, where to change what
 - [Contributing](../CONTRIBUTING.md) — fastest path to a merged PR
 - [Usage Guide](../USAGE_GUIDE.md) — how to use Rosetta flows

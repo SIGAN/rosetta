@@ -243,25 +243,50 @@ Environment overrides:
 |---|---|---|
 | Ingress host | `rosetta-dev.evergreen...` | `rosetta.evergreen...` |
 | `ROSETTA_SERVER_URL` | `http://ims--ragflow--dev....:80` | `http://ims--ragflow--prod....:80` |
+| `VERSION` | `r2` | `r2` |
 | `ROSETTA_MODE` | `SOFT` | `SOFT` |
+| `ROSETTA_OAUTH_MODE` | `oauth` | `oauth` |
+| `ROSETTA_OAUTH_REQUIRED_SCOPES` | `offline_access` | `offline_access` |
+| `ROSETTA_OAUTH_VALID_SCOPES` | (empty) | (empty) |
+| `REDIS_DB` | `2` | `2` |
+| `FASTMCP_ENABLE_RICH_LOGGING` | `false` | `false` |
+| `FASTMCP_LOG_LEVEL` | `DEBUG` | (unset) |
 | `IMS_DEBUG` | `1` | (unset) |
 | Keycloak realm | `evergreen` | `ims` |
 | Service account | `sa-w-ims-dev` | `sa-w-ims-prod` |
 | ESO secret source | `ims-dev-mcp-secrets` | `ims-mcp-secrets` |
 
+### Redis
+
+Rosetta MCP uses Redis for OAuth token storage, session state, and `plan_manager` execution plans. Configure the connection via `REDIS_URL` (provided as a secret) and `REDIS_DB` (logical database index, e.g. `2`).
+
+**Database isolation:** Use `REDIS_DB` to select a logical database within a shared Redis instance. Set different values per environment to avoid key collisions.
+
+**Data invalidation:** Redis data is not schema-versioned and requires no migration scripts. However, existing sessions and stored plans become inaccessible after:
+
+- Rotating `FERNET_KEY` (tokens can no longer be decrypted)
+- Changing `REDIS_DB` (data is in a different logical database)
+- Flushing the Redis database (`redis-cli -n <db> FLUSHDB`)
+
+Users must re-authenticate and in-flight plans are lost after any of these. Plan key rotations accordingly in production.
+
 ### Security
 
 **OAuth 2.1:** Rosetta MCP authenticates IDE clients via [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy), which bridges any OAuth provider (Keycloak, GitHub, Google, Azure, etc.) with MCP's authentication flow. Required environment variables:
 
-- `ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT`
-- `ROSETTA_OAUTH_TOKEN_ENDPOINT`
-- `ROSETTA_OAUTH_INTROSPECTION_ENDPOINT`
-- `ROSETTA_OAUTH_REVOCATION_ENDPOINT`
-- `ROSETTA_OAUTH_BASE_URL`
-- `ROSETTA_OAUTH_SCOPE` — valid scopes advertised in `.well-known/oauth-authorization-server` (default: `openid email offline_access`)
-- `ROSETTA_OAUTH_EXTRA_SCOPES` — scopes forwarded to upstream IdP authorization endpoint via `extra_authorize_params` (optional)
+- `ROSETTA_OAUTH_MODE` — `oauth` (token introspection, default) or `oidc` (JWT validation via OIDC discovery doc)
+- `ROSETTA_OAUTH_OIDC_CONFIG_URL` — IdP OIDC discovery URL; required when `ROSETTA_OAUTH_MODE=oidc` - example: "https://keycloak.evergreen.gcp.griddynamics.net/realms/evergreen/.well-known/openid-configuration"
+- `ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT` - example: "https://keycloak.evergreen.gcp.griddynamics.net/realms/evergreen/protocol/openid-connect/auth"
+- `ROSETTA_OAUTH_TOKEN_ENDPOINT` - example: "https://keycloak.evergreen.gcp.griddynamics.net/realms/evergreen/protocol/openid-connect/token"
+- `ROSETTA_OAUTH_INTROSPECTION_ENDPOINT` - example: "https://keycloak.evergreen.gcp.griddynamics.net/realms/evergreen/protocol/openid-connect/token/introspect"
+- `ROSETTA_OAUTH_REVOCATION_ENDPOINT` - example: "https://keycloak.evergreen.gcp.griddynamics.net/realms/evergreen/protocol/openid-connect/revoke"
+- `ROSETTA_OAUTH_BASE_URL` - example: "https://rosetta-dev.evergreen.gcp.griddynamics.net"
+- `ROSETTA_OAUTH_REQUIRED_SCOPES` — scopes required by FastMCP OAuthProxy on inbound tokens from MCP clients, **must** include `offline_access`
+- `ROSETTA_OAUTH_VALID_SCOPES` — scopes advertised in `.well-known`; leave empty to derive from `ROSETTA_OAUTH_REQUIRED_SCOPES`
+- `ROSETTA_OAUTH_EXTRA_SCOPES` — scopes forwarded to upstream IdP authorization endpoint, **must** be `openid email profile offline_access`
 
-The `offline_access` scope is critical: it enables refresh tokens so users authenticate once instead of re-authenticating daily. Your OAuth provider must be configured to allow this scope. Include it in `ROSETTA_OAUTH_EXTRA_SCOPES` to forward it to the upstream IdP.
+The `offline_access` scope is critical: it enables refresh tokens so users authenticate once instead of re-authenticating daily. 
+Your OAuth provider must be configured to allow this scope.
 
 **Secrets** (use ESO, Vault, or manual Kubernetes secrets):
 
