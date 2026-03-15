@@ -1,0 +1,135 @@
+{
+  "name": "rosetta",
+  "owner": {
+    "name": "Grid Dynamics",
+    "email": "rosetta-support@griddynamics.com"
+  },
+  "metadata": {
+    "description": "Rosetta 2.0 - Enterprise knowledge management system providing AI agents with unified access to instructions, workflows, skills, and business context",
+    "version": "2.0.0"
+  },
+  "plugins": [
+    {
+      "name": "core",
+      "source": "./instructions/r2/core",
+      "description": "Rosetta Core 2.0 - OSS foundation for AI agent instructions, workflows, and guardrails. Includes Rosetta MCP for knowledge base access.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Grid Dynamics",
+        "email": "rosetta-support@griddynamics.com"
+      },
+      "homepage": "https://griddynamics.github.io/rosetta/",
+      "repository": "https://github.com/griddynamics/rosetta",
+      "license": "Apache-2.0",
+      "keywords": [
+        "rosetta",
+        "ai-agents",
+        "workflows",
+        "instructions",
+        "guardrails",
+        "planning",
+        "coding",
+        "knowledge-base"
+      ],
+      "category": "productivity",
+      "commands": "./workflows/",
+      "hooks": {
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "cat \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap-core-policy.md\" \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap-execution-policy.md\" \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap-guardrails.md\" \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap-hitl-questioning.md\" \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap-rosetta-files.md\" \"${CLAUDE_PLUGIN_ROOT}/rules/plugin-files-mode.md\""
+              }
+            ]
+          }
+        ]
+      },
+      "mcpServers": {
+        "Rosetta": {
+          "type": "http",
+          "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp",
+          "transport": {
+            "type": "http"
+          },
+          "metadata": {
+            "description": "Rosetta Knowledge Base MCP - Access AI agent instructions, workflows, skills, and business context",
+            "capabilities": [
+              "list_instructions",
+              "query_instructions",
+              "get_context_instructions",
+              "list_project_context",
+              "query_project_context",
+              "store_project_context"
+            ],
+            "authentication": "oauth",
+            "datasets": [
+              "aia-r2 (Rosetta R2.0 instructions)",
+              "project-* (User project context)"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rosetta",
+      "source": "./plugins/rosetta",
+      "description": "Lightweight Rosetta plugin with bootstrap always enforced and Rosetta MCP for all instructions, workflows, skills, and project context.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Grid Dynamics",
+        "email": "rosetta-support@griddynamics.com"
+      },
+      "homepage": "https://griddynamics.github.io/rosetta/",
+      "repository": "https://github.com/griddynamics/rosetta",
+      "license": "Apache-2.0",
+      "keywords": [
+        "rosetta",
+        "ai-agents",
+        "bootstrap",
+        "mcp",
+        "knowledge-base",
+        "cursor",
+        "claude-code"
+      ],
+      "category": "productivity",
+      "hooks": {
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "cat \"${CLAUDE_PLUGIN_ROOT}/rules/bootstrap.md\""
+              }
+            ]
+          }
+        ]
+      },
+      "mcpServers": {
+        "Rosetta": {
+          "type": "http",
+          "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp",
+          "transport": {
+            "type": "http"
+          },
+          "metadata": {
+            "description": "Rosetta Knowledge Base MCP - Access AI agent instructions, workflows, skills, and business context",
+            "capabilities": [
+              "list_instructions",
+              "query_instructions",
+              "get_context_instructions",
+              "list_project_context",
+              "query_project_context",
+              "store_project_context"
+            ],
+            "authentication": "oauth",
+            "datasets": [
+              "aia-r2 (Rosetta R2.0 instructions)",
+              "project-* (User project context)"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

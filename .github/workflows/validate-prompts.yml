@@ -1,0 +1,267 @@
+name: Validate Prompts
+
+# This workflow validates prompt quality using the Prompt Quality Auditor agent
+# when changes are made to the instructions/ folder in pull requests.
+#
+# Required GitHub Secrets:
+#   - ANTHROPIC_API_KEY: API key for Claude Code CLI
+#
+# The workflow:
+# - Detects changed files in instructions/ folder
+# - Compares base (target branch) vs new (PR branch) versions
+# - Uses Claude Code CLI to run the Prompt Quality Auditor agent
+# - Outputs issues sorted by severity (high first)
+# - Blocks PR if HIGH+ issues found (severity >= 3)
+# - Creates a PR comment with table of all issues
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'instructions/r2/**'
+      - '.github/workflows/validate-prompts.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'instructions/r2/**'
+
+permissions:
+  contents: read
+  pull-requests: write  # Required for creating PR comments
+
+jobs:
+  validate:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+
+    env:
+      TMP_DIR: .tmp
+      BASE_VERSIONS_DIR: .tmp/base-versions
+      ALL_RESULTS_FILE: .tmp/all-results.json
+      PR_COMMENT_FILE: .tmp/pr-comment.md
+      MODEL: opus
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to compare with base branch
+
+      - name: Install Claude Code CLI
+        run: |
+          echo "Installing Claude Code CLI..."
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Get changed files in instructions folder
+        id: changed-files
+        run: |
+          echo "Detecting changed files in instructions/ folder..."
+
+          # Get the base branch (target of the PR)
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          echo "Base branch: $BASE_BRANCH"
+
+          # Get changed files in instructions/ folder
+          git fetch origin "$BASE_BRANCH"
+          CHANGED_FILES=$(git diff --name-only "origin/$BASE_BRANCH"...HEAD -- 'instructions/**/*.md' | tr '\n' ' ')
+
+          echo "Changed files: $CHANGED_FILES"
+          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+          # Count files
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "count=0" >> $GITHUB_OUTPUT
+          else
+            COUNT=$(echo "$CHANGED_FILES" | wc -w | tr -d ' ')
+            echo "count=$COUNT" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate prompts
+        id: validate
+        if: steps.changed-files.outputs.count > 0
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo "Validating prompts..."
+
+          CHANGED_FILES="${{ steps.changed-files.outputs.files }}"
+          mkdir -p $TMP_DIR $BASE_VERSIONS_DIR
+
+          for FILE in $CHANGED_FILES; do
+            echo ""
+            echo "Validating: $FILE"
+
+            [ ! -f "$FILE" ] && echo "::warning::File deleted, skipping" && continue
+
+            # Get base version - REQUIRED for comparison
+            BASE_FILE="$BASE_VERSIONS_DIR/$(basename "$FILE")"
+            if git show "origin/$BASE_BRANCH:$FILE" > "$BASE_FILE" 2>/dev/null; then
+              echo "::notice::Base version found, running comparison"
+              PROMPT="Compare and evaluate the prompt file versions: 
+                NEW: $FILE
+                BASE: $BASE_FILE."
+            else
+              echo "::warning::New file (no base version), skipping - comparison requires both versions"
+              continue
+            fi
+
+            # Run Claude CLI - it will write directly to .tmp/{filename}.json
+            claude --model $MODEL --allowedTools "Edit(.tmp/**), Read(.tmp/**), Read(instructions/**/*.md), Read(docs/**/*.md), Read(agents/**/*.md)" --system-prompt-file ./.github/prompts/prompt-comparison.md  -p "$PROMPT"
+
+            # Add file name to result
+            RESULT_FILE="$TMP_DIR/$(basename "$FILE" .md).json"
+            if [ -f "$RESULT_FILE" ]; then
+              jq --arg file "$FILE" '. + {file: $file}' "$RESULT_FILE" > "${RESULT_FILE}.tmp" && mv "${RESULT_FILE}.tmp" "$RESULT_FILE"
+              echo "::notice::Result written to $RESULT_FILE"
+            else
+              echo "::warning::Expected result file not found: $RESULT_FILE"
+            fi
+          done
+
+          # Merge all results
+          # Remove old all-results.json if it exists to avoid circular inclusion
+          rm -f $ALL_RESULTS_FILE
+          # Merge all result files
+          if ls $TMP_DIR/*.json 1> /dev/null 2>&1; then
+            jq -s '.' $TMP_DIR/*.json > $ALL_RESULTS_FILE
+          else
+            echo '[]' > $ALL_RESULTS_FILE
+          fi
+
+          # Check for high severity issues
+          HIGH_COUNT=$(jq '[.[] | .issues[]? | select(.severity >= 3)] | length' $ALL_RESULTS_FILE)
+          echo "has_high_severity=$( [ "$HIGH_COUNT" -gt 0 ] && echo true || echo false )" >> $GITHUB_OUTPUT
+
+          [ "$HIGH_COUNT" -gt 0 ] && echo "::error::Found $HIGH_COUNT high/critical issues" && exit 1
+          echo "::notice::No high/critical issues found"
+
+      - name: Generate PR comment
+        if: always() && steps.changed-files.outputs.count > 0
+        run: |
+          cat > $PR_COMMENT_FILE <<EOF
+          ## :clipboard: Prompt Quality Validation Report
+
+          $( [ "${{ steps.validate.outputs.has_high_severity }}" = "true" ] && echo "### :x: Validation Failed" || echo "### :white_check_mark: Validation Passed" )
+
+          ### Summary by File
+
+          | File | :red_circle: Critical | :orange_circle: High | :yellow_circle: Low | Status |
+          |------|-------------|---------|--------|--------|
+          EOF
+
+          # Generate summary table
+          jq -c '.[]' $ALL_RESULTS_FILE | while read -r result; do
+            FILE=$(echo "$result" | jq -r '.file')
+
+            if echo "$result" | jq -e '.error' > /dev/null 2>&1; then
+              echo "| \`$FILE\` | - | - | - | :x: Error |" >> $PR_COMMENT_FILE
+            else
+              ISSUES=$(echo "$result" | jq '[.issues | sort_by(.severity) | reverse[]]')
+              CRITICAL=$(echo "$ISSUES" | jq '[.[] | select(.severity == 5)] | length')
+              HIGH=$(echo "$ISSUES" | jq '[.[] | select(.severity == 3 or .severity == 4)] | length')
+              LOW=$(echo "$ISSUES" | jq '[.[] | select(.severity == 1 or .severity == 2)] | length')
+              TOTAL=$(echo "$ISSUES" | jq 'length')
+
+              if [ "$TOTAL" -eq 0 ]; then
+                STATUS=":white_check_mark: Pass"
+              elif [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+                STATUS=":x: Fail"
+              else
+                STATUS=":warning: Warning"
+              fi
+
+              echo "| \`$FILE\` | $CRITICAL | $HIGH | $LOW | $STATUS |" >> $PR_COMMENT_FILE
+            fi
+          done
+
+          echo -e "\n---\n" >> $PR_COMMENT_FILE
+
+          # Process each file with detailed issues
+          jq -c '.[]' $ALL_RESULTS_FILE | while read -r result; do
+            FILE=$(echo "$result" | jq -r '.file')
+
+            if echo "$result" | jq -e '.error' > /dev/null 2>&1; then
+              echo -e "### :page_facing_up: \`$FILE\`\n" >> $PR_COMMENT_FILE
+              echo "**Error:** $(echo "$result" | jq -r '.error')" >> $PR_COMMENT_FILE
+              echo -e "\n---\n" >> $PR_COMMENT_FILE
+              continue
+            fi
+
+            # Show issues first
+            ISSUES=$(echo "$result" | jq '[.issues | sort_by(.severity) | reverse[]]')
+
+            if [ "$(echo "$ISSUES" | jq 'length')" -eq 0 ]; then
+              echo "#### :white_check_mark: No Issues Found" >> $PR_COMMENT_FILE
+              echo "" >> $PR_COMMENT_FILE
+            else
+              echo "#### :warning: Issues Found" >> $PR_COMMENT_FILE
+              echo "" >> $PR_COMMENT_FILE
+              cat >> $PR_COMMENT_FILE <<EOF
+          | Severity | Gate | Details |
+          |----------|------|---------|
+          EOF
+              echo "$ISSUES" | jq -r '.[] | [
+                (if .severity == 5 then ":red_circle: Critical"
+                 elif (.severity == 4 or .severity == 3) then ":orange_circle: High"
+                 elif (.severity == 2 or .severity == 1) then ":yellow_circle: Low"
+                 else ":white_circle: Unknown" end),
+                .gate, .problem, .reason, .solution] | @tsv' | \
+              while IFS=$'\t' read -r sev gate prob reason sol; do
+                echo "| $sev | $gate | **Problem:**<br> $prob<br>**Reason:**<br> $reason<br>**Solution:**<br> $sol |" >> $PR_COMMENT_FILE
+              done
+              echo "" >> $PR_COMMENT_FILE
+            fi
+
+            # Then show file name
+            echo -e "### :page_facing_up: \`$FILE\`\n" >> $PR_COMMENT_FILE
+
+            # Then show gates comparison with scores
+            echo "$result" | jq -e '.gates' > /dev/null 2>&1 && {
+              echo "#### :bar_chart: Gates Comparison" >> $PR_COMMENT_FILE
+              echo "" >> $PR_COMMENT_FILE
+              echo "| Gate | Score | Comparison |" >> $PR_COMMENT_FILE
+              echo "|------|-------|------------|" >> $PR_COMMENT_FILE
+
+              echo "$result" | jq -r '.gates | to_entries | map(select(.value.comparison != 3)) | .[] |
+                [.key,
+                 .value.score,
+                 (if .value.comparison == 5 then ":white_check_mark: Much better"
+                  elif .value.comparison == 4 then ":arrow_up: Slightly better"
+                  elif .value.comparison == 2 then ":arrow_down: Slightly worse"
+                  elif .value.comparison == 1 then ":x: Much worse"
+                  else ":arrow_right: No change" end)] | @tsv' | \
+              while IFS=$'\t' read -r gate score change; do
+                echo "| $gate | $score | $change |" >> $PR_COMMENT_FILE
+              done
+
+              echo "" >> $PR_COMMENT_FILE
+            }
+
+            echo -e "\n---\n" >> $PR_COMMENT_FILE
+          done
+
+      - name: Post PR comment
+        if: always() && steps.changed-files.outputs.count > 0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Posting PR comment..."
+
+          # Use gh CLI to create PR comment
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file $PR_COMMENT_FILE
+
+          echo "::notice::PR comment posted"
+
+      - name: Summary
+        if: always()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## Prompt Validation Summary
+
+          - **Files validated:** ${{ steps.changed-files.outputs.count }}
+          - **Status:** $( [ "${{ steps.validate.outputs.has_high_severity }}" = "true" ] && echo ":x: Failed" || echo ":white_check_mark: Passed" )
+          EOF

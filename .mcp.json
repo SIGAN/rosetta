@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "Rosetta": {
+      "type": "http",
+      "url": "https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp",
+      "transport": {
+        "type": "http"
+      }
+    }
+  }
+}

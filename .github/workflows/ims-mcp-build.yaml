@@ -1,0 +1,89 @@
+name: IMS MCP Docker Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - v2
+    paths:
+      - 'ims-mcp-server/ims_mcp/**'
+      - 'ims-mcp-server/pyproject.toml'
+      - '.github/workflows/ims-mcp-build.yaml'
+      - 'ims-mcp-server/Dockerfile'
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  id-token: write
+
+jobs:
+  prepare-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract-version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Extract version from pyproject.toml
+        id: extract-version
+        run: |
+          VERSION=$(grep '^version = ' ims-mcp-server/pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          echo "Extracted version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install mypy
+        run: |
+          python -m pip install --upgrade pip
+          pip install mypy
+
+      - name: Run type validation
+        run: |
+          chmod +x validate-types.sh
+          ./validate-types.sh
+
+  build:
+    needs:
+      - prepare-version
+      - typecheck
+    uses: griddynamics/cto-rnd-evergreen-gha/.github/workflows/evergreen-build.yaml@feature/app-version
+    with:
+      image-name: 'gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp'
+      build-context: 'ims-mcp-server'
+      dockerfile: 'ims-mcp-server/Dockerfile'
+      app-version: ${{ needs.prepare-version.outputs.version }}
+
+  report-image:
+    name: Report built image tag
+    runs-on: ubuntu-latest
+    needs:
+      - prepare-version
+      - build
+    steps:
+      - name: Publish image details
+        env:
+          IMAGE_NAME: us-central1-docker.pkg.dev/gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp
+          IMAGE_TAG: ${{ needs.build.outputs['image-tag'] }}
+          APP_VERSION: ${{ needs.prepare-version.outputs.version }}
+        run: |
+          echo "::notice title=Built image tag::$IMAGE_TAG"
+          {
+            echo "## IMS MCP image"
+            echo
+            echo "- Version: \`$APP_VERSION\`"
+            echo "- Tag: \`$IMAGE_TAG\`"
+            echo "- Image: \`$IMAGE_NAME:$IMAGE_TAG\`"
+          } >> "$GITHUB_STEP_SUMMARY"

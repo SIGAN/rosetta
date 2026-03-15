@@ -1,0 +1,15 @@
+# RAGFlow IMS Publishing Tools - Requirements
+# Python version: >=3.12, <3.15 (ragflow-sdk 0.23.1 requirement)
+
+# RAGFlow SDK
+ragflow-sdk==0.23.1
+
+# Configuration
+python-dotenv==1.0.0
+python-frontmatter>=1.1.0,<2.0.0
+
+# Progress bars
+tqdm>=4.67.0
+
+# Utilities
+pathlib2==2.3.7; python_version < '3.4'

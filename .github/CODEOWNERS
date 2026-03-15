@@ -3,3 +3,14 @@
 
 # Docs site
 docs/web/** @omaiesh
+
+# Granular code ownership
+/instructions/ @k-bieniek @scappuccino-grid @vveseliak-ops 
+/docs/ @k-bieniek @scappuccino-grid @vveseliak-ops
+/plans/ @k-bieniek @scappuccino-grid @vveseliak-ops
+/*.md @k-bieniek @scappuccino-grid @vveseliak-ops
+
+.github/ @kkhristenko51
+/tools @kkhristenko51
+/ims-mcp-server @kkhristenko51
+/deployment @kkhristenko51

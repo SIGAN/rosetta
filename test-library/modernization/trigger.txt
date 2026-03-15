@@ -1,0 +1,9 @@
+instructions/agents/advanced/r1/modernization.md
+instructions/agents/advanced/r1/modernization-analysis.md
+instructions/agents/advanced/r1/modernization-mapping.md
+instructions/agents/advanced/r1/modernization-implement.md
+instructions/agents/advanced/r1/modernization-review.md
+instructions/agents/advanced/r1/modernization-grouping.md
+instructions/agents/advanced/r1/modernization-crossproject.md
+instructions/agents/advanced/r1/modernization-reuse.md
+instructions/agents/advanced/r1/modernization-testing.md

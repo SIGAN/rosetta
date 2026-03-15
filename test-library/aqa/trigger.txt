@@ -1,0 +1,7 @@
+instructions/agents/advanced/r1/aqa.md
+instructions/agents/advanced/r1/aqa-phase1.md
+instructions/agents/advanced/r1/aqa-phase2.md
+instructions/agents/advanced/r1/aqa-phase3.md
+instructions/agents/advanced/r1/aqa-phase4.md
+instructions/agents/advanced/r1/aqa-phase5.md
+instructions/agents/advanced/r1/aqa-phase6.md

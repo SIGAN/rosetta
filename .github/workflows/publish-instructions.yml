@@ -1,0 +1,108 @@
+name: Publish Instructions
+
+# This workflow publishes instructions to the Rosetta Server (RAGFlow)
+# when changes are pushed to the main branch in instructions/ or tools/ folders
+#
+# Required GitHub Secrets:
+#   - RAGFLOW_API_KEY: API key for Rosetta Server authentication
+#
+# Server: https://ims.evergreen.gcp.griddynamics.net/
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'instructions/**'
+      - 'tools/**'
+      - '.github/workflows/publish-instructions.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write  # Required for creating releases
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        working-directory: tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Publish instructions to Rosetta Server
+        working-directory: tools
+        env:
+          RAGFLOW_BASE_URL: ${{ secrets.RAGFLOW_BASE_URL || 'https://ims.evergreen.gcp.griddynamics.net/' }}
+          RAGFLOW_API_KEY: ${{ secrets.RAGFLOW_API_KEY }}
+          RAGFLOW_DATASET_DEFAULT: aia
+          RAGFLOW_DATASET_TEMPLATE: aia-{release}
+        run: |
+          echo "Publishing instructions to Rosetta Server..."
+          echo "Server: $RAGFLOW_BASE_URL"
+          echo "Dataset: $RAGFLOW_DATASET_DEFAULT (template: $RAGFLOW_DATASET_TEMPLATE)"
+          echo ""
+
+          python ims_cli.py publish ../instructions
+
+          echo ""
+          echo "Publishing complete!"
+
+      - name: Create instructions archive
+        run: |
+          cd instructions
+          zip -r ../instructions.zip . -x "*.git*"
+          cd ..
+          echo "Archive size: $(du -h instructions.zip | cut -f1)"
+          echo "Archive created: instructions.zip"
+
+      - name: Get current date and tag
+        id: date
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "tag=instructions-$(date +'%Y-%m-%d')-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.date.outputs.tag }}" \
+            --title "Instructions ${{ steps.date.outputs.date }}" \
+            --notes "## Rosetta Instructions Release
+
+          **Date:** ${{ steps.date.outputs.date }}
+          **Commit:** ${{ github.sha }}
+
+          ### What's Included
+          - All instructions from \`instructions/\` folder
+          - Release: r1 (current production)
+
+          See [README.md](https://github.com/griddynamics/cto-ims-kb/blob/main/README.md) for details." \
+            instructions.zip
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Publishing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Server:** Rosetta Server (RAGFlow)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dataset:** aia (default), aia-r1, aia-r2, etc." >> $GITHUB_STEP_SUMMARY
+          echo "- **Folders:** instructions/" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Tag:** ${{ steps.date.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Download:** [instructions.zip](https://github.com/${{ github.repository }}/releases/latest)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "**Status:** Successfully published to Rosetta Server and GitHub Release" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** Publishing failed" >> $GITHUB_STEP_SUMMARY
+          fi

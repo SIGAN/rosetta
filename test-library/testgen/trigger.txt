@@ -1,0 +1,6 @@
+instructions/agents/core/r1/testgen.md
+instructions/agents/core/r1/testgen-phase1.md
+instructions/agents/core/r1/testgen-phase2.md
+instructions/agents/core/r1/testgen-phase3.md
+instructions/agents/core/r1/testgen-phase4.md
+instructions/agents/core/r1/testgen-phase5.md

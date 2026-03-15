@@ -1,0 +1,279 @@
+"""Instruction retrieval tools."""
+
+from __future__ import annotations
+
+import json
+from collections.abc import Iterable
+
+from ims_mcp.clients.doc_cache import InstructionDocCache
+from ims_mcp.clients.document import DocumentClient
+from ims_mcp.constants import QUERY_LIST_THRESHOLD, TAG_BOOTSTRAP
+from ims_mcp.context import CallContext
+from ims_mcp.services.bundler import Bundler
+from ims_mcp.services.keyword_search import list_docs_with_keyword_fallback
+from ims_mcp.services.query_builder import QueryBuilder
+from ims_mcp.typing_utils import DocumentLike, JsonObject, as_json_object
+from ims_mcp.tools.validation import normalize_query, normalize_relative_path, normalize_tags, normalize_format
+
+
+def _unique_docs(docs: Iterable[DocumentLike]) -> list[DocumentLike]:
+    seen: set[str] = set()
+    out: list[DocumentLike] = []
+    for doc in docs:
+        if doc.id not in seen:
+            out.append(doc)
+            seen.add(doc.id)
+    return out
+
+
+def _extract_tags(doc: DocumentLike) -> set[str]:
+    meta = getattr(doc, "meta_fields", {}) or {}
+    if isinstance(meta, str):
+        try:
+            meta = as_json_object(json.loads(meta))
+        except Exception:
+            meta = {}
+    if not isinstance(meta, dict) and hasattr(meta, "__dict__"):
+        meta = as_json_object({k: v for k, v in vars(meta).items() if k != "rag"})
+    if isinstance(meta, dict):
+        tags = meta.get("tags", [])
+    else:
+        tags = getattr(meta, "tags", [])
+    return {str(tag).lower() for tag in tags if str(tag).strip()}
+
+
+def _filter_docs_by_any_tag(docs: list[DocumentLike], tags: list[str] | None) -> list[DocumentLike]:
+    required = {tag.strip().lower() for tag in (tags or []) if tag and tag.strip()}
+    if not required:
+        return docs
+    return [doc for doc in docs if required & _extract_tags(doc)]
+
+
+def _resource_path(doc: DocumentLike) -> str:
+    meta = getattr(doc, "meta_fields", {}) or {}
+    if isinstance(meta, dict):
+        resource_path = meta.get("resource_path", "")
+        return str(resource_path) if resource_path else ""
+    return getattr(meta, "resource_path", "") or ""
+
+
+async def get_context_instructions(
+    call_ctx: CallContext,
+    document_client: DocumentClient,
+    bundler: Bundler,
+    query_builder: QueryBuilder,
+    topic: str | None = None,
+) -> str:
+    # Compatibility wrapper: get-context semantics are query-instructions
+    # with predefined bootstrap tag.
+    return await query_instructions(
+        call_ctx=call_ctx,
+        document_client=document_client,
+        bundler=bundler,
+        query_builder=query_builder,
+        query=None,
+        tags=[TAG_BOOTSTRAP],
+        topic=topic,
+        _skip_list_threshold=True,
+    )
+
+
+async def query_instructions(
+    call_ctx: CallContext,
+    document_client: DocumentClient,
+    bundler: Bundler,
+    query_builder: QueryBuilder,
+    query: str | None = None,
+    tags: list[str] | None = None,
+    topic: str | None = None,
+    _skip_list_threshold: bool = False,
+) -> str:
+    normalized_query, query_err = normalize_query(query)
+    if query_err:
+        return query_err
+    normalized_tags, tags_err = normalize_tags(tags)
+    if tags_err:
+        return tags_err
+
+    if not normalized_query and not normalized_tags:
+        return "Error: at least one of query or tags is required"
+
+    dataset_name = call_ctx.config.instruction_dataset
+    if not call_ctx.authorizer.can_read(dataset_name, call_ctx.user_email):
+        return "Error: reading instructions is not permitted"
+    dataset_id = call_ctx.dataset_lookup.get_id(dataset_name)
+    if not dataset_id:
+        return f"Error: instruction dataset not found: {dataset_name}"
+
+    try:
+        dataset = call_ctx.ragflow.get_dataset(name=dataset_name)
+    except Exception as exc:
+        return f"Error: failed to open instruction dataset '{dataset_name}': {exc}"
+
+    if not dataset:
+        return f"Error: instruction dataset not found: {dataset_name}"
+
+    docs = []
+
+    # Keyword search: tags via metadata_condition, query via keywords.
+    if normalized_tags or normalized_query:
+        try:
+            docs.extend(
+                list_docs_with_keyword_fallback(
+                    document_client=document_client,
+                    dataset=dataset,
+                    query_builder=query_builder,
+                    tags=normalized_tags,
+                    query=normalized_query,
+                    page_size=1000,
+                )
+            )
+        except Exception as exc:
+            return f"Error: failed to list instruction documents: {exc}"
+
+    # Semantic expansion via retrieve when topic is provided.
+    if topic and topic.strip():
+        try:
+            semantic = call_ctx.ragflow.retrieve(
+                **query_builder.build_retrieve_params(
+                    dataset_ids=[dataset_id],
+                    query=topic.strip(),
+                    tags=normalized_tags,
+                )
+            )
+            for chunk in semantic:
+                if getattr(chunk, "document_id", ""):
+                    docs.extend(document_client.list_docs(dataset=dataset, doc_id=chunk.document_id, page_size=1))
+        except Exception:
+            # Semantic expansion should not block keyword results.
+            pass
+
+    docs = _filter_docs_by_any_tag(_unique_docs(docs), normalized_tags)
+    if not docs:
+        return "No instructions found"
+
+    # When too many results, output listing instead of full content.
+    if not _skip_list_threshold and len(docs) > QUERY_LIST_THRESHOLD:
+        header = (
+            f'Query matched too many files: {len(docs)}, only listing is returned without content. '
+            f'Use query_instructions with guaranteed unique 3-part/2-part tag to read what you need:'
+        )
+        return header + "\n" + bundler.format_as_listing(docs, dataset_name)
+
+    return bundler.bundle(docs, dataset_name)
+
+
+async def list_instructions(
+    call_ctx: CallContext,
+    doc_cache: InstructionDocCache,
+    bundler: Bundler,
+    full_path_from_root: str,
+    format: str | None = None,
+) -> str:
+    """List immediate children (folders and files) under a virtual path prefix."""
+    normalized_format, format_err = normalize_format(format)
+    if format_err:
+        return format_err
+    
+    normalized_prefix = (full_path_from_root or "").strip()
+    dump_all = normalized_prefix.lower() == "all"
+    if normalized_prefix in {"", "/"}:
+        normalized_prefix = ""
+    elif dump_all:
+        normalized_prefix = "all"
+    else:
+        normalized_prefix_result, err = normalize_relative_path(
+            normalized_prefix,
+            field="full_path_from_root",
+        )
+        if err:
+            return err
+        normalized_prefix = normalized_prefix_result or ""
+
+    dataset_name = call_ctx.config.instruction_dataset
+    if not call_ctx.authorizer.can_read(dataset_name, call_ctx.user_email):
+        return "Error: reading instructions is not permitted"
+
+    try:
+        dataset = call_ctx.ragflow.get_dataset(name=dataset_name)
+    except Exception as exc:
+        return f"Error: failed to open instruction dataset '{dataset_name}': {exc}"
+
+    if not dataset:
+        return f"Error: instruction dataset not found: {dataset_name}"
+
+    all_docs = doc_cache.get_all_docs(dataset, dataset_name)
+
+    if dump_all:
+        docs_with_paths = [doc for doc in all_docs if _resource_path(doc)]
+        if not docs_with_paths:
+            return "No instruction files found"
+        
+        # flat format: just sorted, deduplicated resource paths
+        if normalized_format == "flat":
+            header = "List of all instruction files. Use 2-part/3-part tags for querying: folder/file.md or parent/folder/file.md\n"
+            paths = sorted(set(_resource_path(doc) for doc in docs_with_paths if _resource_path(doc)))
+            return header + "\n".join(paths)
+        
+        # XML format (default)
+        header = (
+            "List of all instruction files, without content. "
+            "When acquired, files with duplicate path values are bundled/combined together. "
+            "Use guaranteed unique 3-part/2-part tags to read specific content:"
+        )
+        return header + "\n" + bundler.format_as_listing(docs_with_paths, dataset_name)
+
+    prefix = normalized_prefix
+    if not prefix:
+        # Root level: find top-level segments
+        prefix_with_slash = ""
+    else:
+        prefix_with_slash = prefix + "/"
+
+    folders: set[str] = set()
+    files = []
+
+    for doc in all_docs:
+        rp = _resource_path(doc)
+        if not rp:
+            continue
+
+        if prefix_with_slash:
+            if not rp.startswith(prefix_with_slash):
+                continue
+            remainder = rp[len(prefix_with_slash):]
+        else:
+            remainder = rp
+
+        parts = remainder.split("/")
+        if len(parts) == 1:
+            # Direct child file
+            files.append(doc)
+        elif len(parts) > 1:
+            # Folder (only immediate child)
+            folder_path = prefix_with_slash + parts[0] if prefix_with_slash else parts[0]
+            folders.add(folder_path)
+
+    if not folders and not files:
+        return f"No children found for path prefix: {prefix or '/'}"
+
+    # flat format: just sorted paths (folders and files)
+    if normalized_format == "flat":
+        paths = []
+        # Add folders (already collected as full paths)
+        paths.append(f"List of immediate folders of \"{prefix or '/'}\", no tags.\n")
+        paths.extend(sorted(folders))
+        # Add file paths
+        paths.append(f"List of immediate files of \"{prefix or '/'}\". Use 2-part/3-part tags for querying: folder/file.md or parent/folder/file.md\n")
+        paths.extend(sorted(_resource_path(f) for f in files if _resource_path(f)))
+        return "\n".join(paths)
+
+    # XML format (default)
+    header = (
+        f'List of immediate children of "{prefix or "/"}", without content, '
+        f'use guaranteed unique 3-part/2-part tag to query the content if needed:'
+    )
+    listing = bundler.format_children_listing(
+        sorted(folders), files, dataset_name,
+    )
+    return header + "\n" + listing

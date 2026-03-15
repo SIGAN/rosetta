@@ -1,0 +1,124 @@
+# Validate Test Cases
+#
+# Triggers only when instructions/ folder is updated.
+# For each test-library/* case whose trigger.txt matches changed files:
+# - Copies root to root-new and root-old
+# - Injects instructions (new vs old) into each
+# - Runs prompt-request on both workspaces
+# - Runs prompt-validation (subagent) to compare results
+#
+# Required: Claude Code CLI. Set VALIDATE_CLI_CMD env or use default (claude).
+# CLI runs from workspace: cd <dir> && claude -p "$(cat prompt-file)" --output-format text
+#
+# Optional: ANTHROPIC_API_KEY or Claude Code auth for CI.
+
+name: Validate Test Cases
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'instructions/r2/**'
+      - '.github/workflows/validate-test-cases.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'instructions/r2/**'
+
+permissions:
+  contents: read
+  pull-requests: write  # for PR comments
+
+jobs:
+  validate-test-cases:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    env:
+      PR_COMMENT_FILE: .tmp/pr-comment.md
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install Claude Code CLI
+        run: |
+          echo "Installing Claude Code CLI..."
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Get changed files in instructions folder
+        id: changed
+        run: |
+          echo "Detecting changed files in instructions/ folder..."
+
+          if [ -n "${{ github.event.pull_request.base.ref }}" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            git fetch origin "$BASE_BRANCH"
+            BASE_REF="origin/$BASE_BRANCH"
+          else
+            BASE_REF="HEAD^"
+          fi
+
+          CHANGED_FILES=$(git diff --name-only "$BASE_REF"...HEAD -- 'instructions/**/*.md' 2>/dev/null | tr '\n' ' ' || true)
+
+          echo "Changed files: $CHANGED_FILES"
+          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "count=0" >> $GITHUB_OUTPUT
+          else
+            COUNT=$(echo "$CHANGED_FILES" | wc -w | tr -d ' ')
+            echo "count=$COUNT" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set base SHA
+        id: base
+        if: steps.changed.outputs.count > 0
+        run: |
+          if [ -n "${{ github.event.pull_request.base.ref }}" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            git fetch origin "$BASE_BRANCH"
+            echo "sha=$(git rev-parse origin/$BASE_BRANCH)" >> $GITHUB_OUTPUT
+          else
+            echo "sha=$(git rev-parse HEAD^)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run test case validation
+        id: validate
+        if: steps.changed.outputs.count > 0
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
+          BASE_SHA: ${{ steps.base.outputs.sha }}
+          REPO_ROOT: ${{ github.workspace }}
+          INSTRUCTIONS_NEW: ${{ github.workspace }}/instructions
+          PR_COMMENT_FILE: ${{ github.workspace }}/.tmp/pr-comment.md
+        run: |
+          echo "Running test cases for changed prompts..."
+          chmod +x .github/scripts/run-test-cases.sh
+          .github/scripts/run-test-cases.sh
+
+      - name: Generate PR comment
+        if: always() && github.event_name == 'pull_request' && steps.changed.outputs.count > 0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_COMMENT_FILE: ${{ github.workspace }}/.tmp/pr-comment.md
+        run: |
+          echo "Posting PR comment..."
+
+          # Use gh CLI to create PR comment
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file "$PR_COMMENT_FILE"
+
+          echo "::notice::PR comment posted"
+
+      - name: Summary
+        if: always()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## Prompt Validation Summary
+
+          - **Files validated:** ${{ steps.changed.outputs.count }}
+          - **Status:** $( [ "${{ steps.validate.outputs.status }}" = "failed" ] && echo ":x: Failed" || echo ":white_check_mark: Passed" )

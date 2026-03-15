@@ -30,8 +30,6 @@ env/
 # Environment files
 *.env*
 !env.template
-!tools/local.env
-!tools/remote.env
 
 # Logs
 *.log
@@ -56,6 +54,7 @@ Thumbs.db
 # Project-specific
 server_output.log
 tools/server_output.log
+tools/logs/
 
 # Local data directories
 business/

@@ -1,0 +1,22 @@
+# Templates
+
+- checklist
+- planning
+- specifications
+- functional-requirements
+- non-functional-requirements
+- state-tracking
+- workflow-instance
+- workflow-phase-instance
+- techstack
+- context
+- architecture
+- codemap
+- module-analysis
+- research
+- discovery
+- scenarios
+- analysis
+- validation
+- use-cases
+- data

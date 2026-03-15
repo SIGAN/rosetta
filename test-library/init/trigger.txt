@@ -1,0 +1,9 @@
+instructions/agents/core/r1/init.md
+instructions/agents/core/r1/init-discovery.md
+instructions/agents/core/r1/init-documentation.md
+instructions/agents/core/r1/init-questions.md
+instructions/agents/core/r1/init-templates.md
+instructions/agents/core/r1/init-verification.md
+instructions/agents/core/r1/init-rules.md
+instructions/agents/core/r1/init-commands.md
+instructions/agents/core/r1/init-subagents.md
