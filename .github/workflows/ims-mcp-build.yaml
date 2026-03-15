@@ -2,15 +2,15 @@ name: IMS MCP Docker Build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - v2
-    paths:
-      - 'ims-mcp-server/ims_mcp/**'
-      - 'ims-mcp-server/pyproject.toml'
-      - '.github/workflows/ims-mcp-build.yaml'
-      - 'ims-mcp-server/Dockerfile'
+#  push:
+#    branches:
+#      - main
+#      - v2
+#    paths:
+#      - 'ims-mcp-server/ims_mcp/**'
+#      - 'ims-mcp-server/pyproject.toml'
+#      - '.github/workflows/ims-mcp-build.yaml'
+#      - 'ims-mcp-server/Dockerfile'
 
 permissions:
   contents: read

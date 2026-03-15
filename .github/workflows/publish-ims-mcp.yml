@@ -1,13 +1,13 @@
 name: Publish IMS MCP
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'ims-mcp-server/**'
-      - '.github/workflows/publish-ims-mcp.yml'
-  workflow_dispatch:  # Allow manual trigger
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - 'ims-mcp-server/**'
+#      - '.github/workflows/publish-ims-mcp.yml'
+  workflow_dispatch:
 
 jobs:
   build-test-deploy:

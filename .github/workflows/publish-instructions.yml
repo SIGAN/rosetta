@@ -6,17 +6,17 @@ name: Publish Instructions
 # Required GitHub Secrets:
 #   - RAGFLOW_API_KEY: API key for Rosetta Server authentication
 #
-# Server: https://ims.evergreen.gcp.griddynamics.net/
+# Server: https://ims-dev.evergreen.gcp.griddynamics.net/
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'instructions/**'
-      - 'tools/**'
-      - '.github/workflows/publish-instructions.yml'
-  workflow_dispatch:  # Allow manual trigger
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - 'instructions/**'
+#      - 'tools/**'
+#      - '.github/workflows/publish-instructions.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write  # Required for creating releases
@@ -43,7 +43,7 @@ jobs:
       - name: Publish instructions to Rosetta Server
         working-directory: tools
         env:
-          RAGFLOW_BASE_URL: ${{ secrets.RAGFLOW_BASE_URL || 'https://ims.evergreen.gcp.griddynamics.net/' }}
+          RAGFLOW_BASE_URL: ${{ secrets.RAGFLOW_BASE_URL || 'https://ims-dev.evergreen.gcp.griddynamics.net/' }}
           RAGFLOW_API_KEY: ${{ secrets.RAGFLOW_API_KEY }}
           RAGFLOW_DATASET_DEFAULT: aia
           RAGFLOW_DATASET_TEMPLATE: aia-{release}
