@@ -2,6 +2,26 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-16) — Rosetta CLI domain-scoped orphan cleanup
+
+- Scoped `rosetta-cli` orphan cleanup to `managed_domains_by_dataset` during full-folder publishes.
+- This prevents `publish ../instructions` from one split repo from deleting published documents owned by a different domain in the same release dataset.
+- File updated:
+  - `rosetta-cli/rosetta_cli/ims_publisher.py`
+  - `rosetta-cli/pyproject.toml`
+  - `rosetta-cli/tests/test_publish_domain_scoped_orphan_cleanup.py`
+- Validated with live `--dry-run` publishes against production `aia-r2` using temporary split trees:
+  - `core`-only publish → orphan detection reported `aia-r2: no orphans`
+  - `grid`-only publish → orphan detection reported `aia-r2: no orphans`
+- Added publisher-level dry-run tests covering:
+  - `core`-only publish ignores stale `grid` docs during orphan cleanup
+  - mixed `core` + `grid` publish still reports stale docs from both managed domains
+- Validation completed successfully:
+  - `venv/bin/pytest rosetta-cli/tests/test_publish_domain_scoped_orphan_cleanup.py -q`
+  - `venv/bin/pytest rosetta-cli/tests -q`
+- Bumped Rosetta CLI prerelease version:
+  - `rosetta-cli` `2.0.0b108` → `2.0.0b109`
+
 ### Recent Operations (2026-03-16) — Rosetta CLI publish workflow recovery
 
 - Investigated failing GitHub Actions run `23151464923` for `.github/workflows/publish-rosetta-cli.yml`.

@@ -268,7 +268,15 @@ class ContentPublisher:
         # docs — running orphan detection would delete everything else.
         is_full_publish = folder.name == "instructions" or folder.parent == self.workspace_root
         if is_full_publish:
-            self._cleanup_orphans(all_caches, dry_run)
+            managed_domains_by_dataset: dict[str, set[str]] = {}
+            for cache in all_caches:
+                dataset_name = self._resolve_dataset_name({"release": cache.release})
+                managed_domains_by_dataset.setdefault(dataset_name, set()).add(cache.domain)
+            self._cleanup_orphans(
+                all_caches,
+                dry_run,
+                managed_domains_by_dataset=managed_domains_by_dataset,
+            )
         else:
             print("\nOrphan detection skipped (subfolder publish)")
 
@@ -728,7 +736,12 @@ class ContentPublisher:
                     except Exception as e:
                         print(f"    Warning: Failed to delete duplicate '{original_path}': {e}")
 
-    def _cleanup_orphans(self, all_caches: list[DocumentData], dry_run: bool) -> None:
+    def _cleanup_orphans(
+        self,
+        all_caches: list[DocumentData],
+        dry_run: bool,
+        managed_domains_by_dataset: dict[str, set[str]] | None = None,
+    ) -> None:
         """Delete server documents whose original_path is no longer present locally.
 
         Only touches documents that have a non-empty original_path metadata field.
@@ -751,6 +764,11 @@ class ContentPublisher:
 
         print("\nOrphan detection...")
         for dataset_name, local_paths in local_paths_by_dataset.items():
+            managed_domains = (
+                managed_domains_by_dataset.get(dataset_name, set())
+                if managed_domains_by_dataset
+                else set()
+            )
             dataset = self.client.get_dataset(name=dataset_name)
             if not dataset:
                 continue
@@ -779,10 +797,15 @@ class ContentPublisher:
                 meta = getattr(doc, "meta_fields", {}) or {}
                 if isinstance(meta, dict):
                     original_path = meta.get("original_path", "")
+                    domain = meta.get("domain", "")
                 else:
                     original_path = getattr(meta, "original_path", "")
+                    domain = getattr(meta, "domain", "")
 
                 if not original_path:
+                    continue
+
+                if managed_domains and domain not in managed_domains:
                     continue
 
                 if original_path not in local_paths:
