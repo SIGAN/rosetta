@@ -2,6 +2,23 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-16) — GitHub Actions Node.js 20 deprecation follow-up
+
+- Applied surgical workflow-only action bumps for remaining repo-owned Node 20-era action majors:
+  - `actions/checkout@v4` → `actions/checkout@v5`
+  - `astral-sh/setup-uv@v5` → `astral-sh/setup-uv@v7`
+- Files updated:
+  - `.github/workflows/pages.yml`
+  - `.github/workflows/repo-analysis.yml`
+  - `.github/workflows/repo-implement.yml`
+  - `.github/workflows/repo-plan.yml`
+  - `.github/workflows/validate-prompts.yml`
+  - `.github/workflows/validate-test-cases.yml`
+- Confirmed current upstream Pages actions remain Node 20 based:
+  - `actions/configure-pages@v5`
+  - `actions/deploy-pages@v4`
+- Left upstream-limited Pages actions unchanged to keep the fix surgical.
+
 ### Recent Operations (2026-03-10) — GitHub Actions Node.js 24 migration
 
 - Updated all GitHub Actions workflows to Node.js 24 compatible actions:
