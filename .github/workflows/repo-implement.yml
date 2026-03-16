@@ -1,0 +1,86 @@
+name: Rosetta Story Implementer
+
+# Polls Jira epic CTORNDGAIN-1174 every 4 hours (or on manual trigger).
+# Stories in "Ready for Development" without AI-IMPLEMENTING/AI-IMPLEMENTED labels
+# → parallel implementation subagents that create a branch, write code, and open a PR.
+#
+# Required GitHub Secrets:
+#   - ANTHROPIC_API_KEY
+#   - JIRA_API_KEY
+#   - CONFLUENCE_API_KEY
+#   - JIRA_CONFLUENCE_API_EMAIL
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  # ── Orchestrator ─────────────────────────────────────────────────────────────
+  load-stories:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.load.outputs.impl_matrix }}
+      has_work: ${{ steps.load.outputs.has_impl }}
+      count: ${{ steps.load.outputs.impl_count }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load stories from Jira
+        id: load
+        env:
+          JIRA_URL: https://griddynamics.atlassian.net
+          JIRA_USERNAME: ${{ secrets.JIRA_CONFLUENCE_API_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_KEY }}
+        run: python .github/scripts/load_stories.py
+
+      - name: Summary
+        run: |
+          echo "## Implementer — Story Load" >> $GITHUB_STEP_SUMMARY
+          echo "- Stories to implement: ${{ steps.load.outputs.impl_count }}" >> $GITHUB_STEP_SUMMARY
+
+  # ── Implementation subagents (parallel, one per story) ────────────────────────
+  implement-story:
+    needs: load-stories
+    if: needs.load-stories.outputs.has_work == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+      pull-requests: write
+
+    strategy:
+      matrix: ${{ fromJSON(needs.load-stories.outputs.matrix) }}
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false
+
+      - name: Configure git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Implement — ${{ matrix.story_key }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Story: ${{ matrix.story_key }} — ${{ matrix.story_summary }}
+            MUST APPLY AND FULLY EXECUTE .github/prompts/repo-implement-code.md
+          claude_args: |
+            --allowedTools Read,Write,Edit,MultiEdit,Glob,Grep,Bash(*),mcp__atlassian__jira_get_issue,mcp__atlassian__jira_update_issue,mcp__atlassian__jira_add_comment,mcp__atlassian__jira_get_transitions,mcp__atlassian__jira_transition_issue
+            --mcp-config '{"mcpServers":{"atlassian":{"type":"stdio","command":"uvx","args":["mcp-atlassian"],"env":{"JIRA_URL":"https://griddynamics.atlassian.net","JIRA_USERNAME":"${{ secrets.JIRA_CONFLUENCE_API_EMAIL }}","JIRA_API_TOKEN":"${{ secrets.JIRA_API_KEY }}","CONFLUENCE_URL":"https://griddynamics.atlassian.net","CONFLUENCE_USERNAME":"${{ secrets.JIRA_CONFLUENCE_API_EMAIL }}","CONFLUENCE_API_TOKEN":"${{ secrets.CONFLUENCE_API_KEY }}"}}}}'
+            --model claude-sonnet-4-6
