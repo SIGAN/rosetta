@@ -48,7 +48,7 @@ redis = [
 Homepage = "https://github.com/griddynamics/rosetta"
 Discord = "https://discord.gg/QzZ2cWg36g"
 Website = "https://griddynamics.github.io/rosetta/"
-Support = "mailto:rosetta-support@griddynamics.com"
+Support = "https://github.com/griddynamics/rosetta/issues"
 
 [project.scripts]
 ims-mcp = "ims_mcp.server:main"

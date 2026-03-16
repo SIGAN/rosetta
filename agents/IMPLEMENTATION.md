@@ -2,6 +2,21 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-16) — Rosetta CLI publish workflow recovery
+
+- Investigated failing GitHub Actions run `23151464923` for `.github/workflows/publish-rosetta-cli.yml`.
+- Confirmed the workflow failed during `pip install -r requirements.txt` because current setuptools validation rejects `project.urls.Support = "mailto:..."` in package metadata.
+- Updated package metadata support links to an HTTPS issue tracker URL in:
+  - `rosetta-cli/pyproject.toml`
+  - `ims-mcp-server/pyproject.toml`
+- Bumped Rosetta CLI prerelease version:
+  - `rosetta-cli` `2.0.0b107` → `2.0.0b108`
+- Revalidated the publish path locally using the repo venv:
+  - `venv/bin/pip install -r requirements.txt` → passes
+  - `venv/bin/pytest rosetta-cli/tests -v` → 9 passed
+  - `../venv/bin/python -m build` from `rosetta-cli/` → passes
+  - `../venv/bin/twine check dist/rosetta_cli-2.0.0b108.tar.gz dist/rosetta_cli-2.0.0b108-py3-none-any.whl` → passes
+
 ### Recent Operations (2026-03-16) — GitHub Actions Node.js 20 deprecation follow-up
 
 - Applied surgical workflow-only action bumps for remaining repo-owned Node 20-era action majors:

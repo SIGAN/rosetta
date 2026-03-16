@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rosetta-cli"
-version = "2.0.0b107"
+version = "2.0.0b108"
 description = "Rosetta CLI for publishing knowledge base content to RAGFlow"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -39,7 +39,7 @@ dev = [
 Homepage = "https://github.com/griddynamics/rosetta"
 Discord = "https://discord.gg/QzZ2cWg36g"
 Website = "https://griddynamics.github.io/rosetta/"
-Support = "mailto:rosetta-support@griddynamics.com"
+Support = "https://github.com/griddynamics/rosetta/issues"
 
 [project.scripts]
 rosetta-cli = "rosetta_cli.cli:main"
