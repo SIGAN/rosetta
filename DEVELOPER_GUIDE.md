@@ -63,9 +63,9 @@ rosetta/
 │   ├── ims_mcp/          ← Server source code
 │   ├── tests/            ← Unit tests (pytest)
 │   └── validation/       ← verify_mcp.py integration test
-├── tools/                ← Rosetta CLI (publish, verify, cleanup)
-│   ├── commands/         ← CLI command implementations
-│   ├── services/         ← Shared service layer
+├── rosetta-cli/          ← Rosetta CLI package (PyPI: rosetta-cli)
+│   ├── rosetta_cli/      ← CLI source package
+│   ├── pyproject.toml    ← Package metadata + entrypoints
 │   └── tests/            ← CLI unit tests
 ├── deployment/           ← Helm charts (RAGFlow)
 ├── plugins/              ← IDE plugin definitions
@@ -196,17 +196,16 @@ Add the bootstrap rule to your IDE as defined in [Quick Start — Add Bootstrap 
 Use this when changing publish, verify, or cleanup commands.
 
 ```bash
-cd tools
-bash setup.sh           # One-time: creates venv, installs deps
-source venv/bin/activate
-cp .env.dev .env        # Points at dev RAGFlow instance
-python ims_cli.py verify
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+cp rosetta-cli/.env.dev .env  # Points at dev RAGFlow instance
+venv/bin/rosetta-cli verify
 ```
 
 Preview changes without publishing:
 
 ```bash
-python ims_cli.py publish ../instructions --dry-run
+uvx rosetta-cli@latest publish instructions --dry-run
 ```
 
 The `--dry-run` flag shows what would be published (new, changed, unchanged files) without writing anything to RAGFlow.
@@ -218,7 +217,7 @@ The `--dry-run` flag shows what would be published (new, changed, unchanged file
 ### MCP integration tests
 
 ```bash
-# From repo root, with tools/venv activated
+# From repo root, with the root venv activated
 VERSION=r1 python ims-mcp-server/validation/verify_mcp.py
 VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
 
@@ -232,10 +231,10 @@ Run both r1 and r2. If your change touches Redis-dependent features, run with an
 
 ```bash
 # MCP server tests
-tools/venv/bin/pytest ims-mcp-server/tests
+venv/bin/pytest ims-mcp-server/tests
 
 # CLI tests
-cd tools && PYTHONPATH=. venv/bin/pytest tests
+venv/bin/pytest rosetta-cli/tests
 ```
 
 ### Type checking
@@ -262,10 +261,8 @@ After local validation passes, test end-to-end against the dev environment.
 ### 1. Publish instructions to dev
 
 ```bash
-cd tools
-source venv/bin/activate
-cp .env.dev .env
-python ims_cli.py publish ../instructions
+cp rosetta-cli/.env.dev .env
+uvx rosetta-cli@latest publish instructions
 ```
 
 This publishes to the dev RAGFlow instance. Only changed files are uploaded (MD5-based change detection). Use `--force` to republish everything.
@@ -325,9 +322,9 @@ Add the bootstrap rule to your IDE as defined in [Quick Start — Add Bootstrap 
 If you changed CLI commands, run them against dev with `--dry-run` first, then without:
 
 ```bash
-python ims_cli.py publish ../instructions --dry-run
-python ims_cli.py publish ../instructions
-python ims_cli.py list-collection --collection aia-r2
+uvx rosetta-cli@latest publish instructions --dry-run
+uvx rosetta-cli@latest publish instructions
+venv/bin/rosetta-cli list-dataset --dataset aia-r2
 ```
 
 ---
@@ -342,7 +339,7 @@ python ims_cli.py list-collection --collection aia-r2
 | New/modified rule      | `instructions/r2/core/rules/<name>.md`                | Publish, test via MCP                    |
 | Organization extension | `instructions/r2/<org>/` (same type structure)        | Publish, test via MCP                    |
 | MCP tool or prompt     | `ims-mcp-server/ims_mcp/server.py`, `tool_prompts.py` | verify_mcp.py, pytest, validate-types.sh |
-| CLI command            | `tools/commands/`                                     | pytest, dry-run, publish to dev          |
+| CLI command            | `rosetta-cli/rosetta_cli/commands/`                   | pytest, dry-run, publish to dev          |
 | Website                | `docs/web/`                                           | Local Jekyll build                       |
 | Documentation          | `docs/`, repo root `.md` files                        | Use AI to check consistency              |
 

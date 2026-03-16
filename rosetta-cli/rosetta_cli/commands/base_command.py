@@ -7,9 +7,9 @@ Defines the interface and common functionality for all IMS CLI commands.
 import time
 from abc import ABC, abstractmethod
 
-from ims_config import IMSConfig
-from ragflow_client import RAGFlowClient
-from typing_utils import CommandArgs
+from ..ims_config import IMSConfig
+from ..ragflow_client import RAGFlowClient
+from ..typing_utils import CommandArgs
 
 
 class BaseCommand(ABC):

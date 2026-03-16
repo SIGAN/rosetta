@@ -108,7 +108,7 @@ Prep Step 3 for orchestrator (primary/top agent):
 22. Adopt plan changes with proper ordering/analysis. If something comes up, adapt the plan. Extra work goes later, if logical and user agrees.
 23. Keep orchestrator and subagent contexts below overload thresholds.
 24. Prefer minimal state transitions between orchestration steps.
-25. Subagents ask orchestrator, orchestrator asks user.
+25. Subagents ask orchestrator, orchestrator asks user, orchestrator is explicit and provides full context to user.
 
 </subagents_orchestration_rules>
 

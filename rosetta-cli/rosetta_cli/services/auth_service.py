@@ -8,9 +8,9 @@ Eliminates code duplication across commands.
 import time
 from typing import Any, Dict, Optional
 
-from ims_auth import IMSAuthManager
-from ims_config import IMSConfig
-from ragflow_client import RAGFlowClient
+from ..ims_auth import IMSAuthManager
+from ..ims_config import IMSConfig
+from ..ragflow_client import RAGFlowClient
 
 
 class AuthService:

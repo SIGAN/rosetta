@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Optional, cast
 from ragflow_sdk import RAGFlow
 from ragflow_sdk.modules.dataset import DataSet
 from ragflow_sdk.modules.document import Document
-from typing_utils import DatasetLike, DocumentLike, JsonDict
+from .typing_utils import DatasetLike, DocumentLike, JsonDict
 
 
 

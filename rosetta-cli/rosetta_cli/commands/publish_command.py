@@ -4,12 +4,12 @@ Publish Command - Upload knowledge base content to RAGFlow
 
 from pathlib import Path
 
-from ims_publisher import ContentPublisher
-from services.auth_service import AuthService
-from ims_utils import get_workspace_root
+from ..ims_publisher import ContentPublisher
+from ..services.auth_service import AuthService
+from ..ims_utils import resolve_workspace_root
 
 from .base_command import BaseCommand
-from typing_utils import CommandArgs
+from ..typing_utils import CommandArgs
 
 
 
@@ -40,8 +40,8 @@ class PublishCommand(BaseCommand):
         # Verify authentication
         AuthService.verify_or_exit(self.client, self.config)
         
-        # Initialize publisher
-        workspace_root = get_workspace_root()
+        path = Path(args.path.strip()).resolve()
+        workspace_root = resolve_workspace_root(path)
         
         publisher = ContentPublisher(
             self.client,
@@ -51,7 +51,6 @@ class PublishCommand(BaseCommand):
         )
         
         # Publish
-        path = Path(args.path.strip())
         exit_code = self._publish_path(publisher, path, args)
         
         # Print timing

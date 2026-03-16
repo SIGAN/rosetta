@@ -1,7 +1,7 @@
 name: Publish Instructions
 
 # This workflow publishes instructions to the Rosetta Server (RAGFlow)
-# when changes are pushed to the main branch in instructions/ or tools/ folders
+# when changes are pushed to the main branch in instructions/ or rosetta-cli/ folders
 #
 # Required GitHub Secrets:
 #   - RAGFLOW_API_KEY: API key for Rosetta Server authentication
@@ -14,7 +14,7 @@ on:
 #      - main
 #    paths:
 #      - 'instructions/**'
-#      - 'tools/**'
+#      - 'rosetta-cli/**'
 #      - '.github/workflows/publish-instructions.yml'
   workflow_dispatch:
 
@@ -34,14 +34,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        working-directory: tools
+      - name: Install uv
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install uv
 
       - name: Publish instructions to Rosetta Server
-        working-directory: tools
         env:
           RAGFLOW_BASE_URL: ${{ secrets.RAGFLOW_BASE_URL || 'https://ims-dev.evergreen.gcp.griddynamics.net/' }}
           RAGFLOW_API_KEY: ${{ secrets.RAGFLOW_API_KEY }}
@@ -53,7 +51,7 @@ jobs:
           echo "Dataset: $RAGFLOW_DATASET_DEFAULT (template: $RAGFLOW_DATASET_TEMPLATE)"
           echo ""
 
-          python ims_cli.py publish ../instructions
+          uvx rosetta-cli@latest publish instructions
 
           echo ""
           echo "Publishing complete!"

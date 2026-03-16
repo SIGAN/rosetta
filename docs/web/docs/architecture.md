@@ -57,7 +57,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
                          │
               ┌──────────┴──────────┐
               │    Rosetta CLI      │
-              │   (tools/ims_cli)   │
+              │ (rosetta-cli PyPI)  │
               │                     │
               │  publish · parse    │
               │  verify · cleanup   │
@@ -251,19 +251,19 @@ For RAGFlow internals, see [Rosetta Server](/docs/rosetta-server/).
 
 ## Rosetta CLI
 
-The CLI (`tools/ims_cli.py`) publishes instructions from the instructions repository into RAGFlow. It handles change detection, metadata extraction, frontmatter parsing, and auto-tagging.
+The CLI (`rosetta-cli`, published on PyPI) publishes instructions from the instructions repository into RAGFlow. It handles change detection, metadata extraction, frontmatter parsing, and auto-tagging.
 
 **Core commands:**
 
 | Command | What it does |
 |---|---|
-| `publish ../instructions` | Publish changed files (incremental, MD5-based) |
-| `publish ../instructions --force` | Republish all files regardless of changes |
-| `publish ../instructions --dry-run` | Preview what would be published |
+| `uvx rosetta-cli@latest publish instructions` | Publish changed files (incremental, MD5-based) |
+| `uvx rosetta-cli@latest publish instructions --force` | Republish all files regardless of changes |
+| `uvx rosetta-cli@latest publish instructions --dry-run` | Preview what would be published |
 | `parse` | Trigger server-side document parsing |
 | `verify` | Test connection and health |
-| `list-collection --collection aia-r2` | List documents in a dataset |
-| `cleanup-collection --collection aia-r2` | Delete documents from a dataset |
+| `list-dataset --dataset aia-r2` | List documents in a dataset |
+| `cleanup-dataset --dataset aia-r2` | Delete documents from a dataset |
 
 **Critical rule:** Always publish the entire `/instructions` folder. Never subfolders or single files (breaks tag extraction).
 
@@ -372,18 +372,15 @@ Instructions Repo ──► CLI (publish) ──► RAGFlow ──► Rosetta MC
 
 ### Prerequisites
 
-- Python 3.12 (virtual environment at `tools/venv`)
+- Python 3.12 (virtual environment at repo root: `venv/`)
 
 ### Publishing Instructions
 
 Publish instructions to remote IMS server:
 
 ```bash
-cd tools
-source venv/bin/activate
-cp .env.dev .env
-python ims_cli.py verify
-python ims_cli.py publish ../instructions
+cp rosetta-cli/.env.dev .env
+uvx rosetta-cli@latest publish instructions
 ```
 
 ---
@@ -418,7 +415,7 @@ Where contributors add or change things:
 - **Organization layer:** Create `instructions/r2/<org>/` with the same type structure
 - **MCP tools:** Modify `ims-mcp-server/ims_mcp/server.py`
 - **Tool prompts:** Modify `ims-mcp-server/ims_mcp/tool_prompts.py`
-- **CLI commands:** Add to `tools/commands/`
+- **CLI commands:** Add to `rosetta-cli/rosetta_cli/commands/`
 - **Website:** Edit pages in `docs/web/`
 
 After adding or changing instructions, publish with the CLI to make them available via MCP. See the [Developer Guide — Where to Change What](/docs/developer-guide/#where-to-change-what) for the validation steps per change type.

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from services.document_data import DocumentData
+from rosetta_cli.services.document_data import DocumentData
 
 
 def test_frontmatter_metadata_merge_and_sort_order(tmp_path: Path):

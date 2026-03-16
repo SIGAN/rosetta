@@ -2,11 +2,11 @@
 List Command - Display documents in a dataset
 """
 
-from services.dataset_service import DatasetService
-from services.document_service import DocumentService
+from ..services.dataset_service import DatasetService
+from ..services.document_service import DocumentService
 
 from .base_command import BaseCommand
-from typing_utils import CommandArgs
+from ..typing_utils import CommandArgs
 
 
 class ListCommand(BaseCommand):

@@ -2,11 +2,11 @@
 Cleanup Command - Delete documents from a dataset
 """
 
-from services.dataset_service import DatasetService
-from services.document_service import DocumentService
+from ..services.dataset_service import DatasetService
+from ..services.document_service import DocumentService
 
 from .base_command import BaseCommand
-from typing_utils import CommandArgs, DatasetLike, DocumentLike
+from ..typing_utils import CommandArgs, DatasetLike, DocumentLike
 
 
 class CleanupCommand(BaseCommand):

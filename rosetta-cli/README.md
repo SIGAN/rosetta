@@ -1,10 +1,16 @@
-# IMS Publishing Tools
+# Rosetta CLI
 
 > Knowledge base publishing and management tools powered by RAGFlow
 
 ## 🎯 Overview
 
-This directory contains Python tools for publishing knowledge base content to RAGFlow instances. The tools support multi-environment workflows with smart change detection and auto-metadata extraction.
+This directory contains the Python package for publishing knowledge base content to RAGFlow instances. The CLI supports multi-environment workflows with smart change detection and auto-metadata extraction.
+
+## Community
+
+- [Discord](https://discord.gg/QzZ2cWg36g)
+- [Website](https://griddynamics.github.io/rosetta/)
+- [rosetta-support@griddynamics.com](mailto:rosetta-support@griddynamics.com)
 
 ### Key Features
 
@@ -27,25 +33,17 @@ This directory contains Python tools for publishing knowledge base content to RA
 ## 📁 Contents
 
 ```
-tools/
-├── ims_cli.py              # CLI entry point (333 lines)
-├── commands/               # Command implementations (modular)
-│   ├── base_command.py     # Abstract base class
-│   ├── publish_command.py  # Publish command
-│   ├── verify_command.py   # Verify command
-│   ├── list_command.py     # List dataset command
-│   ├── cleanup_command.py  # Cleanup dataset command
-│   └── parse_command.py    # Parse command
-├── services/               # Shared business logic
-│   ├── auth_service.py     # Authentication operations
-│   ├── dataset_service.py  # Dataset operations
-│   ├── document_service.py # Document operations
-│   └── document_data.py    # Document value object
-├── ims_publisher.py        # Publishing orchestration
-├── ims_config.py           # Configuration management
-├── ragflow_client.py       # RAGFlow SDK wrapper
+rosetta-cli/
+├── pyproject.toml          # Package metadata + console entrypoint
+├── rosetta_cli/            # Installable Python package
+│   ├── cli.py              # CLI entry point
+│   ├── commands/           # Command implementations
+│   ├── services/           # Shared business logic
+│   ├── ims_config.py       # Configuration management
+│   ├── ims_publisher.py    # Publishing orchestration
+│   └── ragflow_client.py   # RAGFlow SDK wrapper
 ├── env.template            # Environment configuration template
-├── requirements.txt        # Python dependencies
+├── tests/                  # CLI unit tests
 └── README.md               # This file
 ```
 
@@ -57,28 +55,22 @@ Complete setup instructions are in [docs/QUICKSTART.md](../docs/QUICKSTART.md). 
 
 - Python 3.12 (required by ragflow-sdk 0.23.1)
 - RAGFlow instance (local via Docker Compose or remote)
-- Virtual environment configured
+- `uvx` for installed CLI usage
+- Root virtual environment configured for local CLI development
 
-### Activate Virtual Environment
+### Installed Usage
 
 ```bash
-cd tools
-source venv/bin/activate
+uvx rosetta-cli@latest verify
 ```
 
-You should see `(venv)` in your terminal prompt.
-
-### Verify Setup
+### Local Development
 
 ```bash
-# Check Python version (should be 3.12.x)
-python --version
-
-# Check installed packages
-pip list | grep ragflow-sdk
-
-# Verify RAGFlow connection
-python ims_cli.py verify
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+cp rosetta-cli/.env.dev .env
+venv/bin/rosetta-cli verify
 ```
 
 ## 🔧 CLI Commands
@@ -91,19 +83,19 @@ All commands support `--env <environment>` flag to override the active environme
 
 ```bash
 # Publish all instructions (only changed files)
-python ims_cli.py publish ../instructions
+uvx rosetta-cli@latest publish ../instructions
 
 # Publish business context
-python ims_cli.py publish ../business
+uvx rosetta-cli@latest publish ../business
 
 # Force republish all files (bypass change detection)
-python ims_cli.py publish ../instructions --force
+uvx rosetta-cli@latest publish ../instructions --force
 
 # Preview changes without publishing
-python ims_cli.py publish ../instructions --dry-run
+uvx rosetta-cli@latest publish ../instructions --dry-run
 
 # Use different environment
-python ims_cli.py publish ../instructions --env production
+uvx rosetta-cli@latest publish ../instructions --env production
 ```
 
 **Performance:**
@@ -132,26 +124,26 @@ Re-parse documents without re-uploading (useful for changing parser settings):
 
 ```bash
 # Parse all unparsed documents
-python ims_cli.py parse
+uvx rosetta-cli@latest parse
 
 # Parse specific dataset
-python ims_cli.py parse --dataset aia-r1
+uvx rosetta-cli@latest parse --dataset aia-r1
 
 # Force re-parse ALL documents
-python ims_cli.py parse --dataset aia-r1 --force
+uvx rosetta-cli@latest parse --dataset aia-r1 --force
 
 # Preview without parsing (dry run)
-python ims_cli.py parse --dataset aia-r1 --dry-run
+uvx rosetta-cli@latest parse --dataset aia-r1 --dry-run
 ```
 
 #### List Documents
 
 ```bash
 # List documents in default dataset
-python ims_cli.py list-dataset
+uvx rosetta-cli@latest list-dataset
 
 # List specific dataset
-python ims_cli.py list-dataset --dataset aia-r1
+uvx rosetta-cli@latest list-dataset --dataset aia-r1
 ```
 
 **Output shows:**
@@ -163,25 +155,25 @@ python ims_cli.py list-dataset --dataset aia-r1
 
 ```bash
 # Preview cleanup without deleting
-python ims_cli.py cleanup-dataset --dataset aia-r1 --dry-run
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --dry-run
 
 # Cleanup documents with specific prefix
-python ims_cli.py cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --dry-run
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --dry-run
 
 # Cleanup documents with specific tags (space-separated)
-python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1 agents" --dry-run
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --tags "r1 agents" --dry-run
 
 # Cleanup documents with specific tags (comma-separated)
-python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1,agents" --dry-run
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --tags "r1,agents" --dry-run
 
 # Force cleanup without confirmation
-python ims_cli.py cleanup-dataset --dataset aia-r1 --force
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --force
 
 # Force cleanup with prefix
-python ims_cli.py cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --force
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --force
 
 # Force cleanup with tags
-python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1,agents" --force
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --tags "r1,agents" --force
 ```
 
 ⚠️ **Warning:** Without `--prefix` or `--tags`, this deletes ALL documents. Use `--dry-run` first.
@@ -197,10 +189,10 @@ python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1,agents" --force
 #### Verify Connection
 
 ```bash
-python ims_cli.py verify
+uvx rosetta-cli@latest verify
 
 # Check production environment
-python ims_cli.py verify --env production
+uvx rosetta-cli@latest verify --env production
 ```
 
 Checks:
@@ -238,8 +230,8 @@ grep "ENVIRONMENT=" .env
 **Method 2: Use --env flag** (temporary override)
 
 ```bash
-python ims_cli.py list-dataset --env local
-python ims_cli.py publish ../instructions --env production
+uvx rosetta-cli@latest list-dataset --env local
+uvx rosetta-cli@latest publish ../instructions --env production
 ```
 
 ### Environment Variables
@@ -270,7 +262,7 @@ RAGFLOW_AUTO_QUESTIONS=0
 ```bash
 cp env.template .env.staging
 nano .env.staging
-python ims_cli.py verify --env staging
+uvx rosetta-cli@latest verify --env staging
 ```
 
 ## 🏗️ Architecture
@@ -282,7 +274,7 @@ python ims_cli.py verify --env staging
 Wrapper around ragflow-sdk:
 
 ```python
-from ragflow_client import RAGFlowClient, DocumentMetadata
+from rosetta_cli.ragflow_client import RAGFlowClient, DocumentMetadata
 
 client = RAGFlowClient(api_key="ragflow-xxx", base_url="http://your-ragflow-instance")
 
@@ -309,7 +301,7 @@ client.get_system_health()
 Configuration management with smart .env discovery:
 
 ```python
-from ims_config import IMSConfig
+from rosetta_cli.ims_config import IMSConfig
 
 # Auto-discover .env (searches cwd, script dir, git root)
 config = IMSConfig.from_env()
@@ -326,7 +318,7 @@ config.validate()
 Publishing logic with metadata extraction:
 
 ```python
-from ims_publisher import ContentPublisher
+from rosetta_cli.ims_publisher import ContentPublisher
 
 publisher = ContentPublisher(client, config, workspace_root)
 
@@ -392,10 +384,10 @@ Tags: [instructions][agents][r1]
 
 ```bash
 # Delete all instruction documents
-python ims_cli.py cleanup-dataset --prefix "[instructions]"
+uvx rosetta-cli@latest cleanup-dataset --prefix "[instructions]"
 
 # Delete all r1 agent documents
-python ims_cli.py cleanup-dataset --prefix "[instructions][agents][r1]"
+uvx rosetta-cli@latest cleanup-dataset --prefix "[instructions][agents][r1]"
 ```
 
 ## 💻 Usage Examples
@@ -403,55 +395,55 @@ python ims_cli.py cleanup-dataset --prefix "[instructions][agents][r1]"
 ### Example 1: First-Time Setup
 
 ```bash
-cd tools
-pip install -r requirements.txt
-cp env.template .env
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+cp rosetta-cli/env.template .env
 nano .env  # Add RAGFLOW_BASE_URL and RAGFLOW_API_KEY
-python ims_cli.py verify
-python ims_cli.py publish ../instructions
+uvx rosetta-cli@latest verify
+uvx rosetta-cli@latest publish instructions
 ```
 
 ### Example 2: Daily Publishing Workflow
 
 ```bash
-python ims_cli.py publish ../instructions --dry-run
-python ims_cli.py publish ../instructions
-python ims_cli.py list-dataset
+uvx rosetta-cli@latest publish ../instructions --dry-run
+uvx rosetta-cli@latest publish ../instructions
+uvx rosetta-cli@latest list-dataset
 ```
 
 ### Example 3: Multi-Environment Publishing
 
 ```bash
 # Publish to dev
-python ims_cli.py publish ../instructions --env dev
+uvx rosetta-cli@latest publish ../instructions --env dev
 
 # Verify on dev
-python ims_cli.py verify --env dev
+uvx rosetta-cli@latest verify --env dev
 
 # Publish to production
-python ims_cli.py publish ../instructions --env prod
+uvx rosetta-cli@latest publish ../instructions --env prod
 ```
 
 ### Example 4: Cleanup and Republish
 
 ```bash
 # Preview deletion
-python ims_cli.py cleanup-dataset --dataset aia-r1 --dry-run
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --dry-run
 
 # Delete all documents
-python ims_cli.py cleanup-dataset --dataset aia-r1 --force
+uvx rosetta-cli@latest cleanup-dataset --dataset aia-r1 --force
 
 # Republish everything
-python ims_cli.py publish ../instructions --force
+uvx rosetta-cli@latest publish ../instructions --force
 ```
 
 ### Example 5: Programmatic Usage
 
 ```python
 from pathlib import Path
-from ragflow_client import RAGFlowClient, DocumentMetadata
-from ims_config import IMSConfig
-from ims_publisher import ContentPublisher
+from rosetta_cli.ragflow_client import RAGFlowClient, DocumentMetadata
+from rosetta_cli.ims_config import IMSConfig
+from rosetta_cli.ims_publisher import ContentPublisher
 
 config = IMSConfig.from_env()
 client = RAGFlowClient(
@@ -500,20 +492,20 @@ Generate new API key:
 ### Error: "Module 'ragflow_sdk' not found"
 
 ```bash
-pip install -r requirements.txt
+venv/bin/pip install -r requirements.txt
 ```
 
 ### Error: "No .env file found"
 
 ```bash
-cp env.template .env
+cp rosetta-cli/env.template .env
 nano .env
 ```
 
 ### Parse Status Shows "FAIL"
 
 1. Check document format (PDF, MD, TXT supported)
-2. Re-trigger parsing: `python ims_cli.py parse --dataset aia-r1 --force`
+2. Re-trigger parsing: `uvx rosetta-cli@latest parse --dataset aia-r1 --force`
 3. Check RAGFlow logs: `docker logs ragflow-server`
 
 ### Slow Publishing Performance
@@ -526,7 +518,7 @@ nano .env
 
 Tags should appear in title with format `[tag1][tag2]`:
 ```bash
-python ims_cli.py list-dataset
+uvx rosetta-cli@latest list-dataset
 # Output: 1. [instructions][agents][r1] agents.md
 ```
 
@@ -536,20 +528,20 @@ python ims_cli.py list-dataset
 
 ```bash
 # Good: Only publishes changed files (~77% faster)
-python ims_cli.py publish ../instructions
+uvx rosetta-cli@latest publish ../instructions
 
 # Bad: Republishes everything
-python ims_cli.py publish ../instructions --force
+uvx rosetta-cli@latest publish ../instructions --force
 ```
 
 ### 2. Use Dry Run to Preview
 
 ```bash
 # Preview (fast)
-python ims_cli.py publish ../instructions --dry-run
+uvx rosetta-cli@latest publish ../instructions --dry-run
 
 # Then publish for real
-python ims_cli.py publish ../instructions
+uvx rosetta-cli@latest publish ../instructions
 ```
 
 ### 3. Optimize Chunking
@@ -566,17 +558,17 @@ RAGFLOW_CHUNK_TOKEN_NUM=1024
 
 ```bash
 # Fast: Delete specific documents
-python ims_cli.py cleanup-dataset --prefix "[instructions][agents]" --force
+uvx rosetta-cli@latest cleanup-dataset --prefix "[instructions][agents]" --force
 
 # Slow: Delete and republish everything
-python ims_cli.py cleanup-dataset --force
-python ims_cli.py publish ../instructions --force
+uvx rosetta-cli@latest cleanup-dataset --force
+uvx rosetta-cli@latest publish ../instructions --force
 ```
 
 ### 5. Monitor Parse Status
 
 ```bash
-python ims_cli.py list-dataset | grep "Parse Status"
+uvx rosetta-cli@latest list-dataset | grep "Parse Status"
 ```
 
 ## 📖 Advanced Topics

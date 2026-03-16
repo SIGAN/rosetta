@@ -23,10 +23,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-from services.document_service import DocumentService
-from services.document_data import DocumentData
-from ragflow_client import DocumentMetadata, RAGFlowClient, RAGFlowClientError
-from typing_utils import DocumentLike, JsonDict
+from .services.document_service import DocumentService
+from .services.document_data import DocumentData
+from .ragflow_client import DocumentMetadata, RAGFlowClient, RAGFlowClientError
+from .typing_utils import DocumentLike, JsonDict
 
 # Extensions RAGFlow can actually parse (from ragflow source: api/utils/file_utils.py).
 # Files with other extensions are uploaded (server stores them) but must NOT be sent to parsing.

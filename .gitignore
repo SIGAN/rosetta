@@ -53,8 +53,8 @@ Thumbs.db
 
 # Project-specific
 server_output.log
-tools/server_output.log
-tools/logs/
+rosetta-cli/server_output.log
+rosetta-cli/logs/
 
 # Local data directories
 business/
@@ -64,7 +64,7 @@ confluence-docs/
 temporary/
 *.tmp
 *.temp
-tools/test-remote-*.sh
+rosetta-cli/test-remote-*.sh
 refsrc/
 
 # Jekyll / GitHub Pages

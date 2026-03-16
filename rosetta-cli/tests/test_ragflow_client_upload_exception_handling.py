@@ -1,4 +1,4 @@
-from ragflow_client import DocumentMetadata, RAGFlowClient, RAGFlowClientError
+from rosetta_cli.ragflow_client import DocumentMetadata, RAGFlowClient, RAGFlowClientError
 
 
 class _UploadedDoc:

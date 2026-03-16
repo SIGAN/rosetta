@@ -2,10 +2,10 @@
 Verify Command - RAGFlow connection verification
 """
 
-from services.auth_service import AuthService
+from ..services.auth_service import AuthService
 
 from .base_command import BaseCommand
-from typing_utils import CommandArgs
+from ..typing_utils import CommandArgs
 
 
 class VerifyCommand(BaseCommand):

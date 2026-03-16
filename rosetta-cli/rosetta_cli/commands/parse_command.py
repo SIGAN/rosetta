@@ -4,14 +4,14 @@ Parse Command - Trigger document parsing without re-uploading
 
 import time
 
-from services.dataset_service import DatasetService
-from services.document_service import DocumentService
-from services.auth_service import AuthService
+from ..services.dataset_service import DatasetService
+from ..services.document_service import DocumentService
+from ..services.auth_service import AuthService
 
 
 
 from .base_command import BaseCommand
-from typing_utils import CommandArgs, DatasetLike, JsonDict
+from ..typing_utils import CommandArgs, DatasetLike, JsonDict
 
 
 class ParseCommand(BaseCommand):

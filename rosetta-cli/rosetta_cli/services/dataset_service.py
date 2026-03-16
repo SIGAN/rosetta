@@ -7,8 +7,8 @@ Eliminates code duplication across commands.
 
 from typing import List, Optional
 
-from ims_config import IMSConfig
-from ragflow_client import RAGFlowClient
+from ..ims_config import IMSConfig
+from ..ragflow_client import RAGFlowClient
 
 
 class DatasetService:

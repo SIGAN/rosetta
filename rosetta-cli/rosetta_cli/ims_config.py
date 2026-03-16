@@ -11,20 +11,25 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from ims_utils import get_workspace_root
-from typing_utils import JsonDict
+from .typing_utils import JsonDict
+
+ENV_FILE_ENV_VAR = "ROSETTA_CLI_ENV_FILE"
+
+
+def _candidate_env_names(env_name: str | None) -> list[str]:
+    names: list[str] = []
+    if env_name:
+        names.append(f".env.{env_name}")
+    names.append(".env")
+    return names
+
 
 def find_env_file(env_name: str | None = None) -> Path | None:
     """
     .env file discovery.
-    
-    Searches for .env files in this order:
-    1. Current working directory with optional suffix (e.g., .env.remote)
-    2. Script's directory (where ims_config.py is located) with optional suffix
-    3. Workspace root (.git directory) with optional suffix
-    4. Fallback: .env in any of the above locations
-    
-    This approach is folder-agnostic and works regardless of project structure.
+
+    Searches for `.env` files in the current working directory and its parents.
+    The optional `ROSETTA_CLI_ENV_FILE` environment variable takes precedence.
     
     Args:
         env_name: Environment name (e.g., "remote", "dev"). If provided,
@@ -40,44 +45,18 @@ def find_env_file(env_name: str | None = None) -> Path | None:
         >>> find_env_file()
         Path('/project/.env')
     """
-    search_paths = []
-    
-    # 1. Current working directory (where command is executed)
-    search_paths.append(Path.cwd())
-    
-    # 2. Script's own directory (where this module lives)
-    script_dir = Path(__file__).parent.absolute()
-    if script_dir != Path.cwd():
-        search_paths.append(script_dir)
-    
-    # 3. Workspace root (directory containing .git)
-    workspace_root = Path.cwd()
-    while workspace_root != workspace_root.parent:
-        if (workspace_root / ".git").exists():
-            if workspace_root not in search_paths:
-                search_paths.append(workspace_root)
-            break
-        workspace_root = workspace_root.parent
-    
-    # Remove duplicates while preserving order
-    search_paths = list(dict.fromkeys(search_paths))
-    
-    # Search for env file with intelligent fallback
-    for search_dir in search_paths:
-        if not search_dir.exists():
-            continue
-        
-        # Try with environment suffix first (e.g., .env.remote)
-        if env_name:
-            env_file = search_dir / f".env.{env_name}"
-            if env_file.exists():
-                return env_file
-        
-        # Fall back to .env without suffix
-        env_file = search_dir / ".env"
-        if env_file.exists():
-            return env_file
-    
+    explicit_env_file = os.getenv(ENV_FILE_ENV_VAR)
+    if explicit_env_file:
+        env_path = Path(explicit_env_file).expanduser()
+        return env_path if env_path.exists() else None
+
+    current = Path.cwd().resolve()
+    for search_dir in (current, *current.parents):
+        for env_filename in _candidate_env_names(env_name):
+            env_path = search_dir / env_filename
+            if env_path.exists():
+                return env_path
+
     return None
 
 
@@ -134,7 +113,8 @@ class IMSConfig:
         
         Args:
             env_file: Explicit path to .env file. If not provided,
-                     uses auto-discovery via find_env_file()
+                     uses auto-discovery via find_env_file(). The
+                     ROSETTA_CLI_ENV_FILE environment variable also works.
             environment: Environment name for auto-discovery (e.g., "remote").
                         Only used if env_file is not provided.
                         Looks for .env.<environment> or .env files.
@@ -172,7 +152,7 @@ class IMSConfig:
                 raise FileNotFoundError(
                     f"No .env file found{env_hint}\n"
                     f"Current directory: {Path.cwd()}\n"
-                    f"Workspace root: {get_workspace_root()}\n"
+                    f"Env override: {os.getenv(ENV_FILE_ENV_VAR, '(not set)')}\n"
                     f"\nPlease create a .env file with RAGFLOW_BASE_URL and RAGFLOW_API_KEY"
                 )
             env_path = discovered_env_path

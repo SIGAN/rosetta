@@ -1,24 +1,4 @@
-"""
-IMS CLI Tool
-
-Command-line interface for publishing knowledge base content to RAGFlow and managing datasets.
-All commands include performance timing measurements.
-
-Usage:
-    python ims_cli.py publish <path> [--dry-run] [--force] [--env <environment>]
-    python ims_cli.py parse --dataset <name> [--force] [--dry-run] [--env <environment>]
-    python ims_cli.py list-dataset [--dataset <name>] [--env <environment>]
-    python ims_cli.py cleanup-dataset [--dataset <name>] [--prefix <prefix>] [--tags <tags>] [--dry-run] [--force] [--env <environment>]
-    python ims_cli.py verify [--env <environment>]
-
-Features:
-    - RAGFlow SDK integration for dataset and document management
-    - API key authentication
-    - Tag-in-title format: [tag1][tag2] filename.ext
-    - Parse command for re-triggering parsing without re-upload
-    - Performance timing for all operations
-    - Publishing averages ~10-15s per file (embedding generation)
-"""
+"""Rosetta CLI entry point."""
 
 
 import argparse
@@ -26,15 +6,15 @@ import sys
 from collections.abc import Callable
 from typing import TypeAlias
 
-from commands.base_command import BaseCommand
-from commands.cleanup_command import CleanupCommand
-from commands.list_command import ListCommand
-from commands.parse_command import ParseCommand
-from commands.publish_command import PublishCommand
-from commands.verify_command import VerifyCommand
-from ims_config import IMSConfig
-from ragflow_client import RAGFlowClient
-from typing_utils import CommandArgs
+from .commands.base_command import BaseCommand
+from .commands.cleanup_command import CleanupCommand
+from .commands.list_command import ListCommand
+from .commands.parse_command import ParseCommand
+from .commands.publish_command import PublishCommand
+from .commands.verify_command import VerifyCommand
+from .ims_config import IMSConfig
+from .ragflow_client import RAGFlowClient
+from .typing_utils import CommandArgs
 
 CommandClass: TypeAlias = Callable[[RAGFlowClient, IMSConfig], BaseCommand]
 
@@ -74,70 +54,70 @@ def execute_command(command_name: str, args: CommandArgs, client: RAGFlowClient,
 def main() -> int:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="IMS Tools - Publish knowledge base content to RAGFlow and manage datasets\n"
+        description="Rosetta CLI - Publish knowledge base content to RAGFlow and manage datasets\n"
                     "All commands include performance timing measurements.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Publish knowledge base content from a folder (with timing)
-  python ims_cli.py publish ../instructions
+  rosetta-cli publish ../instructions
 
   # Publish with dry-run (no actual upload)
-  python ims_cli.py publish ../business --dry-run
+  rosetta-cli publish ../business --dry-run
 
   # Force republish (ignore change detection)
-  python ims_cli.py publish ../instructions --force
+  rosetta-cli publish ../instructions --force
 
   # List documents in dataset
-  python ims_cli.py list-dataset
+  rosetta-cli list-dataset
 
   # List documents in specific dataset
-  python ims_cli.py list-dataset --dataset aia-r1
+  rosetta-cli list-dataset --dataset aia-r1
 
   # Cleanup (delete all documents from) a dataset
-  python ims_cli.py cleanup-dataset --dataset aia-r1
+  rosetta-cli cleanup-dataset --dataset aia-r1
 
   # Preview cleanup with dry-run (shows what would be deleted)
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --dry-run
+  rosetta-cli cleanup-dataset --dataset aia-r1 --dry-run
 
   # Cleanup documents with specific prefix
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --prefix "aqa-phase"
+  rosetta-cli cleanup-dataset --dataset aia-r1 --prefix "aqa-phase"
 
   # Cleanup documents with specific tags (space-separated)
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1 agents"
+  rosetta-cli cleanup-dataset --dataset aia-r1 --tags "r1 agents"
 
   # Cleanup documents with specific tags (comma-separated)
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1,agents"
+  rosetta-cli cleanup-dataset --dataset aia-r1 --tags "r1,agents"
 
   # Preview cleanup with prefix filter
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --dry-run
+  rosetta-cli cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --dry-run
 
   # Preview cleanup with tags filter
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1 agents" --dry-run
+  rosetta-cli cleanup-dataset --dataset aia-r1 --tags "r1 agents" --dry-run
 
   # Cleanup with force (skip confirmation)
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --force
+  rosetta-cli cleanup-dataset --dataset aia-r1 --force
   
   # Cleanup with prefix and force
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --force
+  rosetta-cli cleanup-dataset --dataset aia-r1 --prefix "aqa-phase" --force
 
   # Cleanup with tags and force
-  python ims_cli.py cleanup-dataset --dataset aia-r1 --tags "r1,agents" --force
+  rosetta-cli cleanup-dataset --dataset aia-r1 --tags "r1,agents" --force
 
   # Parse documents in dataset (retry failed/unparsed)
-  python ims_cli.py parse --dataset aia-r1
+  rosetta-cli parse --dataset aia-r1
 
   # Force re-parse all documents (e.g., after changing parser config)
-  python ims_cli.py parse --dataset aia-r1 --force
+  rosetta-cli parse --dataset aia-r1 --force
 
   # Preview which documents would be parsed
-  python ims_cli.py parse --dataset aia-r1 --dry-run
+  rosetta-cli parse --dataset aia-r1 --dry-run
 
   # Verify connection
-  python ims_cli.py verify
+  rosetta-cli verify
 
   # Use different environment
-  python ims_cli.py publish ../instructions --env production
+  rosetta-cli publish ../instructions --env production
 
 Performance Notes:
   - All commands show execution time (⏱️ Total time: X.XXs)
@@ -164,6 +144,12 @@ Frontmatter Metadata (publish flow):
         type=str,
         default=None,
         help='Environment (local, dev, test, production)'
+    )
+    parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
     )
     
     # Subcommands
@@ -206,6 +192,12 @@ Frontmatter Metadata (publish flow):
         default=None,
         help='Environment (local, dev, test, production)'
     )
+    publish_parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
+    )
     
     # Verify command
     verify_parser = subparsers.add_parser(
@@ -217,6 +209,12 @@ Frontmatter Metadata (publish flow):
         type=str,
         default=None,
         help='Environment (local, dev, test, production)'
+    )
+    verify_parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
     )
     
     # List dataset command
@@ -235,6 +233,12 @@ Frontmatter Metadata (publish flow):
         type=str,
         default=None,
         help='Environment (local, dev, test, production)'
+    )
+    list_parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
     )
     
     # Cleanup dataset command
@@ -276,6 +280,12 @@ Frontmatter Metadata (publish flow):
         default=None,
         help='Environment (local, dev, test, production)'
     )
+    cleanup_parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
+    )
     
     # Parse command
     parse_parser = subparsers.add_parser(
@@ -315,6 +325,12 @@ Frontmatter Metadata (publish flow):
         default=None,
         help='Environment (local, dev, test, production)'
     )
+    parse_parser.add_argument(
+        '--env-file',
+        type=str,
+        default=None,
+        help='Explicit path to a .env file'
+    )
     
     # Parse arguments
     args = parser.parse_args()
@@ -326,7 +342,7 @@ Frontmatter Metadata (publish flow):
     
     try:
         # Load configuration
-        config = IMSConfig.from_env(environment=args.env)
+        config = IMSConfig.from_env(env_file=args.env_file, environment=args.env)
         
         # Validate configuration
         config.validate()

@@ -66,8 +66,8 @@ SERVER_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if SERVER_ROOT not in sys.path:
     sys.path.insert(0, SERVER_ROOT)
 
-# Load API keys from repo-root tools/.env if not already set
-env_file = os.path.join(os.path.dirname(__file__), "..", "..", "tools", ".env")
+# Load API keys from repo-root rosetta-cli/.env if not already set
+env_file = os.path.join(os.path.dirname(__file__), "..", "..", "rosetta-cli", ".env")
 if os.path.exists(env_file):
     with open(env_file) as f:
         for line in f:

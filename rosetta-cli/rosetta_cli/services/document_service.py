@@ -9,8 +9,8 @@ import time
 from typing import cast
 
 from tqdm import tqdm
-from ragflow_client import RAGFlowClient
-from typing_utils import DatasetLike, DocumentLike, JsonDict
+from ..ragflow_client import RAGFlowClient
+from ..typing_utils import DatasetLike, DocumentLike, JsonDict
 
 
 class DocumentService:

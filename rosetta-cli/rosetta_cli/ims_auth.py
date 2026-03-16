@@ -9,9 +9,9 @@ Features:
 - System health checks
 """
 
-from ims_config import IMSConfig
-from ragflow_client import AuthenticationError, RAGFlowClient
-from typing_utils import JsonDict
+from .ims_config import IMSConfig
+from .ragflow_client import AuthenticationError, RAGFlowClient
+from .typing_utils import JsonDict
 
 
 class IMSAuthManager:

@@ -6,6 +6,12 @@
 
 This package provides a FastMCP server that connects to Rosetta servers for advanced retrieval-augmented generation (RAG) capabilities. It enables AI assistants like Claude Desktop, Cursor, and other MCP clients to search, retrieve, and manage documents in Rosetta knowledge bases.
 
+## Community
+
+- [Discord](https://discord.gg/QzZ2cWg36g)
+- [Website](https://griddynamics.github.io/rosetta/)
+- [rosetta-support@griddynamics.com](mailto:rosetta-support@griddynamics.com)
+
 ## Features
 
 - 🧭 **Context Bootstrap** - `get_context_instructions` loads bootstrap rules for agent setup

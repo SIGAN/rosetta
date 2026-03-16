@@ -8,7 +8,7 @@ import hashlib
 import uuid
 from typing import List, Optional, cast
 
-from typing_utils import JsonDict, JsonValue
+from ..typing_utils import JsonDict, JsonValue
 
 try:
     import frontmatter
