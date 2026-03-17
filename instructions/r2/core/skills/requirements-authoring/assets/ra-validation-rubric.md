@@ -31,6 +31,7 @@ Fill all fields with true/false plus short notes for any false result.
   </structure>
   <quality>
     <atomicity>[true if each req has one behavior]</atomicity>
+    <groupings_checked>[true if groupings are not requirements in disguise]</groupings_checked>
     <unambiguous>[true if no reasonable misreading exists]</unambiguous>
     <implementation_free>[true if reqs avoid design details]</implementation_free>
     <measurable_nfr>[true if NFRs have metric and threshold]</measurable_nfr>
