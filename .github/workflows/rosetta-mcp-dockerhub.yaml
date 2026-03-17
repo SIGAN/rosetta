@@ -75,13 +75,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_LOGIN }}
-          password: ${{ secrets.DOCKERHUB_PAT }}
+          password: ${{ secrets.DOCKERHUB_OAT }}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: griddynamics/rosetta-mcp
+          images: ${{ secrets.DOCKERHUB_LOGIN }}/rosetta-mcp
           tags: |
             type=raw,value=${{ needs.prepare-version.outputs.version }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && steps.stable.outputs.is_stable == 'true' }}
@@ -105,5 +105,5 @@ jobs:
             echo "## Rosetta MCP image"
             echo
             echo "- Version: \`$IMAGE_TAG\`"
-            echo "- Image: \`griddynamics/rosetta-mcp:$IMAGE_TAG\`"
+            echo "- Image: \`$DOCKERHUB_LOGIN/rosetta-mcp:$IMAGE_TAG\`"
           } >> "$GITHUB_STEP_SUMMARY"
