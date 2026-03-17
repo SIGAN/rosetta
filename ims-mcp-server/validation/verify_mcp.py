@@ -30,11 +30,11 @@ Runtime requirement:
 
 Run examples:
   # Basic test (in-memory plan storage)
-  VERSION=r1 python ims-mcp-server/validation/verify_mcp.py
-  VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
+  cp .env.dev .env && VERSION=r1 venv/bin/python ims-mcp-server/validation/verify_mcp.py
+  cp .env.dev .env && VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py
   
   # Test with Redis backend for plan_manager
-  REDIS_URL="redis://localhost:6379/0" VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
+  cp .env.dev .env && REDIS_URL="redis://localhost:6379/0" VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py
 
 Redis/Valkey Setup (for REDIS_URL testing):
   
@@ -47,7 +47,7 @@ Redis/Valkey Setup (for REDIS_URL testing):
      podman logs rosetta-redis
   
   3. Run tests with Redis:
-     REDIS_URL="redis://localhost:6379/0" VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
+     cp .env.dev .env && REDIS_URL="redis://localhost:6379/0" VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py
   
   4. Stop and cleanup when done:
      podman stop rosetta-redis
@@ -66,8 +66,8 @@ SERVER_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if SERVER_ROOT not in sys.path:
     sys.path.insert(0, SERVER_ROOT)
 
-# Load API keys from repo-root rosetta-cli/.env if not already set
-env_file = os.path.join(os.path.dirname(__file__), "..", "..", "rosetta-cli", ".env")
+# Load API keys from repo-root .env if not already set
+env_file = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
 if os.path.exists(env_file):
     with open(env_file) as f:
         for line in f:

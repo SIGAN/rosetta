@@ -9,7 +9,7 @@ def test_from_env_defaults(monkeypatch):
     monkeypatch.delenv("ROSETTA_API_KEY", raising=False)
     monkeypatch.delenv("ROSETTA_OAUTH_CALLBACK_PATH", raising=False)
     cfg = RosettaConfig.from_env()
-    assert cfg.server_url == "http://localhost:80"
+    assert cfg.server_url == "https://ims.evergreen.gcp.griddynamics.net"
     assert cfg.instruction_dataset == "aia-r2"
     assert cfg.oauth_callback_path == "/auth/callback"
 

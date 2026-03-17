@@ -198,7 +198,7 @@ Use this when changing publish, verify, or cleanup commands.
 ```bash
 python3 -m venv venv
 venv/bin/pip install -r requirements.txt
-cp rosetta-cli/.env.dev .env  # Points at dev RAGFlow instance
+cp .env.dev .env  # Points at dev RAGFlow instance
 venv/bin/rosetta-cli verify
 ```
 
@@ -230,11 +230,11 @@ The `--dry-run` flag shows what would be published (new, changed, unchanged file
 
 ```bash
 # From repo root, with the root venv activated
-VERSION=r1 python ims-mcp-server/validation/verify_mcp.py
-VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
+cp .env.dev .env && VERSION=r1 venv/bin/python ims-mcp-server/validation/verify_mcp.py
+cp .env.dev .env && VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py
 
 # With Redis (tests plan_manager with RedisPlanStore)
-REDIS_URL="redis://localhost:6379/0" VERSION=r2 python ims-mcp-server/validation/verify_mcp.py
+cp .env.dev .env && REDIS_URL="redis://localhost:6379/0" VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py
 ```
 
 Run both r1 and r2. If your change touches Redis-dependent features, run with and without `REDIS_URL`.
@@ -273,7 +273,7 @@ After local validation passes, test end-to-end against the dev environment.
 ### 1. Publish instructions to dev
 
 ```bash
-cp rosetta-cli/.env.dev .env
+cp .env.dev .env
 uvx rosetta-cli@latest publish instructions
 ```
 

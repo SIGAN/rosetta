@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import os
-from dataclasses import dataclass
+from base64 import b64encode
+from dataclasses import dataclass, replace
+from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from ims_mcp.constants import (
     DEFAULT_HTTP_HOST,
@@ -12,10 +17,14 @@ from ims_mcp.constants import (
     DEFAULT_PLAN_TTL_DAYS,
     DEFAULT_POSTHOG_HOST,
     DEFAULT_READ_POLICY,
+    DEFAULT_SERVER_PUBLIC_KEY_PEM,
     DEFAULT_SERVER_URL,
     DEFAULT_USER_EMAIL,
     DEFAULT_VERSION,
     DEFAULT_WRITE_POLICY,
+    ENV_LEGACY_R2R_API_BASE,
+    ENV_LEGACY_R2R_EMAIL,
+    ENV_LEGACY_R2R_PASSWORD,
     ENV_ALLOWED_ORIGINS,
     ENV_FERNET_KEY,
     ENV_HTTP_HOST,
@@ -87,6 +96,140 @@ def _normalize_callback_path(value: str) -> str:
     return normalized
 
 
+def _has_non_empty_env(name: str) -> bool:
+    return bool((os.getenv(name) or "").strip())
+
+
+def _legacy_compatibility_requested() -> bool:
+    return all(
+        _has_non_empty_env(name)
+        for name in (ENV_LEGACY_R2R_API_BASE, ENV_LEGACY_R2R_EMAIL, ENV_LEGACY_R2R_PASSWORD)
+    )
+
+
+def _encrypt_legacy_password(raw_password: str) -> str:
+    try:
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.asymmetric import padding
+    except ModuleNotFoundError as exc:
+        raise ValueError(
+            "Legacy compatibility mode requires the 'cryptography' package to encrypt the RAGFlow password"
+        ) from exc
+
+    public_key = serialization.load_pem_public_key(DEFAULT_SERVER_PUBLIC_KEY_PEM.encode("utf-8"))
+    encrypted = public_key.encrypt(b64encode(raw_password.encode("utf-8")), padding.PKCS1v15())
+    return b64encode(encrypted).decode("utf-8")
+
+
+def _build_request(
+    url: str,
+    *,
+    method: str,
+    headers: dict[str, str] | None = None,
+    payload: dict[str, Any] | None = None,
+) -> Request:
+    request_headers = dict(headers or {})
+    data: bytes | None = None
+    if payload is not None:
+        request_headers.setdefault("Content-Type", "application/json")
+        data = json.dumps(payload).encode("utf-8")
+    return Request(url=url, data=data, headers=request_headers, method=method)
+
+
+def _extract_response_message(body: dict[str, Any], fallback: str) -> str:
+    message = body.get("message")
+    if isinstance(message, str) and message.strip():
+        return message.strip()
+    return fallback
+
+
+def _load_response(request: Request) -> tuple[dict[str, Any], Any]:
+    try:
+        with urlopen(request, timeout=60) as response:
+            charset = response.headers.get_content_charset() or "utf-8"
+            raw_body = response.read().decode(charset)
+            payload = json.loads(raw_body) if raw_body else {}
+            if not isinstance(payload, dict):
+                raise ValueError("legacy compatibility request returned a non-object JSON payload")
+            return payload, response.headers
+    except HTTPError as exc:
+        raw_body = exc.read().decode("utf-8", errors="replace")
+        try:
+            parsed_body = json.loads(raw_body) if raw_body else {}
+        except json.JSONDecodeError:
+            parsed_body = {}
+        message = raw_body.strip() or str(exc.reason)
+        if isinstance(parsed_body, dict):
+            message = _extract_response_message(parsed_body, message)
+        raise ValueError(f"Legacy compatibility request failed: {message}") from exc
+    except URLError as exc:
+        raise ValueError(f"Legacy compatibility request failed: {exc.reason}") from exc
+
+
+def _require_success(body: dict[str, Any], *, action: str) -> None:
+    if body.get("code") == 0:
+        return
+    message = _extract_response_message(body, "unexpected response")
+    raise ValueError(f"Legacy compatibility {action} failed: {message}")
+
+
+def _extract_legacy_token(payload: Any) -> str:
+    if isinstance(payload, list):
+        for item in payload:
+            if isinstance(item, dict):
+                token = item.get("token")
+                if isinstance(token, str) and token.strip():
+                    return token.strip()
+        return ""
+    if isinstance(payload, dict):
+        token = payload.get("token")
+        if isinstance(token, str):
+            return token.strip()
+    return ""
+
+
+def _resolve_legacy_api_key(*, base_url: str, email: str, password: str) -> str:
+    login_request = _build_request(
+        f"{base_url}/v1/user/login",
+        method="POST",
+        payload={"email": email, "password": _encrypt_legacy_password(password)},
+    )
+    login_body, login_headers = _load_response(login_request)
+    _require_success(login_body, action="login")
+
+    auth_header = login_headers.get("Authorization")
+    if not auth_header:
+        raise ValueError("Legacy compatibility login failed: missing Authorization header")
+
+    auth_headers = {"Authorization": auth_header}
+    token_list_request = _build_request(
+        f"{base_url}/v1/system/token_list",
+        method="GET",
+        headers=auth_headers,
+    )
+    token_list_body, _ = _load_response(token_list_request)
+    _require_success(token_list_body, action="token lookup")
+
+    api_key = _extract_legacy_token(token_list_body.get("data"))
+    if api_key:
+        return api_key
+
+    new_token_request = _build_request(
+        f"{base_url}/v1/system/new_token",
+        method="POST",
+        headers=auth_headers,
+        payload={},
+    )
+    new_token_body, _ = _load_response(new_token_request)
+    _require_success(new_token_body, action="token creation")
+
+    api_key = _extract_legacy_token(new_token_body.get("data"))
+    if api_key:
+        return api_key
+
+    raise ValueError("Legacy compatibility token creation failed: missing token in response")
+
+
 @dataclass(frozen=True)
 class RosettaConfig:
     server_url: str
@@ -146,7 +289,7 @@ class RosettaConfig:
         if write_policy not in VALID_POLICIES:
             write_policy = DEFAULT_WRITE_POLICY
 
-        return cls(
+        config = cls(
             server_url=os.getenv(ENV_ROSETTA_SERVER_URL, DEFAULT_SERVER_URL).rstrip("/"),
             version=os.getenv(ENV_VERSION, DEFAULT_VERSION).strip() or DEFAULT_VERSION,
             api_key=os.getenv(ENV_ROSETTA_API_KEY, "").strip(),
@@ -184,6 +327,26 @@ class RosettaConfig:
             user_email=os.getenv(ENV_USER_EMAIL, DEFAULT_USER_EMAIL).strip() or DEFAULT_USER_EMAIL,
             invite_emails=invite_emails,
             plan_ttl_days=_parse_int(os.getenv(ENV_PLAN_TTL_DAYS, ""), DEFAULT_PLAN_TTL_DAYS),
+        )
+        if (
+            config.transport == TRANSPORT_STDIO
+            and not config.api_key
+            and _legacy_compatibility_requested()
+        ):
+            return config.init_legacy_compatibility_mode(
+                base_url=DEFAULT_SERVER_URL.rstrip("/"),
+            )
+        return config
+
+    def init_legacy_compatibility_mode(self, *, base_url: str) -> "RosettaConfig":
+        email = (os.getenv(ENV_LEGACY_R2R_EMAIL) or "").strip()
+        password = os.getenv(ENV_LEGACY_R2R_PASSWORD) or ""
+        api_key = _resolve_legacy_api_key(base_url=base_url, email=email, password=password)
+        return replace(
+            self,
+            server_url=base_url,
+            user_email=email,
+            api_key=api_key,
         )
 
     @property

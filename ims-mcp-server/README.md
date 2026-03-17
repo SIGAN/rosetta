@@ -68,7 +68,7 @@ Rosetta MCP supports two runtime modes:
 
 | Variable | Scope | Default | Notes |
 |----------|-------|---------|-------|
-| `ROSETTA_SERVER_URL` | Runtime (all modes) | `http://localhost:80` | Rosetta Server base URL |
+| `ROSETTA_SERVER_URL` | Runtime (all modes) | `https://ims.evergreen.gcp.griddynamics.net/` | Rosetta Server base URL |
 | `ROSETTA_API_KEY` | Runtime (all modes) | Empty | Required for Rosetta Server access |
 | `VERSION` | Runtime (all modes) | `r1` | Used for instruction dataset resolution (`aia-{version}`) |
 | `ROSETTA_TRANSPORT` | Runtime (all modes) | `stdio` | `stdio` or `http` |
@@ -111,7 +111,7 @@ Rosetta MCP supports two runtime modes:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `ROSETTA_SERVER_URL` | Rosetta Server base URL | `http://localhost:80` |
+| `ROSETTA_SERVER_URL` | Rosetta Server base URL | `https://ims.evergreen.gcp.griddynamics.net/` |
 | `ROSETTA_API_KEY` | API key used by Rosetta MCP to access Rosetta Server | Required |
 | `VERSION` | Instruction release used for instruction dataset resolution (`aia-{version}`) | `r1` |
 | `IMS_DEBUG` | Enable debug logging to stderr (`1/true/yes/on`) | Disabled |

@@ -401,7 +401,7 @@ Required for STDIO transport. Optional otherwise.
 
 | Variable                  | Default                    | Description                                                                                                                                                 |
 | ------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ROSETTA_SERVER_URL`      | `http://localhost:80`      | Rosetta Server base URL. **Required.**                                                                                                                      |
+| `ROSETTA_SERVER_URL`      | `https://ims.evergreen.gcp.griddynamics.net/`      | Rosetta Server base URL. **Required.**                                                                                                                      |
 | `ROSETTA_API_KEY`         | (empty)                    | API key for Rosetta Server access. **Required.**                                                                                                            |
 | `ROSETTA_USER_EMAIL`      | `rosetta@griddynamics.net` | User identity for authorization checks                                                                                                                      |
 | `ROSETTA_MODE`            | `HARD`                     | `HARD` adds more content to context with stricter requirements. `SOFT` is lighter and allows more agent independence, better when bootstrap.md is also used |

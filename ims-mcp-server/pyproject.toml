@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ims-mcp"
-version = "2.0.0b108"
+version = "2.0.0b109"
 description = "Model Context Protocol server for Rosetta (Instruction Management System)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,6 +29,7 @@ dependencies = [
     "mcp>=1.26.0,<2.0.0",
     "fastmcp>=3.1.0,<4",
     "posthog>=7.0.0,<8.0.0",
+    "cryptography>=43.0.0",
     "uuid7-standard>=1.0.0,<2.0.0",
 ]
 
@@ -41,7 +42,6 @@ dev = [
 ]
 redis = [
     "py-key-value-aio[redis]>=0.4.4,<0.5.0",
-    "cryptography>=43.0.0",
 ]
 
 [project.urls]

@@ -2,6 +2,43 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-17) — Root env-file references for CLI and MCP validation docs
+
+- Corrected documentation to use the repo-root env files for local Rosetta development and validation:
+  - `docs/ARCHITECTURE.md`
+  - `DEVELOPER_GUIDE.md`
+- Updated `ims-mcp-server/validation/verify_mcp.py` usage text and env bootstrap to read the repo-root `.env`.
+- Verification completed successfully:
+  - `venv/bin/python -m py_compile ims-mcp-server/validation/verify_mcp.py`
+  - `git diff --check`
+
+### Recent Operations (2026-03-17) — STDIO legacy auth compatibility for old ims-mcp clients
+
+- Added a legacy compatibility path in `ims-mcp-server/ims_mcp/config.py`:
+  - When transport is `stdio`, `ROSETTA_API_KEY` is absent, and `R2R_API_BASE`, `R2R_EMAIL`, and `R2R_PASSWORD` are all present, `RosettaConfig.from_env()` now calls `init_legacy_compatibility_mode()`.
+  - Legacy mode keeps the existing config defaults and only overrides:
+    - `server_url` -> `https://ims.evergreen.gcp.griddynamics.net/`
+    - `user_email` -> `R2R_EMAIL`
+    - `api_key` -> first tenant token from RAGFlow, or a newly created token if none exist.
+- Implemented the login/token bootstrap flow against RAGFlow frontend endpoints:
+  - `POST /v1/user/login` with RSA-encrypted password
+  - `GET /v1/system/token_list`
+  - `POST /v1/system/new_token` when needed
+- Added `R2R_*` environment constants and promoted `cryptography` to a base `ims-mcp` dependency so the RSA password step works in normal `uvx ims-mcp@latest` installs.
+- Added `ims-mcp-server/tests/conftest.py` to clear `R2R_*` env vars in unit tests, preventing accidental live-server auth from CI or developer shells.
+- Updated `docs/RAGFLOW.md` with the observed system-token bootstrap endpoints and the `data.token` usage contract.
+- Validation completed successfully:
+  - `venv/bin/pytest ims-mcp-server/tests`
+  - `./validate-types.sh`
+- Live MCP harness status:
+  - `VERSION=r1 venv/bin/python ims-mcp-server/validation/verify_mcp.py` -> failed because no `ROSETTA_API_KEY` runtime was configured in this shell
+  - `VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py` -> failed because no `ROSETTA_API_KEY` runtime was configured in this shell
+
+### Recent Operations (2026-03-17) — RAGFlow system-token research artifacts
+
+- Added temporary research scripts under `agents/TEMP/ragflow-login-research/` for frontend login/session validation and masked `/v1/system/token_list` inspection.
+- Added a TEMP note documenting that `data.token` with `ragflow-` prefix is the field used for `/api/v1/...` and `ragflow-sdk`, plus the exact `/v1/system/new_token` request/response contract from source.
+
 ### Recent Operations (2026-03-17) — Architecture note for local CLI testing
 
 - Added a short note to `docs/ARCHITECTURE.md` explaining how to test `rosetta-cli` locally without `uv` or `uvx`.

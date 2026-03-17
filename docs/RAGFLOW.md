@@ -12,6 +12,14 @@ Derived from code in:
 - `refsrc/ragflow-0.24.0/api/apps/document_app.py`
 - `refsrc/ragflow-0.24.0/common/metadata_utils.py`
 
+### System Token Bootstrap (Observed)
+
+For tenant-level API access derived from a frontend login session:
+- `POST /v1/user/login` expects the frontend RSA-encrypted password format and returns an `Authorization` response header.
+- `GET /v1/system/token_list` with that `Authorization` header lists tenant tokens.
+- `POST /v1/system/new_token` creates a tenant token when none exist.
+- Use `data.token` from those responses as `Authorization: Bearer <token>` for `/api/v1/...` and `ragflow-sdk`.
+
 ### Metadata Condition (Public API Shape)
 
 For public API payloads/params, `metadata_condition` uses:

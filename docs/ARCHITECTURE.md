@@ -401,7 +401,7 @@ Instructions Repo ──► CLI (publish) ──► RAGFlow ──► Rosetta MC
 ### MCP and Server
 
 MUST use the same venv in both cases: `venv/`.
-There are `rosetta-cli/.env.dev` and `rosetta-cli/.env.prod`.
+There are `.env.dev` and `.env.prod`.
 MUST not read any .env files.
 
 ### Publishing Instructions
@@ -409,7 +409,7 @@ MUST not read any .env files.
 Publish instructions to remote IMS server:
 
 ```bash
-cp rosetta-cli/.env.dev .env
+cp .env.dev .env
 uvx rosetta-cli@latest publish instructions
 ```
 
@@ -431,6 +431,11 @@ If REDIS-dependent feature is affected RUN verify_mcp.py with and without REDIS_
 Must run `./validate-types.sh` if code was changed.
 Do not tail or limit output of `verify_mcp.py`, it is short already.
 Read first 100 lines of `verify_mcp.py` to get instructions ON HOW exactly it should all be done.
+
+Validation command examples:
+- `cp .env.dev .env && VERSION=r1 venv/bin/python ims-mcp-server/validation/verify_mcp.py`
+- `cp .env.dev .env && VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py`
+- `cp .env.dev .env && REDIS_URL="redis://localhost:6379/0" VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py`
 
 Validation notes discovered during real runs:
 - Main MCP unit suite from repo root: `venv/bin/pytest ims-mcp-server/tests`
