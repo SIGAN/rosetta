@@ -17,8 +17,7 @@ baseSchema: docs/schemas/rule.md
 4. Apply `Risk Mitigation Rules`.
 5. Apply `Context Control Rules`.
 6. Suggest user actual solutions to comply with the rules.
-7. Stop and wait for user decision.
-
+7. Stop and wait for explicit user approval before proceeding. Do not assume approval from a question or a partial response.
 </must>
 
 <core_concepts>
