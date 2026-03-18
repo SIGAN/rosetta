@@ -43,13 +43,16 @@ Rules:
 
 ## Phase 3 — Create or Update Stories
 
+Before creating or linking anything, call `mcp__atlassian__jira_get_link_types` once to retrieve the valid link type names for this instance (e.g. `Duplicate`, `Relates`, `Blocks`). Use these names in all subsequent `jira_create_issue_link` calls.
+
 For each improvement found:
 
-1. **Update or skip** if an existing story already covers it: 
+1. **Update or skip** if an existing story already covers it:
    - Update incorrect labels, priority or issue type, any missing detail in description or wrong title
    - Integrate comments
+   - If another story covers the same issue → use `mcp__atlassian__jira_create_issue_link` to mark them as `Duplicate` then skip
    - Close the ticket if there is nothing left to do at all
-2. **Create** if new — use `mcp__atlassian__jira_create_issue`:
+2. **Create** if new — prefer `mcp__atlassian__jira_batch_create_issues` when creating 2 or more stories in a single run (more efficient and atomic); fall back to `mcp__atlassian__jira_create_issue` for a single story:
    - `project`: `CTORNDGAIN`
    - `parent`: `CTORNDGAIN-1174`
    - `issuetype`: `Story` or `Bug`

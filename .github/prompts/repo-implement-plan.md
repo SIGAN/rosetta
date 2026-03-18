@@ -20,9 +20,11 @@ The story key is provided in the prompt that invoked you.
 ## Phase 1 — Claim the Story
 
 1. Fetch full story details via `mcp__atlassian__jira_get_issue`.
-2. Immediately add label `AI-PLANNING` via `mcp__atlassian__jira_update_issue` to prevent
+2. Check development activity via `mcp__atlassian__jira_get_issue_development_info`. If an open PR already exists for this story, post a comment noting the PR URL and stop — planning is likely already done.
+3. Immediately add label `AI-PLANNING` via `mcp__atlassian__jira_update_issue` to prevent
    another agent from processing it concurrently.
-3. Post a Jira comment: `🤖 Planning started by AI agent.`
+4. Check if a planning comment already exists (look for `🤖 Planning started` or `AI-PLANNED` content in existing comments). If found, use `mcp__atlassian__jira_edit_comment` to update it rather than posting a new one.
+5. Post (or update) a Jira comment: `🤖 Planning started by AI agent.`
 
 ## Phase 2 — Review Codebase
 
@@ -52,7 +54,7 @@ Keep it short. A junior engineer should be able to implement this without asking
 
 ## Phase 4 — Write Back to Jira
 
-1. Post the full plan + specs as a Jira comment via `mcp__atlassian__jira_add_comment`.
+1. Post the full plan + specs as a Jira comment via `mcp__atlassian__jira_add_comment`. If a prior planning comment exists (from a previous run), update it with `mcp__atlassian__jira_edit_comment` instead of adding a duplicate.
 2. If there are open questions that block planning, post them as a **separate** comment
    clearly labelled `❓ Open Questions`. Reason through likely answers and include
    2nd-degree questions based on those answers.
@@ -61,8 +63,9 @@ Keep it short. A junior engineer should be able to implement this without asking
    - `title`: `Source: <filepath>`
    - `relationship`: `"relates to"`
    - `icon_url`: `https://github.com/favicon.ico`
-4. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
-5. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
+4. If the plan reveals dependencies on other Jira stories, call `mcp__atlassian__jira_get_link_types` once then use `mcp__atlassian__jira_create_issue_link` to create the appropriate link (e.g. `is blocked by`, `relates to`).
+5. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
+6. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
 
 ## Important Notes
 

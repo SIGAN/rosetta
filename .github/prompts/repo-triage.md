@@ -176,6 +176,8 @@ gh pr comment <NUMBER> --body "<response>"
 
 ## Jira Integration (PR and Issue events only — NOT for `/rosetta` commands)
 
+Before performing any Jira linking, call `mcp__atlassian__jira_get_link_types` once to retrieve the valid issue link type names for this instance. Use these names in all `jira_create_issue_link` calls.
+
 **Every Jira ticket touched or created by this agent MUST have the GitHub URL attached as a "Linked work items" web link** using `mcp__atlassian__jira_add_remote_link`. A Jira comment alone is not sufficient. The remote link is the canonical connection between the GitHub event and the Jira story.
 
 Remote link parameters:
@@ -191,7 +193,8 @@ Pattern: `[A-Z]+-[0-9]+` (e.g. `CTORNDGAIN-1234`).
 1. Verify the key exists via `mcp__atlassian__jira_get_issue`.
 2. **Add the GitHub URL as a web link** via `mcp__atlassian__jira_add_remote_link` (relationship: `"mentioned in"`).
 3. Add a Jira comment via `mcp__atlassian__jira_add_comment` with a brief note (e.g. `Linked from GitHub PR #N / Issue #N by Rosetta triage agent.`).
-4. Do NOT create a new Jira issue. Record result as `exists`.
+4. If the triage reveals this PR/issue duplicates or blocks another known Jira story, use `mcp__atlassian__jira_create_issue_link` with the appropriate link type (e.g. `Duplicate`, `Blocks`).
+5. Do NOT create a new Jira issue. Record result as `exists`.
 
 ### Case B — No Jira key referenced
 

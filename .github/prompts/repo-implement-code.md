@@ -22,9 +22,10 @@ The story key is provided in the prompt that invoked you.
 ## Phase 1 — Claim the Story
 
 1. Fetch full story details and all comments via `mcp__atlassian__jira_get_issue`.
-2. Immediately add label `AI-IMPLEMENTING` via `mcp__atlassian__jira_update_issue`.
-3. Post a Jira comment: `🤖 Implementation started by AI agent.`
-4. Read the planning comment (look for the AI-PLANNED output). If missing, abort (see Constraints).
+2. Check development activity via `mcp__atlassian__jira_get_issue_development_info`. If an open branch or PR already exists for this story, post a comment with the existing branch/PR URL, remove `AI-IMPLEMENTING` label, and stop — do not create a duplicate branch.
+3. Immediately add label `AI-IMPLEMENTING` via `mcp__atlassian__jira_update_issue`.
+4. Check if an `AI-IMPLEMENTING` status comment already exists. If found, update it with `mcp__atlassian__jira_edit_comment`; otherwise post a new comment: `🤖 Implementation started by AI agent.`
+5. Read the planning comment (look for the AI-PLANNED output). If missing, abort (see Constraints).
 
 ## Phase 2 — Prepare Branch
 
