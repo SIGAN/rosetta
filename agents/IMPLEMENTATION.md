@@ -2,6 +2,32 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-18) — Agent memory template normalization
+
+- Rewrote `agents/MEMORY.md` to the requested canonical template:
+  - `# AGENT MEMORY`
+  - `## Preventive Rules`
+  - `## What Worked`
+  - `## What Failed`
+  - `## Discoveries`
+- Converted the prior flat notes into generalized `### ... [ACTIVE]` entries so the file stays grep-friendly and reusable across future sessions.
+
+### Recent Operations (2026-03-18) — GitHub Actions Node.js 20 cleanup completion
+
+- Re-inventoried all workflow `uses:` references with `gh api` and verified action runtimes via upstream `action.yml` files instead of relying on major tags alone.
+- Updated `.github/workflows/rosetta-mcp-dockerhub.yaml` to repo-current Node 24-compatible action majors:
+  - `actions/checkout@v4` → `actions/checkout@v5`
+  - `actions/setup-python@v5` → `actions/setup-python@v6`
+  - `docker/login-action@v3` → `docker/login-action@v4`
+  - `docker/metadata-action@v5` → `docker/metadata-action@v6`
+  - `docker/build-push-action@v6` → `docker/build-push-action@v7`
+- Updated `.github/workflows/pages.yml` from `actions/upload-pages-artifact@v3` to `actions/upload-pages-artifact@v4`.
+- Replaced the `griddynamics/cto-rnd-evergreen-gha/.github/workflows/evergreen-build.yaml@feature/app-version` dependency in `.github/workflows/ims-mcp-build.yaml` with an equivalent local Artifact Registry build job so the workflow no longer inherits deprecated Node 20 Docker actions from that external reusable workflow.
+- Confirmed the remaining official Pages setup/deploy actions are still upstream-limited today:
+  - `actions/configure-pages@v5` → `runs.using: node20`
+  - `actions/deploy-pages@v4` → `runs.using: node20`
+- This corrects the earlier March 10 implementation note that had treated `ims-mcp-build.yaml` as fully migrated after only its top-level action refs were updated.
+
 ### Recent Operations (2026-03-17) — Root env-file references for CLI and MCP validation docs
 
 - Corrected documentation to use the repo-root env files for local Rosetta development and validation:

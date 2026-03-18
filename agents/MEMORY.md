@@ -1,13 +1,38 @@
-# Agent Memory
+# AGENT MEMORY
 
-## Packaging
+Generalized reusable lessons from agent sessions.
+Root causes converted into preventive rules, not incident-specific notes.
+Entries are h3 headers with [ACTIVE|RETIRED] status.
+Content: brief, grep-friendly, MECE across sections. Style: one-liner per entry, optional sub-bullets for context.
 
-- Modern setuptools validation can reject `mailto:` values inside `project.urls` in `pyproject.toml`; use HTTPS support URLs in package metadata and keep email addresses in documentation instead.
+## Preventive Rules
 
-## GitHub Actions
+### Prefer HTTPS Metadata Links Over `mailto:` Package URLs [ACTIVE]
+Modern package validation can reject `mailto:` entries in `project.urls`; keep support links as HTTPS URLs and put raw email addresses in docs instead.
 
-- Scheduled integrations can fail on third-party API deprecations without any repo code change; isolate the HTTP call behind a small function and add a regression test for the exact endpoint/method contract before re-running the workflow.
+### Verify Nested Workflow Runtimes Before Closing CI Migrations [ACTIVE]
+GitHub Actions runtime cleanup must inspect both local `uses:` refs and referenced reusable workflows, and confirm upstream `runs.using` values directly before marking the repo migrated.
 
-## Config And Tests
+### Clear Live Auth Environment Triggers In Unit Test Fixtures [ACTIVE]
+When env vars can trigger real authentication, add an autouse fixture that strips them so CI and local unit suites never reach shared services by accident.
 
-- When configuration can trigger live network authentication from environment variables, add an autouse test fixture that clears the trigger vars so unit suites never accidentally hit real shared services from CI or developer shells.
+## What Worked
+
+### Inspecting Upstream `action.yml` With `gh api` Separates Repo Fixes From Upstream Limits [ACTIVE]
+Querying the action metadata directly is a reliable way to prove whether a deprecation warning is fixable in-repo or still blocked by an upstream action publisher.
+
+### Autouse Env Cleanup Fixtures Keep Tests Deterministic [ACTIVE]
+Clearing auth-triggering env vars in test setup prevents flaky networked behavior and keeps unit tests scoped to local code paths.
+
+## What Failed
+
+### Top-Level Workflow Bumps Alone Do Not Guarantee Runtime Migration [ACTIVE]
+Updating only the visible workflow file can leave hidden Node 20 actions in nested reusable workflows and create a false “migration complete” result.
+
+### `mailto:` Values In `project.urls` Break Modern Packaging Validation [ACTIVE]
+Using email links directly in package metadata can fail publish/install validation even when the project otherwise builds correctly.
+
+## Discoveries
+
+### Official GitHub Pages Setup And Deploy Actions Are Still Node 20 Upstream [ACTIVE]
+As of 2026-03-18, `actions/configure-pages@v5` and `actions/deploy-pages@v4` still declare `runs.using: node20`, so those warnings are not removable by a repo-local version bump.

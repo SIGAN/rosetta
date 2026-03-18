@@ -17,11 +17,16 @@ permissions:
   checks: write
   id-token: write
 
+env:
+  GCP_PROJECT_NAME: "gd-gcp-rnd-evergreen"
+  GCP_OIDC_PROVIDER: "projects/945405964360/locations/global/workloadIdentityPools/github/providers/cto-rnd-evergreen-infra"
+
 jobs:
   prepare-version:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract-version.outputs.version }}
+      sha_short: ${{ steps.extract-version.outputs.sha_short }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -30,8 +35,10 @@ jobs:
         id: extract-version
         run: |
           VERSION=$(grep '^version = ' ims-mcp-server/pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          SHA_SHORT=$(git rev-parse --short HEAD)
           echo "Extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
 
   typecheck:
     runs-on: ubuntu-latest
@@ -58,12 +65,59 @@ jobs:
     needs:
       - prepare-version
       - typecheck
-    uses: griddynamics/cto-rnd-evergreen-gha/.github/workflows/evergreen-build.yaml@feature/app-version
-    with:
-      image-name: 'gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp'
-      build-context: 'ims-mcp-server'
-      dockerfile: 'ims-mcp-server/Dockerfile'
-      app-version: ${{ needs.prepare-version.outputs.version }}
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.image_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Authenticate to GCP via OIDC
+        id: gcp-auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.GCP_OIDC_PROVIDER }}
+          service_account: cicd-github-account@${{ env.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+
+      - name: Get container registry credentials
+        id: get-secret
+        uses: google-github-actions/get-secretmanager-secrets@v3
+        with:
+          secrets: |-
+            crtoken:${{ env.GCP_PROJECT_NAME }}/evergreen-gcr-rw
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          platforms: amd64
+
+      - name: Compose image tag
+        id: image-tag
+        env:
+          APP_VERSION: ${{ needs.prepare-version.outputs.version }}
+          SHA_SHORT: ${{ needs.prepare-version.outputs.sha_short }}
+        run: echo "image_tag=${APP_VERSION}-${SHA_SHORT}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to Artifact Registry
+        uses: docker/login-action@v4
+        with:
+          registry: us-central1-docker.pkg.dev
+          username: _json_key
+          password: ${{ steps.get-secret.outputs.crtoken }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: ims-mcp-server
+          file: ims-mcp-server/Dockerfile
+          push: true
+          tags: |
+            us-central1-docker.pkg.dev/gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp:${{ steps.image-tag.outputs.image_tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   report-image:
     name: Report built image tag

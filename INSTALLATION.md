@@ -453,6 +453,9 @@ For environments without network access to Rosetta Server.
 | Antigravity                | `.agent/rules/local-files-mode.md`    |
 | OpenCode                   | `AGENTS.md`                           |
 
+
+For full version: download additional enterprise instructions from respective repositories.
+
 ## Step 2: Add Bootstrap Rule (HTTP and STDIO modes ONLY)
 
 Applies to HTTP and STDIO modes.
