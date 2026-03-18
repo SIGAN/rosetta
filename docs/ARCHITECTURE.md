@@ -78,6 +78,8 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 - **Rosetta HTTP MCP prod:** `https://rosetta.evergreen.gcp.griddynamics.net/mcp` — production MCP endpoint for end users
 - **Rosetta HTTP MCP dev:** `https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp` — dev MCP endpoint for integration testing
 
+> **Note:** The repo's `.mcp.json` (Claude Code contributor config) intentionally points to the **dev** MCP endpoint. Contributors developing Rosetta connect to dev so their in-progress instruction changes are reflected immediately. End users should connect to the production endpoint — see [Installation](../INSTALLATION.md) and [Quickstart](../QUICKSTART.md).
+
 ---
 
 ## Rosetta MCP
