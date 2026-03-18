@@ -24,7 +24,7 @@ Validation: Each phase produces verifiable outputs; reviewer catches issues befo
 
 <discovery phase="1" applies="MEDIUM,LARGE" subagent="discoverer" role="Context discoverer">
 
-1. Gather project context, affected areas, dependencies, constraints. SMALL: orchestrator handles inline.
+1. Gather project context, affected areas, dependencies, constraints, requirements. SMALL: orchestrator handles inline.
 2. Input: user request + `CONTEXT.md` + `ARCHITECTURE.md` + `IMPLEMENTATION.md`. Output: discovery-notes.md in FEATURE PLAN folder.
 3. Recommended skills: `load-context`
 4. Update `agents/coding-flow-state.md`
