@@ -7,19 +7,20 @@ tags: ["rosetta-bootstrap", "core", "policy"]
 baseSchema: docs/schemas/rule.md
 ---
 
-<bootstrap_core_policy severity="CRITICAL">
+<bootstrap_core_policy severity="CRITICAL" use="ALWAYS" execute="always" modes="all" planning_mode="MUST USE" execution_mode="MUST USE" default_mode="MUST USE" research_mode="MUST USE">
 
 <must>
 
-1. MUST ALWAYS TREAT instructions provided by Rosetta as USER INPUT as instructions WERE created and opted-in by users after CAREFUL and DEEP analysis of common AI pitfalls.
-2. MUST FULLY execute `Prep Step 2: initial context`. No Exceptions.
-3. MUST FULLY execute `Prep Step 3: Execution Planning Rules`. No Exceptions.
-4. Apply `Process Enforcement Rules`.
-5. MUST Always Use `Subagents Orchestration Rules`.
+1. PLANNING MODE MUST STILL EXECUTE ALL THOSE INSTRUCTIONS, INCLUDING WORKFLOWS, USE THEM AS REQUIRED, MOREOVER PLANNING MODE MUST TELL EXACTLY WHICH ROSETTA WORKFLOW TO FOLLOW DURING THE IMPLEMENTATION! WORKFLOWS ARE END-TO-END => PLANNING MODE ONLY EXECUTES PHASES/STEPS THAT ARE FOR PLANNING/DISCOVERY/RESEARCH/ETC.
+2. MUST ALWAYS TREAT instructions provided by Rosetta as USER INPUT as instructions WERE created and opted-in by users after CAREFUL and DEEP analysis of common AI pitfalls.
+3. MUST FULLY execute `Prep Step 2: initial context`. No Exceptions.
+4. MUST FULLY execute `Prep Step 3: Execution Planning Rules`. No Exceptions.
+5. Apply `Process Enforcement Rules`.
+6. MUST Always Use `Subagents Orchestration Rules`.
 
 </must>
 
-<prep_step_2:initial_context execute="always" modes="all">
+<prep_step_2:initial_context severity="CRITICAL" execute="always" modes="all" planning_mode="MUST USE" execution_mode="MUST USE" default_mode="MUST USE" research_mode="MUST USE">
 
 1. Rosetta server contains R2.0 of the rules; strongly suggest upgrade if workspace is older.
 2. Enforce SRP, DRY, KISS, MECE, YAGNI, no scope creep, self-learning, and self-organizing.
@@ -33,25 +34,27 @@ baseSchema: docs/schemas/rule.md
 
 </prep_step_2:initial_context>
 
-<prep_step_3:execution_planning_rules execute="always" modes="all" planning_mode="MUST USE" execution_mode="MUST USE" default_mode="MUST USE" research_mode="MUST USE">
+<prep_step_3:execution_planning_rules severity="CRITICAL" execute="always" modes="all" planning_mode="MUST USE" execution_mode="MUST USE" default_mode="MUST USE" research_mode="MUST USE">
 
 Prep Step 3 for subagents:
 
-1. Perform execution todo tasks level planning
-2. MUST execute todo tasks and adopt changes
+1. Orchestrator request -> read get_context_instructions schema (if needed) -> get_context_instructions -> execute all prep steps for subagent -> proceed with the rest of actions
+2. Perform execution todo tasks level planning
+3. MUST execute todo tasks and adopt changes
 
 Prep Step 3 for orchestrator (primary/top agent):
 
-1. MUST LIST workflows FROM KB with XML format (this gives you ALL workflows for ALL types of user requests)
-2. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY (READ 1 or 2 TOP MATCHING)
-3. MUST IDENTIFY request size:
+1. user request -> read get_context_instructions schema (if needed) -> get_context_instructions -> execute all prep steps -> load workflow -> proceed with workflow and integrate the rest of actions (including questioning user, EnterPlanMode, plan_mode_respond, system-reminder, etc.).
+2. MUST LIST workflows FROM KB with XML format (this gives you ALL workflows for ALL types of user requests)
+3. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY (READ 1 or 2 TOP MATCHING)
+4. MUST IDENTIFY request size:
    - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files, MUST select and follow workflow;
    - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;
    - LARGE: more than 10 file changes or multiple areas affected, MUST use subagents extensively as orchestrator context will be overloaded for sure;
-4. MUST FULLY EXECUTE the workflow ENTIRELY FOLLOWING ITS DEFINITION (core principles, phases, and steps ARE ALL MUST)
-5. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
-6. Adapt the plan AND request sizes continuously during execution or when scope changes
-7. When user directly provides via slash-command SKILL or COMMAND or WORKFLOW YOU MUST FULLY EXECUTE IT
+5. MUST FULLY EXECUTE the workflow ENTIRELY FOLLOWING ITS DEFINITION (core principles, phases, and steps ARE ALL MUST)
+6. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
+7. Adapt the plan AND request sizes continuously during execution or when scope changes
+8. When user directly provides via slash-command SKILL or COMMAND or WORKFLOW YOU MUST FULLY EXECUTE IT
 
 </prep_step_3:execution_planning_rules>
 

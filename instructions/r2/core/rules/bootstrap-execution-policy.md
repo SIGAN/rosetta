@@ -15,6 +15,7 @@ baseSchema: docs/schemas/rule.md
 2. Apply `Task Management Rules`.
 3. Apply `Validation Rules`.
 4. Apply `Memory And Self-Learning Rules`.
+5. MUST NOT IGNORE entire set of instructions if one or another activity of the set is impossible to execute. Those inconsistencies MUST BE REPORTED ALWAYS.
 
 </must>
 
