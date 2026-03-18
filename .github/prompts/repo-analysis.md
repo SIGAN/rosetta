@@ -58,6 +58,11 @@ For each improvement found:
    - `labels`: `["AI"]`
    - `priority`: P1 (Highest) to P5 (Lowest)
    - The rest of the fields initialize as you see fit (but keep unassigned)
+   - **Immediately after creation**, add a "Linked work items" web link via `mcp__atlassian__jira_add_remote_link`:
+     - `url`: GitHub permalink to the primary affected file — `https://github.com/<repo>/blob/main/<filepath>`; if multiple files, use the most important one
+     - `title`: `Source: <filepath>`
+     - `relationship`: `"relates to"`
+     - `icon_url`: `https://github.com/favicon.ico`
 3. **Update** if existing story is stale or missing the `AI` label — use `mcp__atlassian__jira_update_issue`.
 
 ## Phase 4 — Update Confluence Automation Page

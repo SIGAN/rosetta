@@ -77,8 +77,13 @@ PR body must include:
 ## Phase 6 — Update Jira Story
 
 1. Post PR link as a Jira comment via `mcp__atlassian__jira_add_comment`.
-2. Update labels: add `AI-IMPLEMENTED`, remove `AI-IMPLEMENTING` via `mcp__atlassian__jira_update_issue`.
-3. Transition story to "In Review" or equivalent if available via
+2. **Add the PR URL as a "Linked work items" web link** via `mcp__atlassian__jira_add_remote_link`:
+   - `url`: the full GitHub PR URL
+   - `title`: `GitHub PR #N: <PR title>`
+   - `relationship`: `"implemented in"`
+   - `icon_url`: `https://github.com/favicon.ico`
+3. Update labels: add `AI-IMPLEMENTED`, remove `AI-IMPLEMENTING` via `mcp__atlassian__jira_update_issue`.
+4. Transition story to "In Review" or equivalent if available via
    `mcp__atlassian__jira_get_transitions` + `mcp__atlassian__jira_transition_issue`.
 
 ## Important Notes

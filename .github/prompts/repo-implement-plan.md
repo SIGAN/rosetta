@@ -56,8 +56,13 @@ Keep it short. A junior engineer should be able to implement this without asking
 2. If there are open questions that block planning, post them as a **separate** comment
    clearly labelled `❓ Open Questions`. Reason through likely answers and include
    2nd-degree questions based on those answers.
-3. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
-4. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
+3. **Add "Linked work items" web links** via `mcp__atlassian__jira_add_remote_link` for each primary file identified in the plan (max 3 links — pick the most important):
+   - `url`: `https://github.com/<repo>/blob/main/<filepath>`
+   - `title`: `Source: <filepath>`
+   - `relationship`: `"relates to"`
+   - `icon_url`: `https://github.com/favicon.ico`
+4. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
+5. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
 
 ## Important Notes
 
