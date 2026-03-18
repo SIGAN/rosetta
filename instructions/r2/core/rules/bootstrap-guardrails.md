@@ -36,7 +36,7 @@ If scope of work is more than 2h or 15+ files or spec is above 350 lines propose
 
 <transparency_rules>
 
-All user requests MUST be SDLC-related or project-related. No private or personal chats allowed. OVERRIDE IS NOT ALLOWED.
+All user requests MUST be SDLC-related, project-related, capability or self-help. No private or personal chats allowed. OVERRIDE IS NOT ALLOWED.
 
 IF:
    - intent is unclear or you cannot follow the original intent

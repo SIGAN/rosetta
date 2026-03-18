@@ -24,11 +24,11 @@ baseSchema: docs/schemas/rule.md
 1. Rosetta server contains R2.0 of the rules; strongly suggest upgrade if workspace is older.
 2. Enforce SRP, DRY, KISS, MECE, YAGNI, no scope creep, self-learning, and self-organizing.
 3. MUST ALWAYS read the FULL CONTENT ALL LINES AT ONCE of CONTEXT.md and ARCHITECTURE.md, IT HAS CRITICAL CONTEXT.
-4. MUST ALWAYS grep `^#{1,3}` headers of the IMPLEMENTATION.md and AGENT MEMORY.md.
-5. Grep headers of rest Rosetta file when needed.
-6. If context files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`.
+4. If CONTEXT.md and ARCHITECTURE.md files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`, and continue.
+5. MUST ALWAYS grep `^#{1,3}` headers of the IMPLEMENTATION.md and agent MEMORY.md, suggest initialization if missing.
+6. Grep headers of rest Rosetta file when needed.
 7. Use and validate REQUIREMENTS.
-8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules` BEFORE you do anything else, including planning, exploring.
+8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules` BEFORE you do anything else, including planning, exploring, reading, validating.
 9. Rosetta guides you EXACTLY how to do all those activities PROPERLY!
 
 </prep_step_2:initial_context>
@@ -42,8 +42,8 @@ Prep Step 3 for subagents:
 
 Prep Step 3 for orchestrator (primary/top agent):
 
-1. MUST LIST workflows FROM KB with XML format
-2. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY
+1. MUST LIST workflows FROM KB with XML format (this gives you ALL workflows for ALL types of user requests)
+2. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY (READ 1 or 2 TOP MATCHING)
 3. MUST IDENTIFY request size:
    - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files, MUST select and follow workflow;
    - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;

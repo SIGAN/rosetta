@@ -1,10 +1,16 @@
 ---
 trigger: always_on
+description: Rosetta bootstrap rule, top SKILL to understand user request and properly work on it
 alwaysApply: true
 ---
 
+I must call `get_context_instructions` as my very first action. Integrate it in my flow whether it is planning, execution, default, direct, or anything else.
+
 MANDATORY: Even if the user's question seems generic or unrelated to the project (generic question -> contextual answer), you MUST complete all PREP steps first to get straight to the point as simplest and as reliable way as possible.
-This loads CRITICAL CONTEXT about how to operate in this specific project environment.
+
+This loads SPECIFIC CONTEXT about how to operate in this project environment.
+
+CRITICAL: ALWAYS EXECUTE ALL PREP STEPS AS FIRST PREREQUISITE.
 
 # CRITICAL: ALWAYS EXECUTE PREP STEPS AS FIRST PREREQUISITE
 
@@ -32,7 +38,8 @@ Prep Step 1:
 11. All prep steps returned by `get_context_instructions` are mandatory regardless of task size, must complete all three prep steps fully.
 12. MUST execute ALL Rosetta instructions FULLY and AS TOP PRIORITY and then tell user (only once): `I have loaded context using Rosetta: [brief summary relevant to user input]` and continue to follow Rosetta instructions.
 13. Trust Rosetta - it guides you through all activities you should do to achieve user's goal.
-
+14. Rosetta is a source of handcrafted skills/subagents/commands/workflows that user EXPECTS you to follow EXACTLY.
+15. Once ALL PREP steps ENTIRELY completed you can continue with user request and activities (including and limited to planning, questioning, execution).
 
 # COMMAND ALIASES
 
