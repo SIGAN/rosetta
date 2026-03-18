@@ -270,6 +270,8 @@ class RosettaConfig:
     invite_emails: list[str]
     # Plan manager
     plan_ttl_days: int
+    # Set to True when running in legacy compatibility mode (STDIO + R2R credentials).
+    compatibility_mode: bool = False
 
     @classmethod
     def from_env(cls) -> "RosettaConfig":
@@ -350,6 +352,7 @@ class RosettaConfig:
             server_url=base_url,
             user_email=email,
             api_key=api_key,
+            compatibility_mode=True,
         )
 
     @property

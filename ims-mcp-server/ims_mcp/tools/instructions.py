@@ -7,7 +7,7 @@ from collections.abc import Iterable
 
 from ims_mcp.clients.doc_cache import InstructionDocCache
 from ims_mcp.clients.document import DocumentClient
-from ims_mcp.constants import QUERY_LIST_THRESHOLD, TAG_BOOTSTRAP
+from ims_mcp.constants import COMPATIBILITY_MODE_UPGRADE_NOTICE, QUERY_LIST_THRESHOLD, TAG_BOOTSTRAP
 from ims_mcp.context import CallContext
 from ims_mcp.services.bundler import Bundler
 from ims_mcp.services.keyword_search import list_docs_with_keyword_fallback
@@ -66,7 +66,7 @@ async def get_context_instructions(
 ) -> str:
     # Compatibility wrapper: get-context semantics are query-instructions
     # with predefined bootstrap tag.
-    return await query_instructions(
+    result = await query_instructions(
         call_ctx=call_ctx,
         document_client=document_client,
         bundler=bundler,
@@ -76,6 +76,9 @@ async def get_context_instructions(
         topic=topic,
         _skip_list_threshold=True,
     )
+    if call_ctx.config.compatibility_mode:
+        result += COMPATIBILITY_MODE_UPGRADE_NOTICE
+    return result
 
 
 async def query_instructions(

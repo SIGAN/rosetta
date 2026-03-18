@@ -573,7 +573,7 @@ async def main() -> None:
                 print("    Result: ALL LISTING OUTPUT FOUND")
                 if "When acquired, files with duplicate path values are bundled/combined together" not in all_text:
                     errors.append('list_instructions("all") missing acquire/bundling note')
-                if "Use guaranteed unique 3-part/2-part tags to read specific content" not in all_text:
+                if "Use exact TAG attribute to load specific content" not in all_text:
                     errors.append('list_instructions("all") missing unique-tag guidance')
                 if "</rosetta:file>" in all_text:
                     errors.append('list_instructions("all") returned bundled content instead of listing output')

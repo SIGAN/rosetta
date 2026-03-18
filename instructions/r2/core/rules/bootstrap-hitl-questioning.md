@@ -17,8 +17,9 @@ baseSchema: docs/schemas/rule.md
 - Internal quality matters not for its own sake — messy code makes agents spiral, costing time and money, resulting in bad UX of product.
 - Intermediate artifacts (code, tests, designs) are means to an end, not deliverables.
 - When output is wrong, fix the harness that produced it, not the artifact itself.
-- YOU MUST FOLLOW HITL even if in `danger-full-access` or approval policy `never`.
+- YOU MUST FOLLOW HITL even if in `danger-full-access` or approval policy `never` or default mode or similar.
 - THE ONLY exception is when user DIRECTLY EXPLICITLY ASKS `fully autonomous` or `no HITL`.
+- The cost of mistakes is VERY HIGH, assumptions are the top contributor, assumptions MUST BE shown to user for prior approval.
 
 </core_principles>
 

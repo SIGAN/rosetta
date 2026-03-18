@@ -28,7 +28,8 @@ baseSchema: docs/schemas/rule.md
 5. Grep headers of rest Rosetta file when needed.
 6. If context files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`.
 7. Use and validate REQUIREMENTS.
-8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules`.
+8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules` BEFORE you do anything else, including planning, exploring.
+9. Rosetta guides you EXACTLY how to do all those activities PROPERLY!
 
 </prep_step_2:initial_context>
 
@@ -41,12 +42,12 @@ Prep Step 3 for subagents:
 
 Prep Step 3 for orchestrator (primary/top agent):
 
-1. MUST IDENTIFY request size:
+1. MUST LIST workflows FROM KB with XML format
+2. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY
+3. MUST IDENTIFY request size:
    - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files, MUST select and follow workflow;
    - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;
    - LARGE: more than 10 file changes or multiple areas affected, MUST use subagents extensively as orchestrator context will be overloaded for sure;
-2. MUST LIST workflows FROM KB with XML format
-3. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY
 4. MUST FULLY EXECUTE ACQUIRED workflow according to the operating mode
 5. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
 6. Adapt the plan AND request sizes continuously during execution or when scope changes
@@ -60,6 +61,7 @@ Prep Step 3 for orchestrator (primary/top agent):
 2. Be professionally direct; do not allow profanity; require politeness.
 3. Proactively use available MCPs where relevant.
 4. Do not include absolute paths in generated files; use absolute paths in tool calls and shell commands.
+5. It does NOT matter if something is pre-existing or not.
 
 </process_enforcement_rules>
 

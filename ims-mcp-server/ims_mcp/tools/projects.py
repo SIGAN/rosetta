@@ -6,7 +6,7 @@ import json
 from typing import cast
 
 from ims_mcp.clients.document import DocumentClient
-from ims_mcp.constants import PROJECT_DATASET_PREFIX, XML_DATASET
+from ims_mcp.constants import COMPATIBILITY_MODE_ERROR, PROJECT_DATASET_PREFIX, XML_DATASET
 from ims_mcp.context import CallContext
 from ims_mcp.services.bundler import Bundler
 from ims_mcp.services.invite import auto_invite
@@ -94,6 +94,8 @@ async def query_project_context(
     tags: list[str] | None = None,
     topic: str | None = None,
 ) -> str:
+    if call_ctx.config.compatibility_mode:
+        return COMPATIBILITY_MODE_ERROR
     normalized_repo, repo_err = normalize_project_name(repository_name)
     if repo_err:
         return repo_err
@@ -174,6 +176,8 @@ async def store_project_context(
     content: str,
     force: bool = False,
 ) -> str:
+    if call_ctx.config.compatibility_mode:
+        return COMPATIBILITY_MODE_ERROR
     normalized_repo, repo_err = normalize_project_name(repository_name)
     if repo_err:
         return repo_err
@@ -257,6 +261,8 @@ async def store_project_context(
 
 async def discover_projects(call_ctx: CallContext, query: str | None = None) -> str:
     """List all project datasets (``project-*``), returning names with prefix stripped."""
+    if call_ctx.config.compatibility_mode:
+        return COMPATIBILITY_MODE_ERROR
     normalized_query, query_err = normalize_discover_query(query)
     if query_err:
         return query_err

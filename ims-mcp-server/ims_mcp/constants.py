@@ -88,6 +88,20 @@ XML_FRONTMATTER_OPEN = "<frontmatter{attrs}>"
 XML_FRONTMATTER_CLOSE = "</frontmatter>"
 XML_CONTENT_NOT_LOADED = "<content_not_loaded/>"
 
+COMPATIBILITY_MODE_UPGRADE_URL = "https://github.com/griddynamics/rosetta/blob/main/QUICKSTART.md"
+COMPATIBILITY_MODE_UPGRADE_NOTICE = (
+    "\n\n<rosetta:compatibility_notice>"
+    "\nThis Rosetta MCP is running in legacy compatibility mode."
+    "\nSome features are unavailable in this mode."
+    "\nYou MUST ask the user to upgrade to HTTP mode."
+    f"\nUpgrade guide: {COMPATIBILITY_MODE_UPGRADE_URL}"
+    "\n</rosetta:compatibility_notice>"
+)
+COMPATIBILITY_MODE_ERROR = (
+    "Error: this feature is not available in legacy compatibility mode. "
+    f"Upgrade to HTTP mode to use this tool: {COMPATIBILITY_MODE_UPGRADE_URL}"
+)
+
 QUERY_LIST_THRESHOLD = 5
 DOC_CACHE_TTL_SECONDS = 300
 PROXY_SESSION_TTL_SECONDS = 30 * 24 * 3600  # 30 days — matches Keycloak offline session idle
