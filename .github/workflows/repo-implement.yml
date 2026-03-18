@@ -1,7 +1,7 @@
 name: Rosetta Story Implementer
 
 # Polls Jira epic CTORNDGAIN-1174 every 4 hours (or on manual trigger).
-# Stories in "Ready for Development" without AI-IMPLEMENTING/AI-IMPLEMENTED labels
+# Stories in "Selected for Development" without AI-IMPLEMENTING/AI-IMPLEMENTED labels
 # → parallel implementation subagents that create a branch, write code, and open a PR.
 #
 # Required GitHub Secrets:

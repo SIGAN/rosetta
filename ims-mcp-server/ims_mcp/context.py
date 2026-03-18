@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from fastmcp import Context
 from ragflow_sdk import RAGFlow
@@ -24,4 +24,12 @@ class CallContext:
     tool_name: str
     params: dict[str, Any]
     user_email: str = ""
-    authorizer: Authorizer = field(default_factory=lambda: Authorizer("all", "all"))
+    authorizer: Authorizer = field(default=cast(Authorizer, None))
+
+    def __post_init__(self) -> None:
+        if self.authorizer is None:
+            self.authorizer = Authorizer(
+                self.config.read_policy,
+                self.config.write_policy,
+                config=self.config,
+            )

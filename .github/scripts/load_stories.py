@@ -4,7 +4,7 @@ Load Jira stories from epic CTORNDGAIN-1174 that require AI work.
 
 Filtering logic:
   - Status "Planned"               AND no label AI-PLANNING or AI-PLANNED   → plan_matrix
-  - Status "Ready for Development" AND no label AI-IMPLEMENTING or AI-IMPLEMENTED → impl_matrix
+  - Status "Selected for Development" AND no label AI-IMPLEMENTING or AI-IMPLEMENTED → impl_matrix
 
 Writes to GITHUB_OUTPUT:
   plan_matrix, impl_matrix, has_plan, has_impl, plan_count, impl_count
@@ -21,7 +21,7 @@ FIELDS = ["summary", "status", "labels"]
 
 JQL = (
     'parent = CTORNDGAIN-1174 '
-    'AND status in ("Planned", "Ready for Development") '
+    'AND status in ("Planned", "Selected for Development") '
     'ORDER BY priority DESC'
 )
 
@@ -82,7 +82,7 @@ def collect_story_matrices(data: dict) -> tuple[list[dict], list[dict]]:
         if status == "Planned":
             if "AI-PLANNING" not in labels and "AI-PLANNED" not in labels:
                 plan_stories.append({"story_key": key, "story_summary": summary})
-        elif status == "Ready for Development":
+        elif status == "Selected for Development":
             if "AI-IMPLEMENTING" not in labels and "AI-IMPLEMENTED" not in labels:
                 impl_stories.append({"story_key": key, "story_summary": summary})
 

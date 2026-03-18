@@ -17,8 +17,8 @@ Validation: Each phase produces verifiable outputs; reviewer catches issues befo
 <workflow_phases>
 
 - Rosetta prep steps completed
+- MUST FOLLOW THIS WORKFLOW ENTIRELY AND FULLY, ALL REQUIRED SCALING IS ALREADY PRE-DEFINED BY "applies" ATTRIBUTE.
 - Phases are sequential. Independent subagent tasks within a phase CAN run in parallel.
-- Scale per Request size classification (SMALL / MEDIUM / LARGE). Phase attributes indicate minimum size.
 - When debugging is needed, INVOKE SUBAGENT `engineer` separately to isolate debugging context from implementation.
 - Use INVOKE SUBAGENT `executor` for building, running tests, installing packages, and similar mechanical actions.
 

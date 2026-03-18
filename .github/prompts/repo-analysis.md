@@ -45,7 +45,10 @@ Rules:
 
 For each improvement found:
 
-1. **Skip** if an existing story already covers it.
+1. **Update or skip** if an existing story already covers it: 
+   - Update incorrect labels, priority or issue type, any missing detail in description or wrong title
+   - Integrate comments
+   - Close the ticket if there is nothing left to do at all
 2. **Create** if new — use `mcp__atlassian__jira_create_issue`:
    - `project`: `CTORNDGAIN`
    - `parent`: `CTORNDGAIN-1174`

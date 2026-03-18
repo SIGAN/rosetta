@@ -140,7 +140,7 @@ _DOC_CACHE = InstructionDocCache(_DOCUMENT_CLIENT)
 _FEEDBACK = FeedbackService()
 _CONTEXT_INSTRUCTIONS_CACHE: str | None = None
 _CONTEXT_INSTRUCTIONS_CACHE_TIME: float = 0.0
-_AUTHORIZER = Authorizer(_CONFIG.read_policy, _CONFIG.write_policy)
+_AUTHORIZER = Authorizer(_CONFIG.read_policy, _CONFIG.write_policy, config=_CONFIG)
 _OAUTH_PROVIDER = build_oauth_provider(_CONFIG, client_storage=_build_oauth_client_storage())
 _IS_DEBUG = os.getenv(ENV_IMS_DEBUG, "").strip().lower() in {"1", "true", "yes", "on"}
 _MCP_VERSION_TEXT = str(_MCP_VERSION)

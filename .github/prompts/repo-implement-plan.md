@@ -57,9 +57,7 @@ Keep it short. A junior engineer should be able to implement this without asking
    clearly labelled `❓ Open Questions`. Reason through likely answers and include
    2nd-degree questions based on those answers.
 3. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
-4. Transition story if a "Ready for Development" transition is available via
-   `mcp__atlassian__jira_get_transitions` + `mcp__atlassian__jira_transition_issue`.
-   Only transition if all acceptance criteria are clear. If open questions exist, skip transition.
+4. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
 
 ## Output
 

@@ -9,6 +9,7 @@ from ims_mcp.context import CallContext
 from ims_mcp.services.authorizer import Authorizer
 from ims_mcp.tools.feedback import submit_feedback
 from ims_mcp.tools.instructions import list_instructions, query_instructions
+from ims_mcp.tools import projects as projects_module
 from ims_mcp.tools.projects import discover_projects, query_project_context, store_project_context
 from ims_mcp.tools.resources import read_instruction_resource
 from ims_mcp.tools.validation import normalize_project_name, normalize_relative_path
@@ -54,12 +55,31 @@ class _DatasetLookup:
 class _Ragflow:
     def __init__(self, datasets=None):
         self._datasets = datasets or []
+        self.created = []
 
     def list_datasets(self, page=1, page_size=1000):
         return list(self._datasets)
 
     def get_dataset(self, name: str):
         return object()
+
+    def create_dataset(self, name: str, permission: str):
+        dataset = SimpleNamespace(id="new-dataset", name=name, permission=permission)
+        self.created.append((name, permission, dataset))
+        return dataset
+
+
+class _ProjectDocumentClient:
+    def __init__(self):
+        self.upsert_calls = []
+        self.parse_calls = []
+
+    def upsert_doc(self, dataset, name: str, content: bytes, meta_fields: dict):
+        self.upsert_calls.append((dataset, name, content, meta_fields))
+        return SimpleNamespace(id="doc-1")
+
+    def submit_background_parse(self, dataset, document_ids: list[str]) -> None:
+        self.parse_calls.append((dataset, document_ids))
 
 
 class _FeedbackService:
@@ -86,8 +106,9 @@ class _SelectiveAuthorizer:
 
 
 def make_call_ctx(*, authorizer=None, ragflow=None, dataset_lookup=None) -> CallContext:
+    config = RosettaConfig.from_env()
     return CallContext(
-        config=RosettaConfig.from_env(),
+        config=config,
         ragflow=ragflow or _Ragflow(),
         dataset_lookup=dataset_lookup or _DatasetLookup(),
         ctx=None,
@@ -96,8 +117,15 @@ def make_call_ctx(*, authorizer=None, ragflow=None, dataset_lookup=None) -> Call
         tool_name="test",
         params={},
         user_email="tester@example.com",
-        authorizer=authorizer or Authorizer("all", "all"),
+        authorizer=authorizer or Authorizer("all", "all", config=config),
     )
+
+
+def _make_config(**overrides) -> RosettaConfig:
+    config = RosettaConfig.from_env()
+    values = config.__dict__.copy()
+    values.update(overrides)
+    return RosettaConfig(**values)
 
 
 @pytest.mark.asyncio
@@ -198,6 +226,40 @@ async def test_store_project_context_rejects_invalid_repository_name():
         content="# x",
     )
     assert result == "Error: document must not contain empty, '.' or '..' path segments"
+
+
+@pytest.mark.asyncio
+async def test_store_project_context_skips_auto_invite_for_all_all(monkeypatch):
+    ragflow = _Ragflow()
+    document_client = _ProjectDocumentClient()
+    invite_calls = []
+
+    async def _fake_auto_invite(**kwargs):
+        invite_calls.append(kwargs)
+
+    monkeypatch.setattr(projects_module, "auto_invite", _fake_auto_invite)
+
+    call_ctx = make_call_ctx(ragflow=ragflow, dataset_lookup=_DatasetLookup())
+    call_ctx.config = _make_config(
+        read_policy="all",
+        write_policy="all",
+        invite_emails=["team@example.com"],
+    )
+    call_ctx.authorizer = Authorizer("all", "all", config=call_ctx.config)
+
+    result = await store_project_context(
+        call_ctx=call_ctx,
+        document_client=document_client,
+        repository_name="demo",
+        document="ARCHITECTURE.md",
+        tags=["architecture"],
+        content="# x",
+        force=True,
+    )
+
+    assert "Stored 'ARCHITECTURE.md' in project 'demo'" in result
+    assert ragflow.created
+    assert invite_calls == []
 
 
 @pytest.mark.asyncio

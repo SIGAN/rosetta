@@ -8,8 +8,9 @@ from ims_mcp.services.feedback import FeedbackService
 
 
 def _call_ctx() -> CallContext:
+    config = RosettaConfig.from_env()
     return CallContext(
-        config=RosettaConfig.from_env(),
+        config=config,
         ragflow=SimpleNamespace(),
         dataset_lookup=SimpleNamespace(),
         ctx=None,
@@ -18,7 +19,7 @@ def _call_ctx() -> CallContext:
         tool_name="submit_feedback",
         params={},
         user_email="tester@example.com",
-        authorizer=Authorizer("all", "all"),
+        authorizer=Authorizer("all", "all", config=config),
     )
 
 

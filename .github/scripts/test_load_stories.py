@@ -73,7 +73,7 @@ def test_collect_story_matrices_filters_labels_and_statuses():
                     "key": "CTORNDGAIN-3",
                     "fields": {
                         "summary": "Ready to implement",
-                        "status": {"name": "Ready for Development"},
+                        "status": {"name": "Selected for Development"},
                         "labels": [],
                     },
                 },
@@ -81,7 +81,7 @@ def test_collect_story_matrices_filters_labels_and_statuses():
                     "key": "CTORNDGAIN-4",
                     "fields": {
                         "summary": "Already implemented",
-                        "status": {"name": "Ready for Development"},
+                        "status": {"name": "Selected for Development"},
                         "labels": ["AI-IMPLEMENTED"],
                     },
                 },

@@ -6,7 +6,7 @@ import json
 from typing import cast
 
 from ims_mcp.clients.document import DocumentClient
-from ims_mcp.constants import COMPATIBILITY_MODE_ERROR, PROJECT_DATASET_PREFIX, XML_DATASET
+from ims_mcp.constants import COMPATIBILITY_MODE_ERROR, POLICY_ALL, PROJECT_DATASET_PREFIX, XML_DATASET
 from ims_mcp.context import CallContext
 from ims_mcp.services.bundler import Bundler
 from ims_mcp.services.invite import auto_invite
@@ -41,6 +41,13 @@ def _to_project_name(dataset_name: str) -> str:
     if dataset_name.startswith(PROJECT_DATASET_PREFIX):
         return dataset_name[len(PROJECT_DATASET_PREFIX):]
     return dataset_name
+
+
+def _should_auto_invite(call_ctx: CallContext) -> bool:
+    return not (
+        call_ctx.config.read_policy == POLICY_ALL
+        and call_ctx.config.write_policy == POLICY_ALL
+    )
 
 
 def _tagged_title(document: str, tags: list[str]) -> str:
@@ -215,13 +222,14 @@ async def store_project_context(
         except Exception as exc:
             return f"Error: could not create project '{normalized_repo}': {exc}"
         call_ctx.dataset_lookup.invalidate()
-        # Auto-invite (stub)
-        await auto_invite(
-            ragflow=call_ctx.ragflow,
-            dataset=dataset,
-            user_email=call_ctx.user_email,
-            invite_emails=call_ctx.config.invite_emails,
-        )
+        if _should_auto_invite(call_ctx):
+            await auto_invite(
+                ragflow=call_ctx.ragflow,
+                dataset=dataset,
+                config=call_ctx.config,
+                user_email=call_ctx.user_email,
+                invite_emails=call_ctx.config.invite_emails,
+            )
     else:
         try:
             dataset = call_ctx.ragflow.get_dataset(name=dataset_name)

@@ -48,7 +48,7 @@ Prep Step 3 for orchestrator (primary/top agent):
    - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files, MUST select and follow workflow;
    - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;
    - LARGE: more than 10 file changes or multiple areas affected, MUST use subagents extensively as orchestrator context will be overloaded for sure;
-4. MUST FULLY EXECUTE ACQUIRED workflow according to the operating mode
+4. MUST FULLY EXECUTE the workflow ENTIRELY FOLLOWING ITS DEFINITION (core principles, phases, and steps ARE ALL MUST)
 5. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
 6. Adapt the plan AND request sizes continuously during execution or when scope changes
 7. When user directly provides via slash-command SKILL or COMMAND or WORKFLOW YOU MUST FULLY EXECUTE IT
