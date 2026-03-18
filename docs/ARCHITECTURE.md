@@ -131,7 +131,7 @@ Eight tools and one resource exposed to agents:
 
 | Tool | Purpose |
 |---|---|
-| `get_context_instructions` | Bootstrap: load all rules and guardrails bundled (prep step 1) |
+| `get_context_instructions` | Bootstrap: load all rules and guardrails bundled (prep step 1 to 3)  |
 | `query_instructions` | Fetch instruction docs by tags (primary) or keyword search (fallback) |
 | `list_instructions` | Browse the VFS hierarchy (flat listing of immediate children) |
 | `query_project_context` | Search project-specific docs in a target repo dataset |
@@ -249,7 +249,7 @@ For MCP setup across all IDEs, see [Get Started](https://griddynamics.github.io/
 
 RAGFlow is the document storage and retrieval engine. Rosetta uses it for ingestion, parsing, embedding, and search. Not exposed to end users directly.
 
-**Deployment:** Local via Docker Compose at `http://localhost:80` (development) or hosted instance (production).
+**Deployment:** Local via Docker Compose at `http://localhost:80`, Development at https://ims-dev.evergreen.gcp.griddynamics.net, or hosted production.
 
 **Processing pipeline:** Upload (upsert by deterministic UUID) → Parse (server-side) → Chunk → Embed → Index. Repeated publishes are idempotent.
 
@@ -418,7 +418,7 @@ uvx rosetta-cli@latest publish instructions
 
 `refsrc/fastmcp-3.1.0` contains source code of FastMCP v3.
 `refsrc/python-sdk-1.26.0` contains source code of MCP Python SDK.
-`refsrc/ragflow` contains source code of RAGFlow Python SDK (v0.23.1+).
+`refsrc/ragflow-0.24.0` contains source code of RAGFlow Python SDK (v0.23.1+).
 
 This is for reference purposes only: do not change, do not copy.
 

@@ -108,7 +108,7 @@ Eight tools and one resource exposed to agents:
 
 | Tool | Purpose |
 |---|---|
-| `get_context_instructions` | Bootstrap: load all rules and guardrails bundled (prep step 1) |
+| `get_context_instructions` | Bootstrap: load all rules and guardrails bundled (prep step 1 to 3) |
 | `query_instructions` | Fetch instruction docs by tags (primary) or keyword search (fallback) |
 | `list_instructions` | Browse the VFS hierarchy (flat listing of immediate children) |
 | `query_project_context` | Search project-specific docs in a target repo dataset |

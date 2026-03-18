@@ -2,6 +2,19 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-18) — TEMP RAGFlow team/dataset/token utility
+
+- Added `agents/TEMP/ragflow-team-dataset-tools/ragflow_team_dataset_tools.py` as a standalone utility for:
+  - listing joined teams / invitations
+  - inviting a team member
+  - accepting a team invite
+  - listing datasets
+  - switching dataset permission between `me` and `team`
+  - listing system tokens with masked output
+- Implemented `create_system_token()` in the script but intentionally did not expose it through the CLI, so routine runs cannot create tokens accidentally.
+- Captured the version-specific behavior in `agents/TEMP/ragflow-team-dataset-tools/README.md`: dataset sharing in RAGFlow 0.24.0 is team-membership plus dataset permission, not a standalone dataset-invitation API.
+- Follow-up hardening: removed all frontend-auth/login code from the TEMP utility so every live request now uses only `RAGFLOW_API_KEY`.
+
 ### Recent Operations (2026-03-18) — `list_instructions` single-tag XML listings
 
 - Narrowed XML listing metadata for `list_instructions` so each `<rosetta:file />` entry now exposes exactly one `tag="..."` attribute instead of a comma-joined `tags="..."` list.
