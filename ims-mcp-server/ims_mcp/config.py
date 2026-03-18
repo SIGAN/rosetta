@@ -111,12 +111,15 @@ def _encrypt_legacy_password(raw_password: str) -> str:
     try:
         from cryptography.hazmat.primitives import serialization
         from cryptography.hazmat.primitives.asymmetric import padding
+        from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
     except ModuleNotFoundError as exc:
         raise ValueError(
             "Legacy compatibility mode requires the 'cryptography' package to encrypt the RAGFlow password"
         ) from exc
 
     public_key = serialization.load_pem_public_key(DEFAULT_SERVER_PUBLIC_KEY_PEM.encode("utf-8"))
+    if not isinstance(public_key, RSAPublicKey):
+        raise ValueError("Default server public key must be an RSA public key")
     encrypted = public_key.encrypt(b64encode(raw_password.encode("utf-8")), padding.PKCS1v15())
     return b64encode(encrypted).decode("utf-8")
 
