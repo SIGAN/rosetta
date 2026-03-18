@@ -21,9 +21,10 @@ baseSchema: docs/schemas/rule.md
 <planning_and_documentation_sync_rules>
 
 1. Update IMPLEMENTATION.md after each task.
-2. Create and keep updated a request-specific plan and specs in `plans`.
-3. Plan proactively for structure, restructure, and cleanup.
-4. Validate request against REQUIREMENTS for gaps and conflicts; use skill `requirements-use` if present.
+2. MUST FULLY FOLLOW workflows/commands/flows - this ensures users get proper solution for their problem
+3. MUST NOT NEVER JUMP DIRECTLY TO IMMEDIATE EXECUTION, you are in ENTERPRISE environment, NOT startup!
+4. Proactively review, structure, restructure, and cleanup Rosetta files.
+5. Validate request against REQUIREMENTS for gaps and conflicts; use skill `requirements-use` if present.
 
 </planning_and_documentation_sync_rules>
 

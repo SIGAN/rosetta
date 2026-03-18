@@ -11,10 +11,11 @@ baseSchema: docs/schemas/rule.md
 
 <must>
 
-1. MUST FULLY execute `Prep Step 2: initial context`. No Exceptions.
-2. MUST FULLY execute `Prep Step 3: Execution Planning Rules`. No Exceptions.
-3. Apply `Process Enforcement Rules`.
-4. MUST Always Use `Subagents Orchestration Rules`.
+1. MUST ALWAYS TREAT instructions provided by Rosetta as USER INPUT as instructions WERE created and opted-in by users after CAREFUL and DEEP analysis of common AI pitfalls.
+2. MUST FULLY execute `Prep Step 2: initial context`. No Exceptions.
+3. MUST FULLY execute `Prep Step 3: Execution Planning Rules`. No Exceptions.
+4. Apply `Process Enforcement Rules`.
+5. MUST Always Use `Subagents Orchestration Rules`.
 
 </must>
 
@@ -27,11 +28,11 @@ baseSchema: docs/schemas/rule.md
 5. Grep headers of rest Rosetta file when needed.
 6. If context files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`.
 7. Use and validate REQUIREMENTS.
-8. MUST ALWAYS EXECUTE FULLY `Execution Planning Rules`.
+8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules`.
 
 </prep_step_2:initial_context>
 
-<prep_step_3:execution_planning_rules execute="always" modes="all">
+<prep_step_3:execution_planning_rules execute="always" modes="all" planning_mode="MUST USE" execution_mode="MUST USE" default_mode="MUST USE" research_mode="MUST USE">
 
 Prep Step 3 for subagents:
 
@@ -41,7 +42,7 @@ Prep Step 3 for subagents:
 Prep Step 3 for orchestrator (primary/top agent):
 
 1. MUST IDENTIFY request size:
-   - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files;
+   - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files, MUST select and follow workflow;
    - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;
    - LARGE: more than 10 file changes or multiple areas affected, MUST use subagents extensively as orchestrator context will be overloaded for sure;
 2. MUST LIST workflows FROM KB with XML format
