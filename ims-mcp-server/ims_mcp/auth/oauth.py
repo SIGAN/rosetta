@@ -113,5 +113,6 @@ def build_oauth_provider(
             valid_scopes=valid_scopes,
             extra_authorize_params=extra_authorize_params_oauth,
             jwt_signing_key=config.oauth_jwt_signing_key,
+            enable_cimd=True,
         ),
     )
