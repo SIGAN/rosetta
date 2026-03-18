@@ -30,10 +30,10 @@ Internal knowledge about IDE/agent shell configuration is obsolete — LIST and 
 
 Step 1: Identify Environment
 
-1. LIST `configure` IN KB for supported IDE/CodingAgents
+1. LIST `configure` IN KB (to understand supported IDE/CodingAgents)
 2. Detect current environment, preselect IDE/CodingAgent
 3. MUST ask user to confirm selection and provide multi-choose
-4. ACQUIRE <selected IDE/CodingAgent configs> FROM KB
+4. ACQUIRE <selected configs using TAG> FROM KB
 5. If multiple selected, must use common standards to reduce copies
 
 Step 2: Install Base Files

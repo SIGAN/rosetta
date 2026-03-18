@@ -23,7 +23,7 @@ Scale: conversational — output is a message, no files, no state tracking.
 
 <list_capabilities phase="1" subagent="discoverer" role="KB catalog lister">
 
-1. List capabilities from KB:
+1. List capabilities from KB with XML format:
    - `LIST workflows IN KB`
    - `LIST skills IN KB`, then `LIST skills/<name> IN KB` for each.
    - `LIST agents IN KB`

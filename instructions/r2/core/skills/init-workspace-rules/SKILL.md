@@ -35,10 +35,10 @@ Internal knowledge about IDE/agent configuration is obsolete — LIST and ACQUIR
 
 Step 1: Identify Environment
 
-1. LIST `configure` IN KB with XML format for supported IDE/CodingAgents
+1. LIST `configure` IN KB with XML format (to understand supported IDE/CodingAgents)
 2. Detect current environment, preselect IDE/CodingAgent
 3. MUST ask user to confirm selection and provide multi-choose
-4. ACQUIRE <selected by 3-part/2-part TAG> FROM KB
+4. ACQUIRE <selected configs using TAG> FROM KB
 5. If multiple selected, use common standards to reduce copies
 
 Step 2: Read Workspace Context
@@ -55,7 +55,7 @@ Step 3: Discover Full Rosetta Content (subagent)
 Step 4: MUST Install Root Entry Point and Bootstrap Rules
 
 1. ACQUIRE `rules/local-files-mode.md` FROM KB — install as root entry point per IDE configure spec
-2. Embed Rosetta version marker (e.g., "R2.0") in root file for staleness detection
+2. Embed Rosetta version marker (e.g., "R2.0") in core root file for staleness detection
 3. Apply IDE-specific frontmatter format from configure file
 4. ACQUIRE each `rules/bootstrap-*.md` FROM KB — install as individual rule files per IDE configure spec
 

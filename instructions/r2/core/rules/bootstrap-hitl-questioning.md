@@ -14,16 +14,15 @@ baseSchema: docs/schemas/rule.md
 - There is "WHY" loop: idea → requirements → working software → learn → evolve idea
 - There is "HOW" loop: specs → code → tests → stories → features
 - Humans in the loop, HITL: human gatekeeps every artefact in HOW loop. Good: human judgement breaks agent spirals fast. Bad: human becomes bottleneck, review time can exceed generation savings.
-- Agentic flywheel, AF: human directs agents to improve the harness itself using test results, prod metrics, user data. Good: self-improving, anti-fragile. Bad: needs high confidence and rich signals first.
 - Internal quality matters not for its own sake — messy code makes agents spiral, costing time and money, resulting in bad UX of product.
 - Intermediate artifacts (code, tests, designs) are means to an end, not deliverables.
 - When output is wrong, fix the harness that produced it, not the artifact itself.
-- We are at HITL, but move towards AF (validation if fully automated).
-- It is still necessary even if in `danger-full-access` or approval policy `never`.
+- YOU MUST FOLLOW HITL even if in `danger-full-access` or approval policy `never`.
+- THE ONLY exception is when user DIRECTLY EXPLICITLY ASKS `fully autonomous` or `no HITL`.
 
 </core_principles>
 
-<questioning_rules>
+<questioning_rules use="ALWAYS">
 
 - Ask clarifying questions until assumptions, ambiguities, gaps, and conflicts are resolved.
 - Skip LOW or NIT PICKING.
@@ -46,7 +45,7 @@ baseSchema: docs/schemas/rule.md
 
 </questioning_rules>
 
-<user_approval_rules>
+<user_approval_rules use="ALWAYS">
 
 - MUST NOT assume user approval. If user sends a message, they are only reviewing, questioning, and clarifying
 - User MUST provide clear, explicit approval. Accepted phrases: `Yes, I approve`, `Yes, I understand consequences`, etc.
@@ -112,7 +111,7 @@ Plan MUST include HITL review gates at key decision points (design, implementati
 
 </hitl_checkpoint_rules>
 
-<working_with_user_rules>
+<working_with_user_rules use="ALWAYS">
 
 - Tell user intent in advance to keep user in the loop.
 - Work with user; validate with user. Back-and-forth IS required, not optional.
@@ -130,7 +129,7 @@ Plan MUST include HITL review gates at key decision points (design, implementati
 
 </working_with_user_rules>
 
-<mismatch_rules>
+<mismatch_rules use="ALWAYS">
 
 - If user is upset or after two mismatches:
   1. STOP all changes immediately.

@@ -40,15 +40,16 @@ Prep Step 3 for subagents:
 
 Prep Step 3 for orchestrator (primary/top agent):
 
-1. MUST LIST workflows FROM KB with XML format
-2. MUST ACQUIRE <guaranteed unique 2-part TAG> FROM KB and use as a template
-3. AFTER workflow IS ACQUIRED, scale workflow to request size:
-   - SMALL (1-2 file changes): MUST USE todo tasks planning, USE SKILL `tech-specs` (OUTPUT as message, no files);
-   - MEDIUM (up to ~10 file changes): USE SKILL `planning` and `tech-specs`; keep documentation concise, light, and short; must use subagents
-   - LARGE (more than 10 file changes): USE SKILL `planning` and `tech-specs`; must use subagents extensively for everything
-4. MUST execute the adapted workflow according to the current mode
-5. In planning mode results of `planning` and `tech-specs` must be stored according to system prompt (NOT in `plans` folder)
-6. Adapt the plan continuously during execution or when scope changes
+1. MUST IDENTIFY request size:
+   - SMALL: 1-2 file changes and only one area affected, MUST USE todo tasks planning, MUST OUTPUT as message, no files;
+   - MEDIUM: up to ~10 file changes and only one area affected, MUST keep documentation concise, light, and short; MUST use subagents;
+   - LARGE: more than 10 file changes or multiple areas affected, MUST use subagents extensively as orchestrator context will be overloaded for sure;
+2. MUST LIST workflows FROM KB with XML format
+3. MUST ACQUIRE <matching workflow TAG> FROM KB IMMEDIATELY
+4. MUST FULLY EXECUTE ACQUIRED workflow according to the operating mode
+5. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
+6. Adapt the plan AND request sizes continuously during execution or when scope changes
+7. When user directly provides via slash-command SKILL or COMMAND or WORKFLOW YOU MUST FULLY EXECUTE IT
 
 </prep_step_3:execution_planning_rules>
 
