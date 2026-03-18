@@ -193,6 +193,7 @@ HITL gates (use when):
 - Keep `<req>` atomic
 - Keep `<req>` independently testable
 - Keep `<req>` implementation free
+- Check if grouping of multiple requirements is a requirement itself
 
 </unit_of_requirement>
 
@@ -364,6 +365,7 @@ HITL gates (use when):
 - Validate unambiguity per `<req>`
 - Validate trace links present
 - Validate overall consistency
+- Validate groupings are not requirements in disguise
 
 </validation_rules>
 
@@ -450,6 +452,7 @@ HITL gates (use when):
 - Bundle multiple behaviors in one unit
 - Add scope without explicit approval
 - Skip boundary and failure scenarios
+- Treat requirement groupings as mere organization when they are requirements themselves
 
 </pitfalls>
 

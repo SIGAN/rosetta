@@ -110,6 +110,7 @@ Validation: Each requirement is atomic, testable, implementation-free, and expli
 - Detect mismatched terminology
 - Detect actor responsibility mismatch
 - Detect ambiguity
+- Detect groupings that should be atomic requirements
 
 </conflict_checks>
 
@@ -136,6 +137,7 @@ Validation: Each requirement is atomic, testable, implementation-free, and expli
 - Skipping unhappy paths and boundaries
 - Introducing unapproved requirements
 - Leaving conflicts unresolved
+- Treating requirement groupings as organization when they are requirements
 
 </pitfalls>
 
