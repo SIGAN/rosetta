@@ -87,6 +87,7 @@ Works with any MCP-compatible tool.
 | Navigate the codebase | [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) |
 | Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Debug a problem | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| See release history | [CHANGELOG.md](CHANGELOG.md) |
 
 ## Contributing
 
