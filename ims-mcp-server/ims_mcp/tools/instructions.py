@@ -211,7 +211,7 @@ async def list_instructions(
         
         # flat format: just sorted, deduplicated resource paths
         if normalized_format == "flat":
-            header = "List of all instruction files. Use 2-part/3-part tags for load content: folder/file.md or parent/folder/file.md\n"
+            header = "List of all instruction files. Use 2-part/3-part tags to load specific content: folder/file.md or parent/folder/file.md.\n"
             paths = sorted(set(_resource_path(doc) for doc in docs_with_paths if _resource_path(doc)))
             return header + "\n".join(paths)
         

@@ -427,7 +427,7 @@ async def test_list_instructions_all_returns_listing_with_duplicate_path_note():
 
     assert result.startswith("List of all instruction files, without content.")
     assert "When acquired, files with duplicate path values are bundled/combined together" in result
-    assert "Use guaranteed unique 3-part/2-part tags to read specific content" in result
+    assert "Use exact TAG attribute to load specific content" in result
     assert result.count('path="rules/alpha.md"') == 2
     assert 'tag="t1"' in result
     assert 'tag="t2"' in result

@@ -75,7 +75,7 @@ class TestListInstructions:
         )
 
         assert "List of all instruction files" in result
-        assert "Use 2-part/3-part tags for querying" in result
+        assert "Use 2-part/3-part tags to load specific content" in result
         assert "skills/coding/SKILL.md" in result
         assert "workflows/coding-flow.md" in result
         assert "rules/bootstrap.md" in result
