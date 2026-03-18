@@ -81,6 +81,11 @@ PR body must include:
 3. Transition story to "In Review" or equivalent if available via
    `mcp__atlassian__jira_get_transitions` + `mcp__atlassian__jira_transition_issue`.
 
+## Important Notes
+
+1. Do not put "\n" in comments, user proper syntax/format for Jira, otherwise this is the results `🤖 Implementation complete.\n\nPR: https://github.com/griddynamics/rosetta/pull/31\n\nBranch: feature/...`
+2. Link PR URL natively
+
 ## Output
 
 Print a summary:

@@ -59,6 +59,10 @@ Keep it short. A junior engineer should be able to implement this without asking
 3. Update story labels: add `AI-PLANNED`, remove `AI-PLANNING` via `mcp__atlassian__jira_update_issue`.
 4. Do not transition story/bug nor change status, user will review the plan and HIMSELF switch it to "Selected for Development".
 
+## Important Notes
+
+1. Do not put "\n" in comments, user proper syntax/format for Jira, otherwise this is the results `🤖 Implementation complete.\n\nPR: https://github.com/griddynamics/rosetta/pull/31\n\nBranch: feature/...`
+
 ## Output
 
 Print a summary:
