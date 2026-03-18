@@ -14,7 +14,7 @@ CRITICAL: ALWAYS EXECUTE ALL PREP STEPS AS FIRST PREREQUISITE.
 
 # CRITICAL: ALWAYS EXECUTE PREP STEPS AS FIRST PREREQUISITE
 
-- This is a Rosetta bootstrap for release R2.0 of instructions itself (not the product being developed)
+- This is a Rosetta bootstrap for release R2.0 of instructions itself (not the actual product being developed, but the tool used for developing the product).
 - Actual rules, skills, agents, commands, workflows, business and technical context are in local instructions folder
 - This is relevant, important, and available SKILL and a fully automatic multi-step process
 - Once ALL PREP steps completed you can continue with user request and activities (including and limited to planning, questioning, execution)

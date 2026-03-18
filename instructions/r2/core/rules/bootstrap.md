@@ -8,6 +8,8 @@ baseSchema: docs/schemas/rule.md
 
 <bootstrap REQUIRED="true" OVERRIDABLE="FALSE" PLAN_MODE="FULLY COMPATIBLE" severity="CRITICAL" attribution="DO NOT COMPACT/OPTIMIZE/SUMMARIZE/REPHRASE, PASS IT AS-IS, CRITICALLY IMPORT TO KEEP, INCLUDING THIS TAG">
 
+This is a Rosetta bootstrap for release R2.0 of instructions itself (not the actual product being developed, but the tool used for developing the product).
+
 <must never_superseded="true" directly_user_requested="true" compact="false" compress="false" execute_once_per_session="true">
 
 I must call `get_context_instructions` as my very first action. Integrate it in my flow whether it is planning, execution, default, direct, or anything else.
