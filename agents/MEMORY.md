@@ -13,6 +13,9 @@ Modern package validation can reject `mailto:` entries in `project.urls`; keep s
 ### Verify Nested Workflow Runtimes Before Closing CI Migrations [ACTIVE]
 GitHub Actions runtime cleanup must inspect both local `uses:` refs and referenced reusable workflows, and confirm upstream `runs.using` values directly before marking the repo migrated.
 
+### Use Override Inputs When Third-Party Actions Vendor Deprecated Tool Installers [ACTIVE]
+If an upstream composite action exposes a path override for an internal runtime like Bun, preinstall the tool in-repo and pass the resolved executable instead of waiting on the vendor to refresh its bundled installer.
+
 ### Clear Live Auth Environment Triggers In Unit Test Fixtures [ACTIVE]
 When env vars can trigger real authentication, add an autouse fixture that strips them so CI and local unit suites never reach shared services by accident.
 

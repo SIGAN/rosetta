@@ -2,6 +2,17 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-18) — Claude workflow Bun runtime override
+
+- Traced the remaining GitHub deprecation warning to `anthropics/claude-code-action@v1`, whose upstream `action.yml` still installs Bun through `oven-sh/setup-bun@3d267786...` (`v2.1.2`, `runs.using: node20`).
+- Updated the three Claude-driven automation workflows to install Bun explicitly with `oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6` (`v2.2.0`, `runs.using: node24`) before invoking Claude:
+  - `.github/workflows/repo-analysis.yml`
+  - `.github/workflows/repo-plan.yml`
+  - `.github/workflows/repo-implement.yml`
+- Passed `path_to_bun_executable: ${{ steps.bun.outputs.bun-path }}` into each `anthropics/claude-code-action@v1` step so the action skips its deprecated internal Bun installer while keeping the same Bun `1.3.6` runtime.
+- Validation status:
+  - `rg -n "anthropics/claude-code-action@|path_to_bun_executable|setup-bun@" .github/workflows` confirms all Claude workflows now preinstall Bun and point the action at the resolved executable.
+
 ### Recent Operations (2026-03-18) — TEMP RAGFlow team/dataset/token utility
 
 - Added `agents/TEMP/ragflow-team-dataset-tools/ragflow_team_dataset_tools.py` as a standalone utility for:
