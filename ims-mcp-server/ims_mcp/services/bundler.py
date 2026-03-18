@@ -7,8 +7,6 @@ from collections.abc import Sequence
 from typing import cast
 from xml.sax.saxutils import escape as xml_escape
 
-from ragflow_sdk.modules.document import Document
-
 from ims_mcp.clients.document import DocumentClient
 from ims_mcp.constants import (
     DEFAULT_SORT_ORDER,
@@ -75,7 +73,7 @@ class Bundler:
         return xml_escape(str(value), {'"': "&quot;", "'": "&apos;"})
 
     @staticmethod
-    def _tags_attr(doc: Document) -> str:
+    def _tags_attr(doc: DocumentLike) -> str:
         meta = Bundler._meta(doc)
         tags = meta.get("tags", []) or []
         if isinstance(tags, str):
@@ -83,6 +81,18 @@ class Bundler:
         if not isinstance(tags, list):
             return ""
         return ",".join(str(tag) for tag in tags)
+
+    @staticmethod
+    def _listing_tag_attr(doc: DocumentLike) -> str:
+        meta = Bundler._meta(doc)
+        raw_tags = meta.get("tags", []) or []
+        if isinstance(raw_tags, str):
+            tags = [raw_tags]
+        elif isinstance(raw_tags, list):
+            tags = [str(tag) for tag in raw_tags if str(tag).strip()]
+        else:
+            return ""
+        return max(tags, key=len, default="")
 
     @staticmethod
     def _xml_tag_name(name: str) -> str:
@@ -180,7 +190,7 @@ class Bundler:
             f' dataset="{self._xml_attr(dataset_name)}"'
             f' path="{self._xml_attr(self._resource_path(doc))}"'
             f' name="{self._xml_attr(doc.name or "")}"'
-            f' tags="{self._xml_attr(self._tags_attr(doc))}"'
+            f' tag="{self._xml_attr(self._listing_tag_attr(doc))}"'
             f'{lc_part}{fm_part} />'
         )
 

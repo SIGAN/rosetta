@@ -36,7 +36,7 @@ Scale: conversational — output is a message, no files, no state tracking.
 <match_and_acquire phase="2" subagent="discoverer" role="Capability matcher">
 
 1. Match user request against `Capability Catalog`.
-2. For each match, `ACQUIRE <guaranteed unique 3-part/2-part TAG> FROM KB` (e.g., `ACQUIRE workflows/coding-flow.md FROM KB`, `ACQUIRE skills/coding/SKILL.md FROM KB`, `ACQUIRE agents/engineer.md FROM KB`).
+2. For each match, `ACQUIRE <selected TAG> FROM KB` (e.g., `ACQUIRE workflows/coding-flow.md FROM KB`, `ACQUIRE skills/coding/SKILL.md FROM KB`, `ACQUIRE agents/engineer.md FROM KB`).
 3. Extract: purpose, when to use, what to expect, inputs/outputs, HITL gates.
 4. Input: user request + `Capability Catalog`. Output: `Matched Capabilities`.
 5. Recommended skills: any currently useful.
@@ -59,7 +59,7 @@ Scale: conversational — output is a message, no files, no state tracking.
 <handoff phase="4" optional="true" type="orchestrator">
 
 1. Triggered when user shifts from help to action (e.g., "run that workflow", "let's do coding").
-2. `ACQUIRE <guaranteed unique 3-part/2-part TAG> FROM KB` for target workflow if not already acquired.
+2. `ACQUIRE <selected TAG> FROM KB` for target workflow if not already acquired.
 3. Adopt acquired workflow as active flow; start from its phase 1.
 4. Self-help-flow yields control — does not wrap the adopted workflow.
 

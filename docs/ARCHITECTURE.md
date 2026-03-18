@@ -83,6 +83,7 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 ## Rosetta MCP
 
 The MCP server is the consulting layer between IDEs and the knowledge base. It does not just proxy requests: it transforms, bundles, and contextualizes instructions so agents know how to do things right. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
+MCP changes are validated with `pytest`, `validate-types.sh`, and the end-to-end `verify_mcp.py` integration check.
 
 **Transport options:**
 - **Streamable HTTP with OAuth** (default). Stateful: the server holds session state and can issue callbacks to the IDE. Zero local dependencies. Cursor, Claude Code, and Codex connect directly. When scaling to multiple replicas, sticky sessions are required (see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md)).
@@ -164,7 +165,7 @@ Listing shows what exists in the VFS without loading content. Implemented by `li
 ```xml
 <rosetta:folder dataset="..." path="skills/" />
 <rosetta:folder dataset="..." path="rules/" />
-<rosetta:file id="..." path="skills/planning/SKILL.md" name="..." tags="..." frontmatter="..." />
+<rosetta:file id="..." path="skills/planning/SKILL.md" name="..." tag="skills/planning/SKILL.md" frontmatter="..." />
 ```
 
 **Flat format** returns resource paths only:

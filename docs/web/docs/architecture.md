@@ -142,7 +142,7 @@ Listing shows what exists in the VFS without loading content. Implemented by `li
 ```xml
 <rosetta:folder dataset="..." path="skills/" />
 <rosetta:folder dataset="..." path="rules/" />
-<rosetta:file id="..." path="skills/planning/SKILL.md" name="..." tags="..." frontmatter="..." />
+<rosetta:file id="..." path="skills/planning/SKILL.md" name="..." tag="skills/planning/SKILL.md" frontmatter="..." />
 ```
 
 **Flat format** returns resource paths only:

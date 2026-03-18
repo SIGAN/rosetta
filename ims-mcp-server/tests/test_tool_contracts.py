@@ -429,6 +429,9 @@ async def test_list_instructions_all_returns_listing_with_duplicate_path_note():
     assert "When acquired, files with duplicate path values are bundled/combined together" in result
     assert "Use guaranteed unique 3-part/2-part tags to read specific content" in result
     assert result.count('path="rules/alpha.md"') == 2
+    assert 'tag="t1"' in result
+    assert 'tag="t2"' in result
+    assert 'tags="' not in result
     assert "FIRST" not in result and "SECOND" not in result and "THIRD" not in result
     assert "IGNORED" not in result
     assert doc_cache.calls

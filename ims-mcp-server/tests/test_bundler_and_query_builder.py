@@ -41,7 +41,7 @@ def test_listing_uses_frontmatter_attr_and_self_closing():
             "A",
             {
                 "sort_order": 1,
-                "tags": ["t1"],
+                "tags": ["t1", "skills/a.md"],
                 "resource_path": "skills/a.md",
                 "frontmatter": {
                     "title": 'A "quoted" title',
@@ -52,6 +52,8 @@ def test_listing_uses_frontmatter_attr_and_self_closing():
     ]
 
     xml = bundler.format_as_listing(docs, "aia-r2")
+    assert 'tag="skills/a.md"' in xml
+    assert 'tags="' not in xml
     assert 'frontmatter="title: A &quot;quoted&quot; title' in xml
     assert "resource_path=" not in xml
     assert "<content_not_loaded/>" not in xml

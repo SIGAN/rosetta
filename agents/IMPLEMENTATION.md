@@ -2,6 +2,16 @@
 
 ## ✅ Completed Implementation
 
+### Recent Operations (2026-03-18) — `list_instructions` single-tag XML listings
+
+- Narrowed XML listing metadata for `list_instructions` so each `<rosetta:file />` entry now exposes exactly one `tag="..."` attribute instead of a comma-joined `tags="..."` list.
+- The selected listing tag is now the longest available tag for that document, which prioritizes the most specific resource-path-style tag and reduces ambiguity for downstream agents.
+- Kept bundled document reads unchanged: `query_instructions` content responses still use the existing plural `tags` field.
+- Updated listing-focused tests and architecture docs to reflect the singular `tag` contract.
+- Validation status:
+  - `python3 -m pytest ...` from the repo root failed because the local shell environment does not have the MCP package dependencies installed.
+  - `uv run --project ims-mcp-server ...` failed to resolve the project because `ims-mcp-server/pyproject.toml` declares `requires-python = ">=3.10"` while `ragflow-sdk>=0.24.0` currently resolves only on Python `>=3.12,<3.15`.
+
 ### Recent Operations (2026-03-18) — Agent memory template normalization
 
 - Rewrote `agents/MEMORY.md` to the requested canonical template:

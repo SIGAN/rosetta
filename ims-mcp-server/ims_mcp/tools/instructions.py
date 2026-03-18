@@ -211,15 +211,15 @@ async def list_instructions(
         
         # flat format: just sorted, deduplicated resource paths
         if normalized_format == "flat":
-            header = "List of all instruction files. Use 2-part/3-part tags for querying: folder/file.md or parent/folder/file.md\n"
+            header = "List of all instruction files. Use 2-part/3-part tags for load content: folder/file.md or parent/folder/file.md\n"
             paths = sorted(set(_resource_path(doc) for doc in docs_with_paths if _resource_path(doc)))
             return header + "\n".join(paths)
         
         # XML format (default)
         header = (
-            "List of all instruction files, without content. "
-            "When acquired, files with duplicate path values are bundled/combined together. "
-            "Use guaranteed unique 3-part/2-part tags to read specific content:"
+            "List of all instruction files, without content.\n"
+            "When acquired, files with duplicate path values are bundled/combined together.\n"
+            "Use exact TAG attribute to load specific content.\n"
         )
         return header + "\n" + bundler.format_as_listing(docs_with_paths, dataset_name)
 
