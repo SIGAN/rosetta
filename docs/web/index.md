@@ -257,6 +257,7 @@ permalink: /
             </div>
           </div>
 
+          <p class="qs-step-note">Rosetta is designed to never use or see your data or IP.</p>
         </div>
       </div>
 
@@ -279,17 +280,6 @@ permalink: /
           <span class="qs-step-line"></span>
         </div>
         <div class="qs-step-body">
-          <h3 class="qs-step-title">Add Bootstrap Rule</h3>
-          <p class="qs-step-desc">Download <a href="https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1" target="_blank" rel="noopener noreferrer">bootstrap.md</a> and add it to your IDE's instruction file. See <a href="{{ '/docs/quickstart/#step-2-add-bootstrap-rule' | relative_url }}">Quick Start</a> for file paths per IDE.</p>
-        </div>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="qs-step qs-step--last">
-        <div class="qs-step-indicator">
-          <span class="qs-step-num">4</span>
-        </div>
-        <div class="qs-step-body">
           <h3 class="qs-step-title">Verify &amp; Initialize</h3>
           <p class="qs-step-desc">Restart your IDE, then verify Rosetta is connected:</p>
           <div class="qs-code-wrap">
@@ -299,6 +289,17 @@ permalink: /
           <div class="qs-code-wrap">
             <pre class="qs-code"><span class="qs-comment"># "Initialize this repository using Rosetta"</span></pre>
           </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="qs-step qs-step--last">
+        <div class="qs-step-indicator">
+          <span class="qs-step-num">4</span>
+        </div>
+        <div class="qs-step-body">
+          <h3 class="qs-step-title">Add Bootstrap Rule <em>(optional)</em></h3>
+          <p class="qs-step-desc">If something does not work — download <a href="https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1" target="_blank" rel="noopener noreferrer">bootstrap.md</a> and add it to your IDE's instruction file. See <a href="{{ '/docs/quickstart/#step-4-add-bootstrap-rule-optional' | relative_url }}">Quick Start</a> for file paths per IDE.</p>
         </div>
       </div>
 
