@@ -8,8 +8,12 @@ permalink: /
 <section class="hero-main" id="hero">
   <img src="{{ '/assets/brand/rosetta-logo-full-color-white-text.png' | relative_url }}" alt="Rosetta logo" class="hero-logo logo-dark">
   <img src="{{ '/assets/brand/rosetta-logo-full-color-black-text.png' | relative_url }}" alt="Rosetta logo" class="hero-logo logo-light">
-  <h1 class="hero-headline">Consulting control plane for AI coding agents</h1>
-  <p class="hero-sub">Rosetta gives every agent the same context, standards, and guardrails — across any IDE, any team.</p>
+  <h1 class="hero-headline">Meta-prompting, context engineering, and centralized knowledge management for AI coding agents</h1>
+  <p class="hero-sub">
+    It provides structured context - rules, skills, workflows, and sub-agents - guiding AI systems to operate with a deep understanding of system architecture, domain constraints, and engineering standards.<br>
+    Rosetta also accelerates project onboarding by reverse-engineering architecture and domain context, improving the reliability and consistency of AI-generated code.<br>
+    Rosetta gives every agent the same context, standards, and guardrails — across any IDE, any team.
+  </p>
   <div class="hero-actions">
     <a href="#hero" class="button">Get Started</a>
     <a href="{{ '/overview/' | relative_url }}" class="button-ghost">See it in action →</a>

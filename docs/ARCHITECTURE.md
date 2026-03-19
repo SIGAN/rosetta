@@ -71,6 +71,12 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 
 ---
 
+## Key Principles
+
+**Inversion of control.** Rosetta never sees or processes source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
+
+---
+
 ## Environments
 
 - **Rosetta Server (RAGFlow) prod:** `https://ims.evergreen.gcp.griddynamics.net/` — document engine backend, dataset management, API keys
@@ -84,7 +90,7 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 
 ## Rosetta MCP
 
-The MCP server is the consulting layer between IDEs and the knowledge base. It does not just proxy requests: it transforms, bundles, and contextualizes instructions so agents know how to do things right. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
+The MCP server is the guiding layer between IDEs and the knowledge base. It exposes guardrails and common best practices, and provides a structured menu of available instructions; the coding agent selects what it needs, and Rosetta delivers only those — preventing context overload. Published on PyPI as `ims-mcp`. Built on [FastMCP v3](https://gofastmcp.com/) (latest stable) with [OAuthProxy](https://gofastmcp.com/servers/auth/oauth-proxy) for authentication and [RAGFlow](https://ragflow.io/) as the document engine backend. Speaks in VFS resource paths, adds context headers describing what information means and how to use it, and controls context size automatically.
 MCP changes are validated with `pytest`, `validate-types.sh`, and the end-to-end `verify_mcp.py` integration check.
 
 **Transport options:**
@@ -136,10 +142,10 @@ Eight tools and one resource exposed to agents:
 | `get_context_instructions` | Bootstrap: load all rules and guardrails bundled (prep step 1 to 3)  |
 | `query_instructions` | Fetch instruction docs by tags (primary) or keyword search (fallback) |
 | `list_instructions` | Browse the VFS hierarchy (flat listing of immediate children) |
-| `query_project_context` | Search project-specific docs in a target repo dataset |
-| `store_project_context` | Create or update a document in a project dataset |
-| `discover_projects` | List readable project datasets |
-| `plan_manager` | Manage execution plans with phases, steps, dependencies, status. Has a `help` command for plan creators (subagents don't need it). Stores plan in REDIS. |
+| `query_project_context` *(opt-in)* | Search project-specific docs in a target repo dataset |
+| `store_project_context` *(opt-in)* | Create or update a document in a project dataset |
+| `discover_projects` *(opt-in)* | List readable project datasets |
+| `plan_manager` *(opt-in)* | Manage execution plans with phases, steps, dependencies, status. Has a `help` command for plan creators (subagents don't need it). Stores plan in REDIS. |
 | `submit_feedback` | Auto-submit structured feedback on agent sessions |
 
 **Resource:** `rosetta://{path}` reads bundled instruction documents by VFS resource path.

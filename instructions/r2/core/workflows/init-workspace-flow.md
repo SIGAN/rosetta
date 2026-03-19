@@ -16,16 +16,19 @@ Validation: State file tracks every phase with file inventory; verification conf
 
 <workflow_phases>
 
-- Rosetta prep steps completed
+- Rosetta prep steps completed (get_context_instructions called and all three prep steps completed).
+- MUST FOLLOW THIS WORKFLOW EXACTLY AND FULLY.
+- MUST extensively use subagents as this is a large workflow.
 - Sequential phases. Each updates `agents/init-workspace-flow-state.md`. Optional phases marked as skipped. Keep state file very brief.
 - ACCURACY > SPEED
 - Dual-mode: every phase reads `state.mode` → check-exists → identify-gaps → create/update → preserve-human-content → report-changes.
-- MUST extensively use subagents as this is a large workflow.
 - Composite workspace: documentation phases create top-level registry referencing sub-repository docs.
 - IF state.file_count >= 50 (set by Phase 3): pass "ACQUIRE `large-workspace-handling/SKILL.md` FROM KB" to Phase 5, 6, 8 subagents.
 - Before Phase 1: create `agents/init-workspace-flow-state.md`.
 - If user explicitly stated he wants to HAVE ALL RULES LOCALLY IN ADVANCE, ONLY then execute phase `init-workspace-flow-rules.md`, otherwise phase `init-workspace-flow-shells.md`.
 - If user says to initialize rules, subagents, agents, workflows, commands it still means `init-workspace-flow-shells.md`.
+- Upgrade from R1 to R2 is exactly the same process, but you already have some files already available, which you can reuse.
+- Additionally tell subagents: "If you want to use shell commands, prefer to combine individual shell commands into single **simple** shell script in `agents/TEMP` and execute it, but already available tools ALWAYS take precedence."
 
 <context phase="1" subagent="built-in" role="Workspace mode detector" subagent_recommended_model="claude-haiku-4-5, gemini-3-flash-preview">
 

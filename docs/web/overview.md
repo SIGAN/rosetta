@@ -6,7 +6,7 @@ permalink: /overview/
 
 ## Architecture
 
-<p>Rosetta is a consulting control plane for AI coding agents. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge — from day one.</p>
+<p>Rosetta is a meta-prompting, context engineering, and centralized knowledge management for AI coding agents. It provides structured context - rules, skills, workflows, and sub-agents - guiding AI systems to operate with a deep understanding of system architecture, domain constraints, and engineering standards. Rosetta also accelerates project onboarding by reverse-engineering architecture and domain context, improving the reliability and consistency of AI-generated code.</p>
 <p>When you type a request in your IDE, the agent loads context from Rosetta first — then follows your organization's proven workflows. Source code never leaves your machine.</p>
 
 <div class="arch-v2" id="arch-v2">

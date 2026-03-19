@@ -163,7 +163,7 @@ Check the admin panel at `https://<your-host>/admin`. Verify document upload and
 
 ## Part 2: Rosetta MCP
 
-Rosetta MCP is the consulting layer between IDEs and the knowledge base. It transforms, bundles, and contextualizes instructions for AI coding agents, manages sessions via Redis, and handles OAuth authentication. See [Architecture — Rosetta MCP](docs/ARCHITECTURE.md#rosetta-mcp) for capabilities.
+Rosetta MCP is the guiding layer between IDEs and the knowledge base. It exposes guardrails and common best practices, and provides a menu of instructions for coding agents to select on demand — delivering only what is needed. Manages sessions via Redis and handles OAuth authentication. See [Architecture — Rosetta MCP](docs/ARCHITECTURE.md#rosetta-mcp) for capabilities.
 
 ### Docker Compose
 

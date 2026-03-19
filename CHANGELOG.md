@@ -4,7 +4,7 @@
 
 ### Overview
 
-Rosetta is a consulting control plane for AI coding agents. R2 is the production release that moves teams from individual developer prompting to governed, organization wide AI assisted development.
+Rosetta is a meta-prompting, context engineering, and centralized knowledge management for AI coding agents. R2 is the production release that moves teams from individual developer prompting to governed, organization wide AI assisted development.
 
 ### Highlights
 

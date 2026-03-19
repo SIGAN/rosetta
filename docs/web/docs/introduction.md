@@ -7,7 +7,7 @@ permalink: /docs/introduction/
 <div align="center">
   <img class="intro-logo intro-logo--dark" src="{{ '/assets/brand/rosetta-logo-full-color-white-text.png' | relative_url }}" alt="Rosetta" width="200">
   <img class="intro-logo intro-logo--light" src="{{ '/assets/brand/rosetta-logo-full-color-black-text.png' | relative_url }}" alt="Rosetta" width="200">
-  <p><strong>Consulting control plane for AI coding agents</strong></p>
+  <p><strong>Meta-prompting, context engineering, and centralized knowledge management for AI coding agents</strong></p>
   <p>
     <a href="https://pypi.org/project/ims-mcp/"><img src="https://img.shields.io/pypi/v/ims-mcp.svg" alt="PyPI"></a>
     <a href="https://pypi.org/project/ims-mcp/"><img src="https://img.shields.io/pypi/dm/ims-mcp.svg" alt="Downloads"></a>
@@ -17,7 +17,7 @@ permalink: /docs/introduction/
 
 ## What is Rosetta
 
-Rosetta is a consulting control plane for AI coding agents. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge. Works across IDEs, runs locally, and keeps instructions versioned as code.
+Rosetta is a meta-prompting, context engineering, and centralized knowledge management for AI coding agents. It provides structured context - rules, skills, workflows, and sub-agents - guiding AI systems to operate with a deep understanding of system architecture, domain constraints, and engineering standards. Rosetta also accelerates project onboarding by reverse-engineering architecture and domain context, improving the reliability and consistency of AI-generated code.
 
 Every AI interaction follows four phases: **Prepare** (load guardrails and context), **Research** (search the knowledge base), **Plan** (produce a reviewable plan), **Act** (execute with full context). Read more in the [Usage Guide](/rosetta/docs/usage-guide/#workflows).
 
@@ -26,15 +26,15 @@ Every AI interaction follows four phases: **Prepare** (load guardrails and conte
 - **Context engineering, not prompt hacking.** Agents receive your conventions, architecture, and business rules automatically — structured, versioned, and ready before the first line of code. See [how it fits your workflow](/rosetta/docs/overview/#how-rosetta-fits-into-your-workflow).
 - **Write once, run everywhere.** Agent-agnostic design adapts to any IDE and any tech stack. No per-tool maintenance.
 - **Guardrails built in.** Approval gates, risk assessment, and data protection ensure consistent AI behavior across teams. See [how Rosetta protects you](/rosetta/docs/usage-guide/#how-rosetta-protects-you).
-- **Cross-project intelligence.** Publish business and technical context from every project into a shared knowledge base. Agents see the system, not just one repo — trace flows across services, catch breaking API changes before they ship, and assess blast radius of any change across the portfolio.
+- **Cross-project intelligence** *(opt-in).* Publish business and technical context from every project into a shared knowledge base. Agents see the system, not just one repo — trace flows across services, catch breaking API changes before they ship, and assess blast radius of any change across the portfolio.
 - **One-command onboarding.** New repo, new developer — productive immediately with best practices baked in.
 - **Instructions as code.** Prompts version-controlled with release management — single source of truth for all teams.
 
 ## How it works
 
-Your IDE connects to the Rosetta MCP server. The server transforms, bundles, and contextualizes knowledge from workflows, guardrails, coding conventions, and project context. The coding agent receives structured instructions from Rosetta and applies them to your code.
+Your IDE connects to the Rosetta MCP server. The server exposes guardrails and common best practices, and provides a menu of available instructions — workflows and coding conventions. The coding agent selects only what it needs for the current task; Rosetta delivers just those, keeping the agent's context lean. No source code or project data ever reaches Rosetta.
 
-Rosetta never sees your source code. It only serves knowledge and instructions to the agent. The agent loads only what it needs per request (progressive disclosure) and follows your organization's workflows.
+Rosetta never sees your source code or IP by design. It only serves knowledge and instructions to the agent. The agent loads only what it needs per request (progressive disclosure) and follows your organization's workflows.
 
 ## Get Started
 

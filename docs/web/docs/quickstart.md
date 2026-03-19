@@ -19,6 +19,10 @@ permalink: /docs/quickstart/
 
 Rosetta uses HTTP MCP transport with OAuth. Pick your IDE and add the configuration.
 
+> [!NOTE]
+> Rosetta is designed to never use or see data or IP.
+> Instead it uses inversion of control, by providing a "menu" to AI coding agents.
+
 <details markdown="1">
 <summary><b>Cursor</b></summary>
 
@@ -167,7 +171,34 @@ Any MCP client that supports HTTP transport can connect using the endpoint URL. 
 
 STDIO transport is available for air-gapped environments. See [Installation](/rosetta/docs/installation/).
 
-## Step 2: Add Bootstrap Rule
+## Step 2: Verify
+
+Ask the agent:
+
+```
+What can you do, Rosetta?
+```
+
+It should use Rosetta MCP to retrieve agents, guardrails, and instructions.
+
+## Step 3: Initialize (once per repository)
+
+Ask the agent:
+
+```
+Initialize this repository using Rosetta
+```
+
+The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md), and ask clarifying questions. Read more about [workspace files](/rosetta/docs/installation/#workspace-files-created) and [all workflows](/rosetta/docs/usage-guide/#workflows).
+
+> [!NOTE]
+> **Prefer medium models:** High reasoning and Opus models consume too much token on reasoning.
+> **Composite workspaces:** init each repository separately, then init at the workspace level with "This is composite workspace" appended.
+> **Dead code or existing specs:** mention their location in the prompt to save time.
+
+## Step 4: Add Bootstrap Rule (optional)
+
+If something does not work.
 
 Download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1) and add it to your IDE's instruction file (keep entire contents, including YAML frontmatter):
 
@@ -181,30 +212,6 @@ Download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instru
 | Windsurf                   | `.windsurf/rules/bootstrap.md`    |
 | Antigravity                | `.agent/rules/bootstrap.md`       |
 | OpenCode                   | `AGENTS.md`                       |
-
-## Step 3: Verify
-
-Ask the agent:
-
-```
-What can you do, Rosetta?
-```
-
-It should use Rosetta MCP to retrieve agents, guardrails, and instructions.
-
-## Step 4: Initialize (once per repository)
-
-Ask the agent:
-
-```
-Initialize this repository using Rosetta
-```
-
-The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md, ARCHITECTURE.md, CONTEXT.md), and ask clarifying questions. Read more about [workspace files](/rosetta/docs/installation/#workspace-files-created) and [all workflows](/rosetta/docs/usage-guide/#workflows).
-
-> [!NOTE]
-> **Composite workspaces:** init each repository separately, then init at the workspace level with "This is composite workspace" appended.
-> **Dead code or existing specs:** mention their location in the prompt to save time.
 
 ## Common Issues
 

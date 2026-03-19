@@ -72,7 +72,7 @@ Prep Step 3 for orchestrator (primary/top agent):
 
 1. Lookup in `refsrc` and ACQUIRE `<external-private-library-name>` FROM KB when external private library is needed.
 2. Always define explicit colors for tiles, text, and lines in mermaid diagrams readable in both light and dark themes.
-3. If the task can be accomplished using built-in tools, prefer them over shell. Otherwise, write single **simple** shell script in `agents/TEMP` and execute it.
+3. Prefer using built-in tools (yes) instead of shell commands (no).
 
 </additional_requirements>
 

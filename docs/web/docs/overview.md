@@ -21,7 +21,7 @@ permalink: /docs/overview/
 
 ## Core Mental Model
 
-Rosetta is a **consulting control plane for AI coding agents**. It consults them with versioned, expert-prepared instructions so every agent follows your organization's rules, conventions, and knowledge — from day one.
+Rosetta is a **meta-prompting, context engineering, and centralized knowledge management** for AI coding agents. It provides structured context - rules, skills, workflows, and sub-agents - guiding AI systems to operate with a deep understanding of system architecture, domain constraints, and engineering standards. Rosetta also accelerates project onboarding by reverse-engineering architecture and domain context, improving the reliability and consistency of AI-generated code.
 
 Design principles:
 
@@ -36,6 +36,8 @@ Design principles:
 **Rules-as-code.** AI behavior is authored, versioned, reviewed, and approved through standard engineering workflows. Same rigor as application code. See [Contributing — Prompt Changes](/rosetta/docs/contributing/#prompt-changes) for the authoring process.
 
 **Security by design.** No source code transfer. Air-gap capable. Runs inside the organization's perimeter. See [Context — Design Philosophy](/rosetta/docs/context/#design-philosophy) for the full set.
+
+**Inversion of control.** Rosetta never sees or processes source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
 
 **Batteries included.** Ships proven defaults from real-world projects. Makes the right thing the easy thing.
 

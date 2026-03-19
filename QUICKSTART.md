@@ -12,6 +12,10 @@
 
 Rosetta uses HTTP MCP transport with OAuth. Pick your IDE and add the configuration.
 
+> [!NOTE]
+> Rosetta is designed to never use or see data or IP.
+> Instead it uses inversion of control, by providing "menu" to AI coding agents.
+
 <details>
 <summary><b>Cursor</b></summary>
 
@@ -160,22 +164,7 @@ Any MCP client that supports HTTP transport can connect using the endpoint URL. 
 
 STDIO transport is available for air-gapped environments. See [INSTALLATION.md](INSTALLATION.md).
 
-## Step 2: Add Bootstrap Rule
-
-Download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1) and add it to your IDE's instruction file (keep entire contents, including YAML frontmatter):
-
-| IDE                        | Destination                       |
-| -------------------------- | --------------------------------- |
-| Cursor                     | `.cursor/rules/bootstrap.mdc`     |
-| Claude Code                | `.claude/claude.md`               |
-| VS Code / GitHub Copilot   | `.github/copilot-instructions.md` |
-| GitHub Copilot (JetBrains) | `.github/copilot-instructions.md` |
-| JetBrains Junie            | `.junie/guidelines.md`            |
-| Windsurf                   | `.windsurf/rules/bootstrap.md`    |
-| Antigravity                | `.agent/rules/bootstrap.md`       |
-| OpenCode/Cursor            | `AGENTS.md`                       |
-
-## Step 3: Verify
+## Step 2: Verify
 
 Ask the agent:
 
@@ -187,7 +176,7 @@ It should use Rosetta MCP to retrieve agents, guardrails, and instructions:
 
 <img src="docs/images/Rosetta-ProperResponse1.png" alt="Rosetta proper response" width="355"/> <img src="docs/images/Rosetta-ProperResponse2.png" alt="Rosetta proper response" width="300"/>
 
-## Step 4: Initialize (once per repository)
+## Step 3: Initialize (once per repository)
 
 Ask the agent:
 
@@ -207,6 +196,23 @@ The agent will analyze your tech stack, generate documentation (TECHSTACK.md, CO
 - **OAuth prompt does not appear:** restart your IDE and retry the connection. Read more in [Troubleshooting — Connection & Authentication](TROUBLESHOOTING.md#connection--authentication).
 - **Agent ignores Rosetta tools:** confirm the MCP server shows as connected in your IDE's MCP settings. Add a [bootstrap rule](INSTALLATION.md) if the agent still skips Rosetta. Read more in [Troubleshooting — Agent Not Using Rosetta](TROUBLESHOOTING.md#agent-not-using-rosetta).
 - **Slow or empty responses:** check your network can reach `rosetta.evergreen.gcp.griddynamics.net`. See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#slow-or-empty-responses).
+
+## Step 4: Add Bootstrap Rule (optional)
+
+If something does not work.
+
+Download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instructions/r2/core/rules/bootstrap.md?plain=1) and add it to your IDE's instruction file (keep entire contents, including YAML frontmatter):
+
+| IDE                        | Destination                       |
+| -------------------------- | --------------------------------- |
+| Cursor                     | `.cursor/rules/bootstrap.mdc`     |
+| Claude Code                | `.claude/claude.md`               |
+| VS Code / GitHub Copilot   | `.github/copilot-instructions.md` |
+| GitHub Copilot (JetBrains) | `.github/copilot-instructions.md` |
+| JetBrains Junie            | `.junie/guidelines.md`            |
+| Windsurf                   | `.windsurf/rules/bootstrap.md`    |
+| Antigravity                | `.agent/rules/bootstrap.md`       |
+| OpenCode/Cursor            | `AGENTS.md`                       |
 
 ## Next Steps
 
