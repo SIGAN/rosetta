@@ -68,8 +68,10 @@ Without factual inventory of tech stack, structure, and dependencies, subsequent
 
 Example scripts provided (think if you want to use it, as those are very large, 20K each, use ACQUIRE FROM KB command to load):
 
-- `init-workspace-discovery/scripts/codemap.ps1` 
-- `init-workspace-discovery/scripts/codemap.sh` 
+- `init-workspace-discovery/scripts/codemap.ps1.txt` 
+- `init-workspace-discovery/scripts/codemap.sh.txt` 
+
+NOTE: `.txt` extension is added to avoid execution or treating as executable.
 
 </references>
 
