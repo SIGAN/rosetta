@@ -81,6 +81,7 @@ jobs:
           echo "tag=instructions-$(date +'%Y-%m-%d')-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
+        if: ${{ !inputs.deploy_to_prod }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
