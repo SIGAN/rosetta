@@ -23,8 +23,8 @@ permalink: /
 </section>
 
 <!-- ===== THE PROBLEM IN 2026 ===== -->
-<section class="section diag-section" id="why-control-plane">
-  <h2 class="with-marker">Why AI Agents Need a Control Plane</h2>
+<section class="section diag-section" id="why-rosetta">
+  <h2 class="with-marker">Why AI Agents Need Rosetta</h2>
   <p class="section-subtitle">AI coding agents are everywhere. Consistency and context are not.</p>
 
   <div class="diag-header">
@@ -128,6 +128,7 @@ permalink: /
         <div class="qs-step-body">
           <h3 class="qs-step-title">Add Rosetta MCP to your IDE</h3>
           <p class="qs-step-desc">Pick your editor. No local install needed — Rosetta connects over HTTP.</p>
+          <p class="qs-step-note">Rosetta is designed to never use or see your data or IP.</p>
 
           <div class="qs-tabs-scroll">
             <div class="qs-tabs" role="tablist">
@@ -257,7 +258,6 @@ permalink: /
             </div>
           </div>
 
-          <p class="qs-step-note">Rosetta is designed to never use or see your data or IP.</p>
         </div>
       </div>
 
@@ -340,7 +340,7 @@ permalink: /
 </script>
 
 <div class="qs-note" style="margin-bottom:2.2rem">
-  Agent-agnostic by design. Use frontier-class models (<strong>Claude Sonnet/Opus</strong>, <strong>GPT-4o+</strong>, <strong>Gemini Pro</strong>) for best results.
+  Agent-agnostic by design. Use frontier-class models (<strong>Claude Sonnet 4.6</strong>, <strong>GPT-5.3-codex-medium</strong>, <strong>Gemini 3.1 Pro</strong>) or better for best results.
 </div>
 
 <!-- ===== WITHOUT vs WITH ROSETTA ===== -->
