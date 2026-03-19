@@ -50,6 +50,7 @@ baseSchema: docs/schemas/rule.md
 
 - MUST NOT assume user approval. If user sends a message, they are only reviewing, questioning, and clarifying
 - User MUST provide clear, explicit approval. Accepted phrases: `Yes, I approve`, `Yes, I understand consequences`, etc.
+- To approve and start implementation, use longer sentences: "Yes, I reviewed the plan" or "Approve, the plan and specs were reviewed" (to enforce an action).
 - Do not proceed to the next phase unless the user explicitly approves, DO NOT ASSUME it is approved
 - If user sends anything else (questions, suggestions, edits), treat it as review, not approval
 - Require explicit approval:

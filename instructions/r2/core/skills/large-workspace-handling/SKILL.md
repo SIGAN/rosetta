@@ -42,10 +42,8 @@ Two strategies (mutually exclusive):
 
 ## Work distribution
 - Coordinated modifications via contract-scoped parallel subagents with explicit boundaries and success criteria
-- Divide change scope across subagents: scope paths, goal, inputs, read-only deps, , boundaries, constraints, output expectations
-
-- Assign subagents: scope paths, goal, context, inputs, output format, boundaries, constraints, operations, and success criteria
-- Subagents decide and execute changes within declared scope
+- Split work across subagents and provide: scope paths, goal, context, inputs, output format, boundaries, constraints, operations, and success criteria
+- Subagents decide and execute work within declared scope
 - Resolve cross-scope deps via execution ordering
 - Resolve shared-interface conflicts or changes with extra pass
 - Produce unified result
