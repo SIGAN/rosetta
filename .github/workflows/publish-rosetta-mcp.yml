@@ -1,4 +1,4 @@
-name: Publish rosetta-mcp
+name: Publish Rosetta MCP
 
 on:
   push:
