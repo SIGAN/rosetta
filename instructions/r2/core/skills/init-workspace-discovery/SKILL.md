@@ -25,11 +25,14 @@ Without factual inventory of tech stack, structure, and dependencies, subsequent
 3. Detect languages, frameworks, build tools, package managers, runtime environments → write TECHSTACK
 4. Existing documentation may be stale or incomplete, prioritize source code artifacts over pre-existing documents
 5. Generate CODEMAP via shell commands (no pseudo graphics), 3-4 levels deep
+   - Perform basic discovery yourself with few commands
+   - Enumerate git repositories yourself
    - Markdown headers = workspace-relative path + recursive children count + <10 words description
    - List only immediate children files and only with file names
    - List target repository source code, static assets, and documentation files based on tech stack
    - Exclude noise/caches/build/binary files, files excluded by .gitignore
    - Implement as a single shell script in `agents/TEMP/` folder
+   - Use `git ls-files --cached --others --exclude-standard` in each repository or fallback to find/ls/etc with filters
 6. List direct dependencies (project, package, version) → write DEPENDENCIES
 7. Preserve human-added sections in existing files
 8. Update .gitignore according to bootstrap_rosetta_files
@@ -60,5 +63,14 @@ Without factual inventory of tech stack, structure, and dependencies, subsequent
 - Keep only current state — no deltas, no changelogs, no update reasons, no changes explanations, no summaries, the shorter the better.
 
 </pitfalls>
+
+<references>
+
+Example scripts provided (think if you want to use it, as those are very large, 20K each, use ACQUIRE FROM KB command to load):
+
+- `init-workspace-discovery/scripts/codemap.ps1` 
+- `init-workspace-discovery/scripts/codemap.sh` 
+
+</references>
 
 </init_workspace_discovery>

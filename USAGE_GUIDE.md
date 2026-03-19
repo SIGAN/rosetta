@@ -292,7 +292,7 @@ Reusable units of work that workflows and subagents invoke. Each skill focuses o
 | **Requirements Authoring** | Atomic requirement units with EARS format, explicit user approval, and traceability |
 | **Requirements Use** | Consume approved requirements to drive planning, implementation, and validation |
 | **Coding Agents Prompt Adaptation** | Adapt prompts from one coding agent/IDE to another while preserving intent and strategy |
-| **Large Workspace Handling** | Partition large workspaces (50+ files) into scoped subagent tasks |
+| **Large Workspace Handling** | Partition large workspaces (100+ files) into scoped subagent tasks |
 | **Init Workspace Context** | Classify initialization mode and build existing file inventory |
 | **Init Workspace Discovery** | Produce TECHSTACK.md, CODEMAP.md, DEPENDENCIES.md from workspace analysis |
 | **Init Workspace Documentation** | Create CONTEXT.md, ARCHITECTURE.md, IMPLEMENTATION.md, ASSUMPTIONS.md, MEMORY.md |

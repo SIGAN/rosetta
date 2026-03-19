@@ -26,7 +26,7 @@ Rosetta is a consulting control plane for AI coding agents. R2 is the production
 
 - **Subagent orchestration.** Work is split into phases handled by specialized agents. One can implement while another reviews, potentially on a different model. Architect, engineer, reviewer, and validator each work with focused context and a clear scope.
 - **Deterministic plan manager.** Execution plans are tracked step by step with phase completion gates. It is in battle testing with limited scope and is designed to make AI work resumable and auditable.
-- **Large workspace handling.** Repositories with more than 50 files are partitioned into scoped subagent tasks to prevent context overflow and keep quality stable at scale.
+- **Large workspace handling.** Repositories with more than 100 files are partitioned into scoped subagent tasks to prevent context overflow and keep quality stable at scale.
 - **Automated review gates.** After implementation and testing, a separate reviewer agent checks the result against the spec before it reaches human reviewers.
 
 #### Knowledge and Patterns
