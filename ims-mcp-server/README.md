@@ -2,7 +2,7 @@
 
 **Model Context Protocol (MCP) server for Rosetta (Enterprise Engineering Governance and Instructions Management System)**
 
-*Powered by R2R technology for advanced RAG capabilities*
+*Powered by [RAGFlow](https://github.com/infiniflow/ragflow) for advanced RAG capabilities*
 
 This package provides a FastMCP server that connects to Rosetta servers for advanced retrieval-augmented generation (RAG) capabilities. It enables AI assistants like Claude Desktop, Cursor, and other MCP clients to search, retrieve, and manage documents in Rosetta knowledge bases.
 
@@ -581,13 +581,13 @@ To track analytics in your own PostHog project, provide your Project API Key:
 
 ## License
 
-MIT License - see LICENSE file for details
+Apache-2.0 - see LICENSE file for details.
 
-This package is built on R2R (RAG to Riches) technology by SciPhi AI, which is licensed under the MIT License. We gratefully acknowledge the R2R project and its contributors.
+This package is built on [RAGFlow](https://github.com/infiniflow/ragflow) by InfiniFlow, which is licensed under the Apache-2.0 License. We gratefully acknowledge the RAGFlow project and its contributors.
 
 ## Links
 
-- **R2R Technology**: https://github.com/SciPhi-AI/R2R
+- **RAGFlow**: https://github.com/infiniflow/ragflow
 - **Model Context Protocol**: https://modelcontextprotocol.io/
 - **FastMCP**: https://github.com/jlowin/fastmcp
 

@@ -348,6 +348,12 @@ Key differences between environments:
 
 Production deploys require a manual image tag bump in `values-prod.yaml`.
 
+## Rosetta Images, Packages
+
+- https://pypi.org/project/ims-mcp/
+- https://pypi.org/project/rosetta-cli/
+- https://hub.docker.com/r/griddynamics/rosetta-mcp
+
 ---
 
 ## Related Docs
