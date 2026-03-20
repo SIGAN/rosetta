@@ -1,6 +1,8 @@
 ---
 name: requirements-authoring-flow
 description: Shared workflow for requirements authoring (creating, updating, improving, reviewing). Guides AI through discovery, intent capture, iterative requirement drafting with mandatory user approvals, validation, and delivery. Contains discovery, research, intent capture, outline, drafting, validating, and finalization
+tags: ["workflows"]
+baseSchema: docs/schemas/workflow.md
 ---
 
 <requirements-flow>
