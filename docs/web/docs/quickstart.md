@@ -15,13 +15,16 @@ permalink: /docs/quickstart/
 ## Step 1: Connect Rosetta MCP
 
 > [!WARNING]
-> Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better models. Avoid Auto model selection.
+> You must receive a prior approval from your manager and company to use it.
 
-Rosetta uses HTTP MCP transport with OAuth. Pick your IDE and add the configuration.
+> [!WARNING]
+> Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better models. Avoid Auto model selection.
 
 > [!NOTE]
 > Rosetta is designed to never use or see data or IP.
 > Instead it uses inversion of control, by providing a "menu" to AI coding agents.
+
+Rosetta uses HTTP MCP transport with OAuth. Pick your IDE and add the configuration.
 
 <details markdown="1">
 <summary><b>Cursor</b></summary>
