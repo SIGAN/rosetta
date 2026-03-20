@@ -699,6 +699,40 @@ h2.with-marker::before {
   color: #276e4e;
 }
 
+/* Warning badge */
+.qs-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  margin-top: 1rem;
+  margin-bottom: 1.4rem;
+  padding: .75rem 1.2rem;
+  background: rgba(236, 181, 24, 0.1);
+  border: 1.5px solid rgba(236, 181, 24, 0.35);
+  border-radius: 10px;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.qs-warning-icon {
+  flex-shrink: 0;
+  color: #d4a017;
+}
+
+[data-theme="light"] .qs-warning {
+  background: rgba(180, 130, 0, 0.09);
+  border-color: rgba(180, 130, 0, 0.35);
+  color: #1a202c;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(180, 130, 0, 0.08);
+}
+
+[data-theme="light"] .qs-warning-icon {
+  color: #a07800;
+}
+
 /* Success banner */
 .qs-success {
   display: flex;
