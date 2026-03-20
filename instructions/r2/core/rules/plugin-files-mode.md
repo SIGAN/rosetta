@@ -78,7 +78,6 @@ Prep Step 1:
 
 - `/rosetta` → engage only Rosetta flow.
 - `GET PREP STEPS`, `EXECUTE PREP STEPS` → execute already loaded prep steps from bootstrap-* instructions.
-- Skills/Commands/Workflows/Agents/Subagents may have `core:` or `grid:` prefix that was omitted
 - `ACQUIRE <file[.md]> ABOUT <PROJECT>` => read local file in user's project `docs/<PROJECT>` folder
 - `QUERY <KEYWORDS> IN <PROJECT>` => use grep or codebase search in user's project `docs/<PROJECT>` with KEYWORDS
 - `STORE <file[.md]> TO <PROJECT>` => upsert file in user's project `docs/<PROJECT>`
