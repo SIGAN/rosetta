@@ -146,7 +146,7 @@ To enable the admin panel, add arguments to the RAGFlow deployment:
 - [Admin UI Documentation](https://ragflow.io/docs/admin_ui)
 
 **Admin Password Setup**:
-1. Access the admin panel at `https://ims.evergreen.gcp.griddynamics.net/admin`
+1. Access the admin panel at `https://<production server URL>/admin`
 2. Navigate to **User Management**
 3. Click the user icon next to the admin account
 4. Change the password
@@ -164,8 +164,8 @@ kubectl get ingress -n ragflow
 ```
 
 **Verify services & functionality**:
-- Access main interface: https://ims.evergreen.gcp.griddynamics.net
-- Admin panel: https://ims.evergreen.gcp.griddynamics.net/admin
+- Access main interface: https://<production server URL>
+- Admin panel: https://<production server URL>/admin
 - MinIO login to a console (via port-forward)
 - Users login using OIDC SSO
 - Document ingestion and retrieval

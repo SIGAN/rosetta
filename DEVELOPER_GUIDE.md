@@ -35,7 +35,7 @@
    - Uninstall `local-files-mode.md` from target repository
    - [Publish to dev](#dev-environment-integration-testing)
    - Enable Rosetta MCP or follow [Quick Start Guide](QUICKSTART.md) to install it
-   - Use dev server URL `https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp`
+   - Use dev server URL `<rosetta MCP development server URL>`
    - Test end-to-end through the HTTP MCP
 
 6. **Open a PR.**
@@ -124,7 +124,7 @@ docker run -d --name rosetta-redis -p 6379:6379 valkey/valkey:latest
 
 ```bash
 claude mcp add --transport stdio Rosetta \
-  --env ROSETTA_SERVER_URL=https://ims-dev.evergreen.gcp.griddynamics.net/ \
+  --env ROSETTA_SERVER_URL=https://<developement server URL>/ \
   --env ROSETTA_API_KEY=ragflow-xxxxx \
   --env VERSION=r2 \
   --env REDIS_URL=redis://localhost:6379/0 \
@@ -135,7 +135,7 @@ claude mcp add --transport stdio Rosetta \
 
 ```bash
 codex mcp add Rosetta \
-  --env ROSETTA_SERVER_URL=https://ims-dev.evergreen.gcp.griddynamics.net/ \
+  --env ROSETTA_SERVER_URL=https://<developement server URL>/ \
   --env ROSETTA_API_KEY=ragflow-xxxxx \
   --env VERSION=r2 \
   --env REDIS_URL=redis://localhost:6379/0 \
@@ -151,7 +151,7 @@ codex mcp add Rosetta \
       "command": "uvx",
       "args": ["--prerelease=allow", "ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims-dev.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<developement server URL>/",
         "ROSETTA_API_KEY": "ragflow-xxxxx",
         "VERSION": "r2",
         "REDIS_URL": "redis://localhost:6379/0"
@@ -171,7 +171,7 @@ codex mcp add Rosetta \
       "command": "uvx",
       "args": ["--prerelease=allow", "ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims-dev.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<developement server URL>/",
         "ROSETTA_API_KEY": "ragflow-xxxxx",
         "VERSION": "r2",
         "REDIS_URL": "redis://localhost:6379/0"
@@ -265,10 +265,10 @@ After local validation passes, test end-to-end against the dev environment.
 
 **Environments (two separate servers):**
 
-- **Rosetta Server (RAGFlow) prod:** `https://ims.evergreen.gcp.griddynamics.net/` — document engine backend, dataset management, API keys
-- **Rosetta Server (RAGFlow) dev:** `https://ims-dev.evergreen.gcp.griddynamics.net/` — used by STDIO MCP and CLI for publishing
-- **Rosetta HTTP MCP prod:** `https://rosetta.evergreen.gcp.griddynamics.net/mcp` — production MCP endpoint for end users
-- **Rosetta HTTP MCP dev:** `https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp` — dev MCP endpoint for integration testing
+- **Rosetta Server (RAGFlow) prod:** `https://<production server URL>/` — document engine backend, dataset management, API keys
+- **Rosetta Server (RAGFlow) dev:** `https://<developement server URL>/` — used by STDIO MCP and CLI for publishing
+- **Rosetta HTTP MCP prod:** `<rosetta MCP production server URL>` — production MCP endpoint for end users
+- **Rosetta HTTP MCP dev:** `<rosetta MCP development server URL>` — dev MCP endpoint for integration testing
 
 ### 1. Publish instructions to dev
 
@@ -291,13 +291,13 @@ This is the mode end users run. Connect your IDE to the hosted dev MCP endpoint 
 **Claude Code** — the repo's `.mcp.json` already contains this config; no extra setup needed:
 
 ```bash
-claude mcp add --transport http Rosetta https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp
+claude mcp add --transport http Rosetta <rosetta MCP development server URL>
 ```
 
 **Codex:**
 
 ```bash
-codex mcp add Rosetta --url https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp
+codex mcp add Rosetta --url <rosetta MCP development server URL>
 ```
 
 **Cursor** (`.cursor/mcp.json`):
@@ -306,7 +306,7 @@ codex mcp add Rosetta --url https://rosetta-dev.evergreen.gcp.griddynamics.net/m
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP development server URL>"
     }
   }
 }
@@ -319,7 +319,7 @@ codex mcp add Rosetta --url https://rosetta-dev.evergreen.gcp.griddynamics.net/m
   "servers": {
     "Rosetta": {
       "type": "http",
-      "url": "https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP development server URL>"
     }
   }
 }

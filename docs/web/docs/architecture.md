@@ -79,10 +79,10 @@ Instructions flow up: files are published by the CLI into RAGFlow, served by Ros
 
 ## Environments
 
-- **Rosetta Server (RAGFlow) prod:** `https://ims.evergreen.gcp.griddynamics.net/` — document engine backend, dataset management, API keys
-- **Rosetta Server (RAGFlow) dev:** `https://ims-dev.evergreen.gcp.griddynamics.net/` — dev instance for testing publishes
-- **Rosetta HTTP MCP prod:** `https://rosetta.evergreen.gcp.griddynamics.net/mcp` — production MCP endpoint for end users
-- **Rosetta HTTP MCP dev:** `https://rosetta-dev.evergreen.gcp.griddynamics.net/mcp` — dev MCP endpoint for integration testing
+- **Rosetta Server (RAGFlow) prod:** `https://<production server URL>/` — document engine backend, dataset management, API keys
+- **Rosetta Server (RAGFlow) dev:** `https://<developement server URL>/` — dev instance for testing publishes
+- **Rosetta HTTP MCP prod:** `<rosetta MCP production server URL>` — production MCP endpoint for end users
+- **Rosetta HTTP MCP dev:** `<rosetta MCP development server URL>` — dev MCP endpoint for integration testing
 
 ---
 

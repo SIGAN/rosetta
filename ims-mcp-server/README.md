@@ -68,7 +68,7 @@ Rosetta MCP supports two runtime modes:
 
 | Variable | Scope | Default | Notes |
 |----------|-------|---------|-------|
-| `ROSETTA_SERVER_URL` | Runtime (all modes) | `https://ims.evergreen.gcp.griddynamics.net/` | Rosetta Server base URL |
+| `ROSETTA_SERVER_URL` | Runtime (all modes) | `https://<production server URL>/` | Rosetta Server base URL |
 | `ROSETTA_API_KEY` | Runtime (all modes) | Empty | Required for Rosetta Server access |
 | `VERSION` | Runtime (all modes) | `r1` | Used for instruction dataset resolution (`aia-{version}`) |
 | `ROSETTA_TRANSPORT` | Runtime (all modes) | `stdio` | `stdio` or `http` |
@@ -111,7 +111,7 @@ Rosetta MCP supports two runtime modes:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `ROSETTA_SERVER_URL` | Rosetta Server base URL | `https://ims.evergreen.gcp.griddynamics.net/` |
+| `ROSETTA_SERVER_URL` | Rosetta Server base URL | `https://<production server URL>/` |
 | `ROSETTA_API_KEY` | API key used by Rosetta MCP to access Rosetta Server | Required |
 | `VERSION` | Instruction release used for instruction dataset resolution (`aia-{version}`) | `r1` |
 | `IMS_DEBUG` | Enable debug logging to stderr (`1/true/yes/on`) | Disabled |
@@ -198,7 +198,7 @@ Add to `.cursor/mcp.json` (or equivalent client config):
       "args": ["ims-mcp@latest"],
       "env": {
         "ROSETTA_TRANSPORT": "stdio",
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net",
+        "ROSETTA_SERVER_URL": "https://<production server URL>",
         "ROSETTA_API_KEY": "your-rosetta-api-key",
         "ROSETTA_USER_EMAIL": "you@griddynamics.com"
       }
@@ -213,7 +213,7 @@ Start Rosetta MCP in HTTP mode:
 
 ```bash
 ROSETTA_TRANSPORT=http \
-ROSETTA_SERVER_URL="https://ims.evergreen.gcp.griddynamics.net" \
+ROSETTA_SERVER_URL="https://<production server URL>" \
 ROSETTA_API_KEY="your-rosetta-api-key" \
 ROSETTA_HTTP_HOST=0.0.0.0 \
 ROSETTA_HTTP_PORT=8000 \
@@ -230,7 +230,7 @@ For multi-instance deployment with shared session state, add `REDIS_URL`:
 
 ```bash
 ROSETTA_TRANSPORT=http \
-ROSETTA_SERVER_URL="https://ims.evergreen.gcp.griddynamics.net" \
+ROSETTA_SERVER_URL="https://<production server URL>" \
 ROSETTA_API_KEY="your-rosetta-api-key" \
 ROSETTA_HTTP_HOST=0.0.0.0 \
 ROSETTA_HTTP_PORT=8000 \
@@ -256,7 +256,7 @@ Minimal HTTP client config shape (client-specific fields may vary):
 {
   "mcpServers": {
     "RosettaHTTP": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -513,7 +513,7 @@ To **disable** analytics, set `POSTHOG_API_KEY` to an empty string in your MCP c
       "args": ["ims-mcp@latest"],
       "env": {
         "ROSETTA_TRANSPORT": "stdio",
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net",
+        "ROSETTA_SERVER_URL": "https://<production server URL>",
         "ROSETTA_API_KEY": "your-rosetta-api-key",
         "POSTHOG_API_KEY": ""
       }

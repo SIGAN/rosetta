@@ -93,7 +93,7 @@ Environment overrides (per-env files):
 
 | Setting | Dev | Prod |
 |---|---|---|
-| Ingress host | `ims-dev.evergreen.gcp.griddynamics.net` | `ims.evergreen.gcp.griddynamics.net` |
+| Ingress host | `<developement server URL>` | `<production server URL>` |
 | MySQL database | `ragflow-dev` | (base default) |
 | MySQL user | `ragflow-dev` | (base default) |
 

@@ -14,6 +14,7 @@ from ims_mcp.constants import (
     TAG_WORKFLOW,
     WORKFLOWS_PATH_PREFIX,
     WORKFLOWS_PSEUDO_FILE_HEADER,
+    XML_FILE_CLOSE,
 )
 from ims_mcp.context import CallContext
 from ims_mcp.services.bundler import Bundler
@@ -117,7 +118,9 @@ def _build_workflows_listing(call_ctx: CallContext, doc_cache: InstructionDocCac
         description = _frontmatter_description(doc)
         desc_part = f" — {description}" if description else ""
         lines.append(f"- `{tag}`{desc_part}")
-    return "\n".join(lines)
+    content = "\n".join(lines)
+    open_tag = f'<rosetta:file dataset="{dataset_name}" name="ALL AVAILABLE WORKFLOWS">\n'
+    return f"\n{open_tag}{content}\n{XML_FILE_CLOSE}"
 
 
 async def get_context_instructions(

@@ -4,6 +4,9 @@
 **When should I read this?** When you need the full picture: HTTP, STDIO, plugins, offline, or environment variables. For the fastest path, see [QUICKSTART.md](QUICKSTART.md).
 
 > [!WARNING]
+> You must receive a prior approval from your manager and company to use it.
+
+> [!WARNING]
 > Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better models. Avoid Auto model selection.
 
 ---
@@ -35,7 +38,7 @@ Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (project):
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -47,7 +50,7 @@ Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (project):
 <summary><b>Claude Code</b></summary>
 
 ```sh
-claude mcp add --transport http Rosetta https://rosetta.evergreen.gcp.griddynamics.net/mcp
+claude mcp add --transport http Rosetta <rosetta MCP production server URL>
 ```
 
 Authenticate inside a claude session with `/mcp`, select Rosetta, Authenticate, and complete the OAuth flow.
@@ -58,7 +61,7 @@ Authenticate inside a claude session with `/mcp`, select Rosetta, Authenticate, 
 <summary><b>Codex</b></summary>
 
 ```sh
-codex mcp add Rosetta --url https://rosetta.evergreen.gcp.griddynamics.net/mcp
+codex mcp add Rosetta --url <rosetta MCP production server URL>
 codex mcp login Rosetta
 ```
 
@@ -73,7 +76,7 @@ Add to `.vscode/mcp.json` or `~/.mcp.json`:
 {
   "servers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -90,7 +93,7 @@ Add to `.vscode/mcp.json` or `~/.mcp.json`:
 {
   "servers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -109,7 +112,7 @@ Restart IDE after changes.
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -126,7 +129,7 @@ Add to your Windsurf MCP config:
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -143,7 +146,7 @@ Add to your Antigravity MCP config:
 {
   "mcpServers": {
     "Rosetta": {
-      "serverUrl": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "serverUrl": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -161,7 +164,7 @@ Add to `opencode.json`:
   "mcp": {
     "Rosetta": {
       "type": "http",
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp",
+      "url": "<rosetta MCP production server URL>",
       "enabled": true
     }
   }
@@ -178,7 +181,7 @@ STDIO runs Rosetta MCP as a local process. Your IDE launches it and communicates
 
 #### Get Your API Key
 
-1. Open [Rosetta Server (RAGFlow)](https://ims.evergreen.gcp.griddynamics.net/)
+1. Open [Rosetta Server (RAGFlow)](https://<production server URL>/)
 2. Create an account or sign in
 3. Generate an API key from your profile
 
@@ -192,7 +195,7 @@ Required environment variables:
 
 | Variable             | Value                                         |
 | -------------------- | --------------------------------------------- |
-| `ROSETTA_SERVER_URL` | `https://ims.evergreen.gcp.griddynamics.net/` |
+| `ROSETTA_SERVER_URL` | `https://<production server URL>/` |
 | `ROSETTA_API_KEY`    | Your personal API key                         |
 | `ROSETTA_USER_EMAIL` | Your email address                            |
 
@@ -208,7 +211,7 @@ Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (project):
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -224,7 +227,7 @@ Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (project):
 
 ```sh
 claude mcp add --transport stdio Rosetta \
-  --env ROSETTA_SERVER_URL=https://ims.evergreen.gcp.griddynamics.net/ \
+  --env ROSETTA_SERVER_URL=https://<production server URL>/ \
   --env ROSETTA_API_KEY=your-api-key \
   --env ROSETTA_USER_EMAIL=you@example.com \
   -- uvx ims-mcp@latest
@@ -237,7 +240,7 @@ claude mcp add --transport stdio Rosetta \
 
 ```sh
 codex mcp add Rosetta \
-  --env ROSETTA_SERVER_URL=https://ims.evergreen.gcp.griddynamics.net/ \
+  --env ROSETTA_SERVER_URL=https://<production server URL>/ \
   --env ROSETTA_API_KEY=your-api-key \
   --env ROSETTA_USER_EMAIL=you@example.com \
   -- uvx ims-mcp@latest
@@ -258,7 +261,7 @@ Add to `.vscode/mcp.json` or `~/.mcp.json`:
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -282,7 +285,7 @@ Add to `~/.config/github-copilot/intellij/mcp.json`:
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -307,7 +310,7 @@ Restart IDE after changes.
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -330,7 +333,7 @@ Add to your Windsurf MCP config:
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -353,7 +356,7 @@ Add to your Antigravity MCP config:
       "command": "uvx",
       "args": ["ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }
@@ -377,7 +380,7 @@ Add to `opencode.json`:
       "command": ["uvx", "ims-mcp@latest"],
       "enabled": true,
       "env": {
-        "ROSETTA_SERVER_URL": "https://ims.evergreen.gcp.griddynamics.net/",
+        "ROSETTA_SERVER_URL": "https://<production server URL>/",
         "ROSETTA_API_KEY": "your-api-key",
         "ROSETTA_USER_EMAIL": "you@example.com"
       }

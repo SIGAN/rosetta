@@ -44,7 +44,7 @@ Rosetta never sees your source code or IP by design. It only serves knowledge an
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp"
+      "url": "<rosetta MCP production server URL>"
     }
   }
 }
@@ -53,13 +53,13 @@ Rosetta never sees your source code or IP by design. It only serves knowledge an
 **Claude Code:**
 
 ```sh
-claude mcp add --transport http Rosetta https://rosetta.evergreen.gcp.griddynamics.net/mcp
+claude mcp add --transport http Rosetta <rosetta MCP production server URL>
 ```
 
 **Codex:**
 
 ```sh
-codex mcp add Rosetta --url https://rosetta.evergreen.gcp.griddynamics.net/mcp
+codex mcp add Rosetta --url <rosetta MCP production server URL>
 codex mcp login Rosetta
 ```
 

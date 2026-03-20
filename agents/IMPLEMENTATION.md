@@ -77,7 +77,7 @@
 - Added a legacy compatibility path in `ims-mcp-server/ims_mcp/config.py`:
   - When transport is `stdio`, `ROSETTA_API_KEY` is absent, and `R2R_API_BASE`, `R2R_EMAIL`, and `R2R_PASSWORD` are all present, `RosettaConfig.from_env()` now calls `init_legacy_compatibility_mode()`.
   - Legacy mode keeps the existing config defaults and only overrides:
-    - `server_url` -> `https://ims.evergreen.gcp.griddynamics.net/`
+    - `server_url` -> `https://<production server URL>/`
     - `user_email` -> `R2R_EMAIL`
     - `api_key` -> first tenant token from RAGFlow, or a newly created token if none exist.
 - Implemented the login/token bootstrap flow against RAGFlow frontend endpoints:
