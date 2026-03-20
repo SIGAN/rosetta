@@ -558,7 +558,7 @@ def test_server_require_client_data_scope_rejects_missing_scope():
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=())):
         assert server._require_client_data_scope() == (
-            "Error: ROSETTA_ALLOWED_SCOPES must include 'allow_client_data'"
+            "Error: this feature is not available for your account!"
         )
 
 
