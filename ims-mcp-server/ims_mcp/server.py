@@ -367,14 +367,10 @@ async def _read_resource(path: str, ctx: Context | None = None) -> str:
 @mcp.tool(name=TOOL_GET_CONTEXT_INSTRUCTIONS, description=PROMPT_GET_CONTEXT_INSTRUCTIONS)
 @track_tool_call
 async def get_context_instructions(
-    topic: Annotated[str | None, Field(description="Brief intent summary used for logging and tracking, <10 words.")] = None, # <10 is intentional: AI will always add more words, gives extra word buffer
     ctx: Context | None = None,
 ) -> str:
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
-    err = _validate_topic(topic)
-    if err:
-        return err
 
     global _CONTEXT_INSTRUCTIONS_CACHE, _CONTEXT_INSTRUCTIONS_CACHE_TIME
     if not _is_context_instructions_stale():
@@ -382,7 +378,7 @@ async def get_context_instructions(
         return _CONTEXT_INSTRUCTIONS_CACHE
 
     await _log(ctx, "info", "Loading context instructions")
-    call_ctx = await _build_call_context(TOOL_GET_CONTEXT_INSTRUCTIONS, {"topic": topic}, ctx)
+    call_ctx = await _build_call_context(TOOL_GET_CONTEXT_INSTRUCTIONS, {}, ctx)
     result = await _retry_once(
         lambda: get_context_instructions_tool(
             call_ctx=call_ctx,
@@ -404,14 +400,10 @@ async def get_context_instructions(
 async def query_instructions(
     query: Annotated[str | None, Field(description="Keyword search text for instruction documents.")] = None,
     tags: Annotated[list[str] | str | None, Field(description='Known files and families tags ("OR" logic). No JSON encoding.')] = None,
-    topic: Annotated[str | None, Field(description="Optional intent used for logging only. Does not affect the result.")] = None,
     ctx: Context | None = None,
 ) -> str:
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
-    err = _validate_topic(topic)
-    if err:
-        return err
 
     normalized_tags, tags_err = _normalize_tags(tags)
     if tags_err:
@@ -419,7 +411,7 @@ async def query_instructions(
     await _log(ctx, "info", "Querying instructions")
     call_ctx = await _build_call_context(
         TOOL_QUERY_INSTRUCTIONS,
-        {"query": query, "tags": normalized_tags, "topic": topic},
+        {"query": query, "tags": normalized_tags},
         ctx,
     )
     return await _retry_once(
@@ -494,7 +486,6 @@ async def query_project_context(
     repository_name: Annotated[str, Field(description="Project/workspace name.")],
     query: Annotated[str | None, Field(description="Keyword search text for project context documents.")] = None,
     tags: Annotated[list[str] | str | None, Field(description="Filter by context tags. Single tag string or array of tags.")] = None,
-    topic: Annotated[str | None, Field(description="Optional intent used for logging only. Does not affect the result.")] = None,
     ctx: Context | None = None,
 ) -> str:
     scope_err = _require_client_data_scope()
@@ -503,9 +494,6 @@ async def query_project_context(
 
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
-    err = _validate_topic(topic)
-    if err:
-        return err
 
     normalized_tags, tags_err = _normalize_tags(tags)
     if tags_err:
@@ -513,7 +501,7 @@ async def query_project_context(
     await _log(ctx, "info", f"Querying project context for {repository_name}")
     call_ctx = await _build_call_context(
         TOOL_QUERY_PROJECT_CONTEXT,
-        {"repository_name": repository_name, "query": query, "tags": normalized_tags, "topic": topic},
+        {"repository_name": repository_name, "query": query, "tags": normalized_tags},
         ctx,
     )
     return await _retry_once(
