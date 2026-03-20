@@ -129,6 +129,9 @@ permalink: /
           <div class="qs-trust-badge">
             <svg class="qs-trust-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span>Rosetta is designed to never use or see your data or IP.</span>
+          </div>
+          <div class="qs-warning">
+            <svg class="qs-warning-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <span>You must receive a prior approval from your manager and company to use it.</span>
           </div>
 
@@ -152,11 +155,11 @@ permalink: /
               <pre class="qs-code">{
   "mcpServers": {
     "Rosetta": {
-      "url": "<rosetta MCP production server URL>"
+      "url": "[rosetta MCP production server URL]"
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"<rosetta MCP production server URL>"}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"[rosetta MCP production server URL]"}}}'>Copy</button>
             </div>
           </div>
 
@@ -165,8 +168,8 @@ permalink: /
             <p class="qs-content-hint">Run this command in your terminal:</p>
             <div class="qs-code-wrap">
               <pre class="qs-code"><span class="qs-prompt">$</span> claude mcp add --transport http Rosetta \
-    <rosetta MCP production server URL></pre>
-              <button class="qs-copy" data-copy="claude mcp add --transport http Rosetta <rosetta MCP production server URL>">Copy</button>
+    [rosetta MCP production server URL]</pre>
+              <button class="qs-copy" data-copy="claude mcp add --transport http Rosetta [rosetta MCP production server URL]">Copy</button>
             </div>
           </div>
 
@@ -175,9 +178,9 @@ permalink: /
             <p class="qs-content-hint">Run these commands in your terminal:</p>
             <div class="qs-code-wrap">
               <pre class="qs-code"><span class="qs-prompt">$</span> codex mcp add Rosetta \
-    --url <rosetta MCP production server URL>
+    --url [rosetta MCP production server URL]
 <span class="qs-prompt">$</span> codex mcp login Rosetta</pre>
-              <button class="qs-copy" data-copy="codex mcp add Rosetta --url <rosetta MCP production server URL>">Copy</button>
+              <button class="qs-copy" data-copy="codex mcp add Rosetta --url [rosetta MCP production server URL]">Copy</button>
             </div>
           </div>
 
@@ -189,11 +192,11 @@ permalink: /
   "servers": {
     "Rosetta": {
       "type": "http",
-      "url": "<rosetta MCP production server URL>"
+      "url": "[rosetta MCP production server URL]"
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"servers":{"Rosetta":{"type":"http","url":"<rosetta MCP production server URL>"}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"servers":{"Rosetta":{"type":"http","url":"[rosetta MCP production server URL]"}}}'>Copy</button>
             </div>
           </div>
 
@@ -205,11 +208,11 @@ permalink: /
   "servers": {
     "Rosetta": {
       "type": "http",
-      "url": "<rosetta MCP production server URL>"
+      "url": "[rosetta MCP production server URL]"
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"servers":{"Rosetta":{"type":"http","url":"<rosetta MCP production server URL>"}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"servers":{"Rosetta":{"type":"http","url":"[rosetta MCP production server URL]"}}}'>Copy</button>
             </div>
           </div>
 
@@ -220,11 +223,11 @@ permalink: /
               <pre class="qs-code">{
   "mcpServers": {
     "Rosetta": {
-      "url": "<rosetta MCP production server URL>"
+      "url": "[rosetta MCP production server URL]"
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"<rosetta MCP production server URL>"}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"[rosetta MCP production server URL]"}}}'>Copy</button>
             </div>
           </div>
 
@@ -235,11 +238,11 @@ permalink: /
               <pre class="qs-code">{
   "mcpServers": {
     "Rosetta": {
-      "url": "<rosetta MCP production server URL>"
+      "url": "[rosetta MCP production server URL]"
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"<rosetta MCP production server URL>"}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"mcpServers":{"Rosetta":{"url":"[rosetta MCP production server URL]"}}}'>Copy</button>
             </div>
           </div>
 
@@ -251,12 +254,12 @@ permalink: /
   "mcp": {
     "Rosetta": {
       "type": "http",
-      "url": "<rosetta MCP production server URL>",
+      "url": "[rosetta MCP production server URL]",
       "enabled": true
     }
   }
 }</pre>
-              <button class="qs-copy" data-copy='{"mcp":{"Rosetta":{"type":"http","url":"<rosetta MCP production server URL>","enabled":true}}}'>Copy</button>
+              <button class="qs-copy" data-copy='{"mcp":{"Rosetta":{"type":"http","url":"[rosetta MCP production server URL]","enabled":true}}}'>Copy</button>
             </div>
           </div>
 

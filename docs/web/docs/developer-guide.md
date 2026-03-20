@@ -38,7 +38,7 @@ permalink: /docs/developer-guide/
    - Uninstall `local-files-mode.md` from target repository
    - [Publish to dev](#dev-environment-integration-testing)
    - Enable Rosetta MCP or follow [Quick Start](/rosetta/docs/quickstart/) to install it
-   - Use dev server URL `<rosetta MCP development server URL>`
+   - Use dev server URL `[rosetta MCP development server URL]`
    - Test end-to-end through the HTTP MCP
 
 6. **Open a PR.**
@@ -127,7 +127,7 @@ docker run -d --name rosetta-redis -p 6379:6379 valkey/valkey:latest
 
 ```bash
 claude mcp add --transport stdio Rosetta \
-  --env ROSETTA_SERVER_URL=https://<developement server URL>/ \
+  --env ROSETTA_SERVER_URL=[RAGFlow production server URL] \
   --env ROSETTA_API_KEY=ragflow-xxxxx \
   --env VERSION=r2 \
   --env REDIS_URL=redis://localhost:6379/0 \
@@ -138,7 +138,7 @@ claude mcp add --transport stdio Rosetta \
 
 ```bash
 codex mcp add Rosetta \
-  --env ROSETTA_SERVER_URL=https://<developement server URL>/ \
+  --env ROSETTA_SERVER_URL=[RAGFlow production server URL] \
   --env ROSETTA_API_KEY=ragflow-xxxxx \
   --env VERSION=r2 \
   --env REDIS_URL=redis://localhost:6379/0 \
@@ -154,7 +154,7 @@ codex mcp add Rosetta \
       "command": "uvx",
       "args": ["--prerelease=allow", "ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://<developement server URL>/",
+        "ROSETTA_SERVER_URL": "[RAGFlow production server URL]",
         "ROSETTA_API_KEY": "ragflow-xxxxx",
         "VERSION": "r2",
         "REDIS_URL": "redis://localhost:6379/0"
@@ -174,7 +174,7 @@ codex mcp add Rosetta \
       "command": "uvx",
       "args": ["--prerelease=allow", "ims-mcp@latest"],
       "env": {
-        "ROSETTA_SERVER_URL": "https://<developement server URL>/",
+        "ROSETTA_SERVER_URL": "[RAGFlow production server URL]",
         "ROSETTA_API_KEY": "ragflow-xxxxx",
         "VERSION": "r2",
         "REDIS_URL": "redis://localhost:6379/0"
@@ -256,10 +256,10 @@ After local validation passes, test end-to-end against the dev environment.
 
 **Environments (two separate servers):**
 
-- **Rosetta Server (RAGFlow) prod:** `https://<production server URL>/` — document engine backend, dataset management, API keys
-- **Rosetta Server (RAGFlow) dev:** `https://<developement server URL>/` — used by STDIO MCP and CLI for publishing
-- **Rosetta HTTP MCP prod:** `<rosetta MCP production server URL>` — production MCP endpoint for end users
-- **Rosetta HTTP MCP dev:** `<rosetta MCP development server URL>` — dev MCP endpoint for integration testing
+- **Rosetta Server (RAGFlow) prod:** `[RAGFlow production server URL]` — document engine backend, dataset management, API keys
+- **Rosetta Server (RAGFlow) dev:** `[RAGFlow production server URL]` — used by STDIO MCP and CLI for publishing
+- **Rosetta HTTP MCP prod:** `[rosetta MCP production server URL]` — production MCP endpoint for end users
+- **Rosetta HTTP MCP dev:** `[rosetta MCP development server URL]` — dev MCP endpoint for integration testing
 
 ### 1. Publish instructions to dev
 
@@ -282,13 +282,13 @@ This is the mode end users run. Connect your IDE to the hosted dev MCP endpoint 
 **Claude Code:**
 
 ```bash
-claude mcp add --transport http Rosetta <rosetta MCP development server URL>
+claude mcp add --transport http Rosetta [rosetta MCP development server URL]
 ```
 
 **Codex:**
 
 ```bash
-codex mcp add Rosetta --url <rosetta MCP development server URL>
+codex mcp add Rosetta --url [rosetta MCP development server URL]
 ```
 
 **Cursor** (`.cursor/mcp.json`):
@@ -297,7 +297,7 @@ codex mcp add Rosetta --url <rosetta MCP development server URL>
 {
   "mcpServers": {
     "Rosetta": {
-      "url": "<rosetta MCP development server URL>"
+      "url": "[rosetta MCP development server URL]"
     }
   }
 }
@@ -310,7 +310,7 @@ codex mcp add Rosetta --url <rosetta MCP development server URL>
   "servers": {
     "Rosetta": {
       "type": "http",
-      "url": "<rosetta MCP development server URL>"
+      "url": "[rosetta MCP development server URL]"
     }
   }
 }
