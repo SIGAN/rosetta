@@ -24,11 +24,13 @@ from ims_mcp.clients.dataset import DatasetLookup
 from ims_mcp.clients.doc_cache import InstructionDocCache
 from ims_mcp.clients.document import DocumentClient
 from ims_mcp.clients.ragflow import RagflowClient
-from ims_mcp.config import RosettaConfig
+from ims_mcp.config import RosettaConfig, parse_scopes
 from ims_mcp.constants import (
     DOC_CACHE_TTL_SECONDS,
+    ENV_ALLOWED_SCOPES,
     ENV_IMS_DEBUG,
     ENV_ROSETTA_MODE,
+    SCOPE_ALLOW_CLIENT_DATA,
     TAG_MCP_SERVER_INSTRUCTIONS,
     TOOL_DISCOVER_PROJECTS,
     TOOL_GET_CONTEXT_INSTRUCTIONS,
@@ -271,6 +273,27 @@ def _resolve_user_email() -> str:
     return _CONFIG.user_email
 
 
+def _resolve_allowed_scopes() -> tuple[str, ...]:
+    if _CONFIG.transport == TRANSPORT_HTTP:
+        try:
+            from fastmcp.server.dependencies import get_http_headers
+
+            # include_all keeps custom application headers such as ROSETTA_ALLOWED_SCOPES.
+            headers = get_http_headers(include_all=True)
+        except Exception:
+            headers = {}
+        return parse_scopes(headers.get(ENV_ALLOWED_SCOPES.lower()) or "")
+    return _CONFIG.allowed_scopes
+
+
+def _require_client_data_scope() -> str | None:
+    allowed_scopes = _resolve_allowed_scopes()
+    logging.getLogger("ims_mcp").info("Resolved allowed scopes: %s", list(allowed_scopes))
+    if SCOPE_ALLOW_CLIENT_DATA in allowed_scopes:
+        return None
+    return f"Error: this feature is not available for your account!"
+
+
 async def _build_call_context(tool_name: str, params: dict[str, Any], ctx: Context) -> CallContext:
     assert _RAGFLOW is not None
     assert _DATASET_LOOKUP is not None
@@ -474,6 +497,9 @@ async def query_project_context(
     topic: Annotated[str | None, Field(description="Optional intent used for logging only. Does not affect the result.")] = None,
     ctx: Context | None = None,
 ) -> str:
+    scope_err = _require_client_data_scope()
+    if scope_err:
+        return scope_err
 
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
@@ -514,6 +540,9 @@ async def store_project_context(
     force: Annotated[bool, Field(description="Do not force. Try to discover the repository first. If true, create repository dataset if it doesn't exist.")] = False,
     ctx: Context | None = None,
 ) -> str:
+    scope_err = _require_client_data_scope()
+    if scope_err:
+        return scope_err
 
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
@@ -551,6 +580,9 @@ async def discover_projects(
     query: Annotated[str | None, Field(description="Optional search term to filter projects by name.")] = None,
     ctx: Context | None = None,
 ) -> str:
+    scope_err = _require_client_data_scope()
+    if scope_err:
+        return scope_err
 
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
@@ -570,6 +602,9 @@ async def plan_manager(
     limit: Annotated[int, Field(description="Max steps returned by next (0 = all).")] = 0,
     ctx: Context | None = None,
 ) -> str:
+    scope_err = _require_client_data_scope()
+    if scope_err:
+        return scope_err
     await _log(ctx, "info", f"plan_manager command={command} plan={plan_name} target={target_id}")
     return await plan_manager_tool(
         command=command,

@@ -23,6 +23,8 @@ Optional environment:
 - REDIS_URL: Redis connection URL for testing RedisPlanStore backend.
   If not set, plan_manager tests use in-memory MemoryPlanStore instead.
   Example: redis://localhost:6379/0
+- ROSETTA_ALLOWED_SCOPES: optional explicit scopes for project-data tools.
+  Defaults to allow_client_data for this verification harness.
 
 Runtime requirement:
 - Network access to configured Rosetta/RAGFlow endpoint and readable instruction dataset
@@ -75,6 +77,10 @@ if os.path.exists(env_file):
             if line and not line.startswith("#") and "=" in line:
                 key, _, value = line.partition("=")
                 os.environ.setdefault(key.strip(), value.strip())
+
+# Project-data checks in this harness require the client-data scope unless the
+# caller explicitly overrides it.
+os.environ.setdefault("ROSETTA_ALLOWED_SCOPES", "allow_client_data")
 
 from fastmcp import Client
 from ims_mcp.server import mcp  # import the FastMCP instance directly

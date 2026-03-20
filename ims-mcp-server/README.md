@@ -75,6 +75,7 @@ Rosetta MCP supports two runtime modes:
 | `ROSETTA_HTTP_HOST` | Runtime (HTTP) | `0.0.0.0` | HTTP bind host |
 | `ROSETTA_HTTP_PORT` | Runtime (HTTP) | `8000` | HTTP bind port |
 | `REDIS_URL` | Runtime (HTTP) | Empty | Optional Redis session store; empty uses in-memory store |
+| `ROSETTA_ALLOWED_SCOPES` | Runtime (STDIO env / HTTP request header) | Empty | Comma-separated scopes. `allow_client_data` is required for `discover_projects`, `query_project_context`, `store_project_context`, and `plan_manager` |
 | `ROSETTA_ALLOWED_ORIGINS` | Runtime (HTTP) | Empty | Comma-separated `Origin` allowlist |
 | `ROSETTA_OAUTH_MODE` | Runtime (HTTP OAuth) | `oauth` | `oauth` (introspection) or `oidc` (JWT via discovery doc) |
 | `ROSETTA_OAUTH_OIDC_CONFIG_URL` | Runtime (HTTP OAuth, oidc) | Empty | IdP OIDC discovery URL (e.g. `https://keycloak.host/realms/x/.well-known/openid-configuration`) |
@@ -134,6 +135,12 @@ STDIO keeps API-key access and does not use OAuth. User identity for authorizati
 ROSETTA_USER_EMAIL=rosetta@griddynamics.net
 ```
 
+Project-data tools are additionally gated by:
+
+```bash
+ROSETTA_ALLOWED_SCOPES=allow_client_data
+```
+
 ### HTTP Mode
 
 Set:
@@ -150,6 +157,10 @@ Optional HTTP runtime settings:
 |----------|-------------|---------|
 | `REDIS_URL` | Shared session store for multi-instance deployments | In-memory store |
 | `ROSETTA_ALLOWED_ORIGINS` | Comma-separated allowlist for `Origin` header validation | No restriction |
+
+Project-data tools in HTTP mode read scopes from the `ROSETTA_ALLOWED_SCOPES` request header.
+The header must include `allow_client_data` for `discover_projects`, `query_project_context`,
+`store_project_context`, and `plan_manager`.
 
 OAuth variables for HTTP mode:
 
@@ -200,7 +211,8 @@ Add to `.cursor/mcp.json` (or equivalent client config):
         "ROSETTA_TRANSPORT": "stdio",
         "ROSETTA_SERVER_URL": "https://<production server URL>",
         "ROSETTA_API_KEY": "your-rosetta-api-key",
-        "ROSETTA_USER_EMAIL": "you@griddynamics.com"
+        "ROSETTA_USER_EMAIL": "you@griddynamics.com",
+        "ROSETTA_ALLOWED_SCOPES": "allow_client_data"
       }
     }
   }
@@ -348,6 +360,8 @@ submit_feedback(
 
 List readable project datasets (`project-*`) available in Rosetta Server.
 
+Requires `allow_client_data` in `ROSETTA_ALLOWED_SCOPES`.
+
 **Parameters:**
 - `query` (str, optional): Name filter; empty or whitespace-only means no filter
 
@@ -362,6 +376,8 @@ discover_projects(query="rulesofpower")
 ### 6. query_project_context
 
 Query documents inside a project dataset.
+
+Requires `allow_client_data` in `ROSETTA_ALLOWED_SCOPES`.
 
 **Parameters:**
 - `repository_name` (str): Project name
@@ -387,6 +403,8 @@ query_project_context(
 ### 7. store_project_context
 
 Create or update a project context document.
+
+Requires `allow_client_data` in `ROSETTA_ALLOWED_SCOPES`.
 
 **Parameters:**
 - `repository_name` (str): Project name
@@ -417,6 +435,8 @@ store_project_context(
 ### 8. plan_manager
 
 Manage execution plans stored in Rosetta.
+
+Requires `allow_client_data` in `ROSETTA_ALLOWED_SCOPES`.
 
 **Parameters:**
 - `command` (str): `upsert`, `query`, `show_status`, `update_status`, or `next`

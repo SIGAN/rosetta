@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -525,3 +526,90 @@ def test_server_normalize_tags_preserves_blank_string_for_validation():
 
     assert _normalize_tags("") == (None, "Error: tags must not be empty")
     assert _normalize_tags(" tag ") == (["tag"], None)
+
+
+def test_server_parse_allowed_scopes_supports_comma_and_space_lists():
+    from ims_mcp.config import parse_scopes
+
+    assert parse_scopes(" allow_client_data, alpha beta , allow_client_data ") == (
+        "allow_client_data",
+        "alpha",
+        "beta",
+    )
+
+
+def test_server_require_client_data_scope_uses_stdio_config():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=("allow_client_data",))):
+        assert server._require_client_data_scope() is None
+
+
+def test_server_require_client_data_scope_uses_http_header():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._CONFIG", _make_config(transport="http", allowed_scopes=())), \
+         patch("fastmcp.server.dependencies.get_http_headers", return_value={"rosetta_allowed_scopes": "allow_client_data,read"}):
+        assert server._require_client_data_scope() is None
+
+
+def test_server_require_client_data_scope_rejects_missing_scope():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=())):
+        assert server._require_client_data_scope() == (
+            "Error: ROSETTA_ALLOWED_SCOPES must include 'allow_client_data'"
+        )
+
+
+@pytest.mark.asyncio
+async def test_server_query_project_context_enforces_client_data_scope_first():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+         patch("ims_mcp.server._build_call_context") as build_call_context:
+        result = await server.query_project_context(repository_name="demo", tags=["architecture"])
+
+    assert result == "Error: blocked"
+    build_call_context.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_server_store_project_context_enforces_client_data_scope_first():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+         patch("ims_mcp.server._build_call_context") as build_call_context:
+        result = await server.store_project_context(
+            repository_name="demo",
+            document="ARCHITECTURE.md",
+            tags=["architecture"],
+            content="# x",
+        )
+
+    assert result == "Error: blocked"
+    build_call_context.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_server_discover_projects_enforces_client_data_scope_first():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+         patch("ims_mcp.server._build_call_context") as build_call_context:
+        result = await server.discover_projects(query="demo")
+
+    assert result == "Error: blocked"
+    build_call_context.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_server_plan_manager_enforces_client_data_scope_first():
+    from ims_mcp import server
+
+    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+         patch("ims_mcp.server.plan_manager_tool", new=AsyncMock()) as plan_manager_tool:
+        result = await server.plan_manager(command="query", plan_name="demo")
+
+    assert result == "Error: blocked"
+    plan_manager_tool.assert_not_called()

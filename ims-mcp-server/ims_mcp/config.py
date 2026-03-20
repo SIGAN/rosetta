@@ -26,6 +26,7 @@ from ims_mcp.constants import (
     ENV_LEGACY_R2R_EMAIL,
     ENV_LEGACY_R2R_PASSWORD,
     ENV_ALLOWED_ORIGINS,
+    ENV_ALLOWED_SCOPES,
     ENV_FERNET_KEY,
     ENV_HTTP_HOST,
     ENV_HTTP_PORT,
@@ -94,6 +95,17 @@ def _normalize_callback_path(value: str) -> str:
     if not normalized.startswith("/"):
         normalized = "/" + normalized
     return normalized
+
+
+def parse_scopes(value: str) -> tuple[str, ...]:
+    scopes: list[str] = []
+    seen: set[str] = set()
+    for raw_scope in value.replace(",", " ").split():
+        scope = raw_scope.strip()
+        if scope and scope not in seen:
+            seen.add(scope)
+            scopes.append(scope)
+    return tuple(scopes)
 
 
 def _has_non_empty_env(name: str) -> bool:
@@ -270,6 +282,7 @@ class RosettaConfig:
     invite_emails: list[str]
     # Plan manager
     plan_ttl_days: int
+    allowed_scopes: tuple[str, ...] = ()
     # Set to True when running in legacy compatibility mode (STDIO + R2R credentials).
     compatibility_mode: bool = False
 
@@ -308,6 +321,7 @@ class RosettaConfig:
             redis_url=os.getenv(ENV_REDIS_URL, "").strip() or None,
             fernet_key=os.getenv(ENV_FERNET_KEY, "").strip() or None,
             allowed_origins=allowed_origins,
+            allowed_scopes=parse_scopes(os.getenv(ENV_ALLOWED_SCOPES, "")),
             oauth_authorization_endpoint=os.getenv(ENV_OAUTH_AUTHORIZATION_ENDPOINT, "").strip(),
             oauth_token_endpoint=os.getenv(ENV_OAUTH_TOKEN_ENDPOINT, "").strip(),
             oauth_introspection_endpoint=os.getenv(ENV_OAUTH_INTROSPECTION_ENDPOINT, "").strip(),
