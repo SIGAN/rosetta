@@ -49,6 +49,6 @@ def test_http_port_must_be_in_valid_range(monkeypatch):
 
 
 def test_allowed_scopes_parsing(monkeypatch):
-    monkeypatch.setenv("ROSETTA_ALLOWED_SCOPES", "allow_client_data, project_read beta allow_client_data")
+    monkeypatch.setenv("ROSETTA_ALLOWED_SCOPES", "allow_write_data, project_read beta allow_write_data")
     cfg = RosettaConfig.from_env()
-    assert cfg.allowed_scopes == ("allow_client_data", "project_read", "beta")
+    assert cfg.allowed_scopes == ("allow_write_data", "project_read", "beta")

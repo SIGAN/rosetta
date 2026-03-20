@@ -43,7 +43,7 @@ def build_oauth_provider(
         return None
 
     if not config.oauth_configured:
-        return None
+        raise ValueError("Rosetta HTTP mode requires OAuth configuration!")
 
     base_url = config.resolve_oauth_base_url()
 

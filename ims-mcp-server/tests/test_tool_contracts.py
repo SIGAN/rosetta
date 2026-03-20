@@ -531,8 +531,8 @@ def test_server_normalize_tags_preserves_blank_string_for_validation():
 def test_server_parse_allowed_scopes_supports_comma_and_space_lists():
     from ims_mcp.config import parse_scopes
 
-    assert parse_scopes(" allow_client_data, alpha beta , allow_client_data ") == (
-        "allow_client_data",
+    assert parse_scopes(" allow_write_data, alpha beta , allow_write_data ") == (
+        "allow_write_data",
         "alpha",
         "beta",
     )
@@ -541,7 +541,7 @@ def test_server_parse_allowed_scopes_supports_comma_and_space_lists():
 def test_server_require_client_data_scope_uses_stdio_config():
     from ims_mcp import server
 
-    with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=("allow_client_data",))):
+    with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=("allow_write_data",))):
         assert server._require_client_data_scope() is None
 
 
@@ -549,7 +549,7 @@ def test_server_require_client_data_scope_uses_http_header():
     from ims_mcp import server
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="http", allowed_scopes=())), \
-         patch("fastmcp.server.dependencies.get_http_headers", return_value={"rosetta_allowed_scopes": "allow_client_data,read"}):
+         patch("fastmcp.server.dependencies.get_http_headers", return_value={"rosetta_allowed_scopes": "allow_write_data,read"}):
         assert server._require_client_data_scope() is None
 
 
@@ -558,7 +558,7 @@ def test_server_require_client_data_scope_rejects_missing_scope():
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=())):
         assert server._require_client_data_scope() == (
-            "Error: this feature is not available for your account!"
+            "Error: this feature is not available for your user account!"
         )
 
 

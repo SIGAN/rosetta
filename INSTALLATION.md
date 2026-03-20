@@ -3,7 +3,7 @@
 **Who is this for?** Complete setup reference for all installation modes.
 **When should I read this?** When you need the full picture: HTTP, STDIO, plugins, offline, or environment variables. For the fastest path, see [QUICKSTART.md](QUICKSTART.md).
 
-> [!WARNING]
+> [!CAUTION]
 > You must receive a prior approval from your manager and company to use it.
 
 > [!WARNING]

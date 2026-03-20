@@ -24,7 +24,7 @@ Optional environment:
   If not set, plan_manager tests use in-memory MemoryPlanStore instead.
   Example: redis://localhost:6379/0
 - ROSETTA_ALLOWED_SCOPES: optional explicit scopes for project-data tools.
-  Defaults to allow_client_data for this verification harness.
+  Defaults to allow_write_data for this verification harness.
 
 Runtime requirement:
 - Network access to configured Rosetta/RAGFlow endpoint and readable instruction dataset
@@ -80,7 +80,7 @@ if os.path.exists(env_file):
 
 # Project-data checks in this harness require the client-data scope unless the
 # caller explicitly overrides it.
-os.environ.setdefault("ROSETTA_ALLOWED_SCOPES", "allow_client_data")
+os.environ.setdefault("ROSETTA_ALLOWED_SCOPES", "allow_write_data")
 
 from fastmcp import Client
 from ims_mcp.server import mcp  # import the FastMCP instance directly

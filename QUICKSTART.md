@@ -7,7 +7,7 @@
 
 ## Step 1: Connect Rosetta MCP
 
-> [!WARNING]
+> [!CAUTION]
 > You must receive a prior approval from your manager and company to use it.
 
 > [!WARNING]

@@ -30,7 +30,7 @@ from ims_mcp.constants import (
     ENV_ALLOWED_SCOPES,
     ENV_IMS_DEBUG,
     ENV_ROSETTA_MODE,
-    SCOPE_ALLOW_CLIENT_DATA,
+    SCOPE_ALLOW_WRITE_DATA,
     TAG_MCP_SERVER_INSTRUCTIONS,
     TOOL_DISCOVER_PROJECTS,
     TOOL_GET_CONTEXT_INSTRUCTIONS,
@@ -289,9 +289,9 @@ def _resolve_allowed_scopes() -> tuple[str, ...]:
 def _require_client_data_scope() -> str | None:
     allowed_scopes = _resolve_allowed_scopes()
     logging.getLogger("ims_mcp").info("Resolved allowed scopes: %s", list(allowed_scopes))
-    if SCOPE_ALLOW_CLIENT_DATA in allowed_scopes:
+    if SCOPE_ALLOW_WRITE_DATA in allowed_scopes:
         return None
-    return f"Error: this feature is not available for your account!"
+    return f"Error: this feature is not available for your user account!"
 
 
 async def _build_call_context(tool_name: str, params: dict[str, Any], ctx: Context) -> CallContext:

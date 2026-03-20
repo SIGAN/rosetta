@@ -136,7 +136,7 @@ TOOL_STORE_PROJECT_CONTEXT = "store_project_context"
 TOOL_DISCOVER_PROJECTS = "discover_projects"
 TOOL_PLAN_MANAGER = "plan_manager"
 
-SCOPE_ALLOW_CLIENT_DATA = "allow_client_data"
+SCOPE_ALLOW_WRITE_DATA = "allow_write_data"
 
 REPOSITORY_CACHE_TTL_SECONDS = 300
 
