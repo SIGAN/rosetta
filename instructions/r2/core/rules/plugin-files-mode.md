@@ -55,7 +55,7 @@ Prep Step 1:
 
 **Local File Operations** (overrides Rosetta MCP for these operations):
 
-- `get_context_instructions` => already loaded bootstrap-* instructions.
+- `get_context_instructions` => already loaded bootstrap-* instructions, continue with prep steps 2 and 3.
 
 - `ACQUIRE <file[.md]> FROM KB` => read local plugin files:
   - Search in: `skills/**/<file-name-with-extension>`
@@ -93,7 +93,7 @@ USE SKILL `load-context`, if available
 
 # PREP STEP 1:
 
-THIS FILE IS PREP STEP 1.
-bootstrap-*.md RULES ARE PREP STEP 2 & 3.
+- THIS FILE IS PREP STEP 1.
+- bootstrap-*.md RULES CONTAIN PREP STEP 2 & 3 TO COMPLETE.
 
 </plugin_files_mode>

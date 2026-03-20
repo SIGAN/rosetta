@@ -38,7 +38,7 @@ baseSchema: docs/schemas/rule.md
     - MEDIUM: MUST keep documentation concise, light, and short; MUST use subagents;
     - LARGE: MUST use subagents extensively as orchestrator context will be overloaded;
 12. Reevaluate request size and workflow when scope changes or new information is received
-13. If CONTEXT.md, ARCHITECTURE.md, IMPLEMENTATION.md, or MEMORY.md files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`, and continue.
+13. If CONTEXT.md, ARCHITECTURE.md, IMPLEMENTATION.md, or MEMORY.md files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`, and continue with the next prep steps.
 
 # Prep Step 3 for subagents:
 
