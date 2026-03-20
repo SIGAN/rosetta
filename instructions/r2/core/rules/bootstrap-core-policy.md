@@ -30,9 +30,9 @@ baseSchema: docs/schemas/rule.md
 8. MUST ALWAYS EXECUTE FULLY `Prep Step 3: Execution Planning Rules` BEFORE you do anything else, including planning, exploring, reading, validating.
 9. Rosetta guides you EXACTLY how to do all those activities PROPERLY!
 10. MUST IDENTIFY request size:
-    - SMALL: 1-2 file changes and only one area affected
-    - MEDIUM: up to ~10 file changes and only one area affected
-    - LARGE: more than 10 file changes or multiple areas affected
+    - SMALL: 1-2 file changes/activities and only one area affected
+    - MEDIUM: up to ~10 file changes/activities and only one area affected
+    - LARGE: more than 10 file changes/activities or multiple areas affected
 11. Additional requirements based on request size:
     - SMALL: MUST USE todo tasks for planning, MUST OUTPUT tech specs as message;
     - MEDIUM: MUST keep documentation concise, light, and short; MUST use subagents;
@@ -42,13 +42,13 @@ baseSchema: docs/schemas/rule.md
 
 # Prep Step 3 for subagents:
 
-1. Orchestrator request -> read get_context_instructions schema (if needed) -> get_context_instructions -> execute all prep steps for subagent -> proceed with the rest of actions
+1. Orchestrator request -> read get_context_instructions schema (if needed) -> get_context_instructions (if not done yet) -> execute all prep steps for subagent -> proceed with the rest of actions
 2. Perform execution todo tasks level planning
 3. MUST execute todo tasks and adopt changes
 
 # Prep Step 3 for orchestrator (primary/top agent):
 
-1. user request -> read get_context_instructions schema (if needed) -> get_context_instructions -> execute all prep steps -> load workflow -> proceed with workflow and integrate the rest of actions (including questioning user, EnterPlanMode, plan_mode_respond, system-reminder, etc.).
+1. user request -> read get_context_instructions schema (if needed) -> get_context_instructions (if not done yet) -> execute all prep steps -> load workflow -> proceed with workflow and integrate the rest of actions (including questioning user, EnterPlanMode, plan_mode_respond, system-reminder, etc.).
 2. MUST ACQUIRE <matching workflow key from available workflows> FROM KB AND FULLY EXECUTE IMMEDIATELY FOLLOWING ITS DEFINITION (core principles, phases, and steps ARE ALL MUST) FOR ALL REQUEST SIZES
 3. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
 
