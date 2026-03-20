@@ -538,35 +538,35 @@ def test_server_parse_allowed_scopes_supports_comma_and_space_lists():
     )
 
 
-def test_server_require_client_data_scope_uses_stdio_config():
+def test_server_require_write_data_scope_uses_stdio_config():
     from ims_mcp import server
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=("allow_write_data",))):
-        assert server._require_client_data_scope() is None
+        assert server._require_write_data_scope() is None
 
 
-def test_server_require_client_data_scope_uses_http_header():
+def test_server_require_write_data_scope_uses_http_header():
     from ims_mcp import server
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="http", allowed_scopes=())), \
          patch("fastmcp.server.dependencies.get_http_headers", return_value={"rosetta_allowed_scopes": "allow_write_data,read"}):
-        assert server._require_client_data_scope() is None
+        assert server._require_write_data_scope() is None
 
 
-def test_server_require_client_data_scope_rejects_missing_scope():
+def test_server_require_write_data_scope_rejects_missing_scope():
     from ims_mcp import server
 
     with patch("ims_mcp.server._CONFIG", _make_config(transport="stdio", allowed_scopes=())):
-        assert server._require_client_data_scope() == (
+        assert server._require_write_data_scope() == (
             "Error: this feature is not available for your user account!"
         )
 
 
 @pytest.mark.asyncio
-async def test_server_query_project_context_enforces_client_data_scope_first():
+async def test_server_query_project_context_enforces_write_data_scope_first():
     from ims_mcp import server
 
-    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+    with patch("ims_mcp.server._require_write_data_scope", return_value="Error: blocked"), \
          patch("ims_mcp.server._build_call_context") as build_call_context:
         result = await server.query_project_context(repository_name="demo", tags=["architecture"])
 
@@ -575,10 +575,10 @@ async def test_server_query_project_context_enforces_client_data_scope_first():
 
 
 @pytest.mark.asyncio
-async def test_server_store_project_context_enforces_client_data_scope_first():
+async def test_server_store_project_context_enforces_write_data_scope_first():
     from ims_mcp import server
 
-    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+    with patch("ims_mcp.server._require_write_data_scope", return_value="Error: blocked"), \
          patch("ims_mcp.server._build_call_context") as build_call_context:
         result = await server.store_project_context(
             repository_name="demo",
@@ -592,10 +592,10 @@ async def test_server_store_project_context_enforces_client_data_scope_first():
 
 
 @pytest.mark.asyncio
-async def test_server_discover_projects_enforces_client_data_scope_first():
+async def test_server_discover_projects_enforces_write_data_scope_first():
     from ims_mcp import server
 
-    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+    with patch("ims_mcp.server._require_write_data_scope", return_value="Error: blocked"), \
          patch("ims_mcp.server._build_call_context") as build_call_context:
         result = await server.discover_projects(query="demo")
 
@@ -604,10 +604,10 @@ async def test_server_discover_projects_enforces_client_data_scope_first():
 
 
 @pytest.mark.asyncio
-async def test_server_plan_manager_enforces_client_data_scope_first():
+async def test_server_plan_manager_enforces_write_data_scope_first():
     from ims_mcp import server
 
-    with patch("ims_mcp.server._require_client_data_scope", return_value="Error: blocked"), \
+    with patch("ims_mcp.server._require_write_data_scope", return_value="Error: blocked"), \
          patch("ims_mcp.server.plan_manager_tool", new=AsyncMock()) as plan_manager_tool:
         result = await server.plan_manager(command="query", plan_name="demo")
 

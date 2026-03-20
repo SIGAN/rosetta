@@ -42,6 +42,7 @@ def build_oauth_provider(
     if config.transport != TRANSPORT_HTTP:
         return None
 
+    # Security by default: require OAuth/OIDC configuration!
     if not config.oauth_configured:
         raise ValueError("Rosetta HTTP mode requires OAuth configuration!")
 

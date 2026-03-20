@@ -33,7 +33,7 @@ permalink: /overview/
         <span class="arch-v2-particle"></span>
         <span class="arch-v2-particle arch-v2-particle--delay"></span>
       </div>
-      <span class="arch-v2-conn-label">HTTP + OAuth</span>
+      <span class="arch-v2-conn-label">HTTPS + OAuth, PULL</span>
     </div>
 
     <!-- Center: Rosetta MCP (hero) -->
@@ -71,7 +71,7 @@ permalink: /overview/
         <span class="arch-v2-particle"></span>
         <span class="arch-v2-particle arch-v2-particle--delay"></span>
       </div>
-      <span class="arch-v2-conn-label">Tags + Search</span>
+      <span class="arch-v2-conn-label">Tags + Search, PULL</span>
     </div>
 
     <!-- Right: Server -->

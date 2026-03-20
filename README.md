@@ -88,6 +88,7 @@ Works with any MCP-compatible tool.
 | Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Debug a problem | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
 | See release history | [CHANGELOG.md](CHANGELOG.md) |
+| Security Policy | [SECURITY.md](SECURITY.md) |
 
 ## Contributing
 

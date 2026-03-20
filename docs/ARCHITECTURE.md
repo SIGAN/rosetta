@@ -31,7 +31,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
 │                    MCP Protocol                         │
 │             (Streamable HTTP + OAuth)                   │
 └────────────────────────┬────────────────────────────────┘
-                         │
+                         │ PULL
               ┌──────────▼──────────┐
               │    Rosetta MCP      │
               │   (ims-mcp on PyPI) │
@@ -40,7 +40,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
               │  Bundler · Tags     │
               │  Context headers    │
               └──────────┬──────────┘
-                         │
+                         │ PULL
               ┌──────────▼──────────┐
               │   RAGFlow (Server)  │
               │  (document engine)  │
@@ -48,7 +48,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
               │  parse · chunk      │
               │  embed · retrieve   │
               └──────────▲──────────┘
-                         │
+                         │ PUSH
               ┌──────────┴──────────┐
               │    Rosetta CLI      │
               │ (rosetta-cli PyPI)  │
@@ -56,7 +56,7 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
               │  publish · parse    │
               │  verify · cleanup   │
               └──────────▲──────────┘
-                         │
+                         │ PUSH
               ┌──────────┴──────────┐
               │  Instructions Repo  │
               │  /instructions/r2/  │

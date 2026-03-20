@@ -286,7 +286,7 @@ def _resolve_allowed_scopes() -> tuple[str, ...]:
     return _CONFIG.allowed_scopes
 
 
-def _require_client_data_scope() -> str | None:
+def _require_write_data_scope() -> str | None:
     allowed_scopes = _resolve_allowed_scopes()
     logging.getLogger("ims_mcp").info("Resolved allowed scopes: %s", list(allowed_scopes))
     if SCOPE_ALLOW_WRITE_DATA in allowed_scopes:
@@ -488,7 +488,7 @@ async def query_project_context(
     tags: Annotated[list[str] | str | None, Field(description="Filter by context tags. Single tag string or array of tags.")] = None,
     ctx: Context | None = None,
 ) -> str:
-    scope_err = _require_client_data_scope()
+    scope_err = _require_write_data_scope()
     if scope_err:
         return scope_err
 
@@ -528,7 +528,7 @@ async def store_project_context(
     force: Annotated[bool, Field(description="Do not force. Try to discover the repository first. If true, create repository dataset if it doesn't exist.")] = False,
     ctx: Context | None = None,
 ) -> str:
-    scope_err = _require_client_data_scope()
+    scope_err = _require_write_data_scope()
     if scope_err:
         return scope_err
 
@@ -568,7 +568,7 @@ async def discover_projects(
     query: Annotated[str | None, Field(description="Optional search term to filter projects by name.")] = None,
     ctx: Context | None = None,
 ) -> str:
-    scope_err = _require_client_data_scope()
+    scope_err = _require_write_data_scope()
     if scope_err:
         return scope_err
 
@@ -590,7 +590,7 @@ async def plan_manager(
     limit: Annotated[int, Field(description="Max steps returned by next (0 = all).")] = 0,
     ctx: Context | None = None,
 ) -> str:
-    scope_err = _require_client_data_scope()
+    scope_err = _require_write_data_scope()
     if scope_err:
         return scope_err
     await _log(ctx, "info", f"plan_manager command={command} plan={plan_name} target={target_id}")
