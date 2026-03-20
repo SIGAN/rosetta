@@ -31,44 +31,7 @@
         "coding",
         "knowledge-base"
       ],
-      "category": "productivity",
-      "rules": [
-        "./rules/bootstrap-core-policy.md",
-        "./rules/bootstrap-execution-policy.md",
-        "./rules/bootstrap-guardrails.md",
-        "./rules/bootstrap-hitl-questioning.md",
-        "./rules/bootstrap-rosetta-files.md",
-        "./rules/plugin-files-mode.md",
-        "./rules/requirements-best-practices.md",
-        "./rules/requirements-use-best-practices.md",
-        "./rules/speckit-integration-policy.md"
-      ],
-      "commands": "./workflows/",
-      "mcpServers": {
-        "Rosetta": {
-          "type": "http",
-          "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp",
-          "transport": {
-            "type": "http"
-          },
-          "metadata": {
-            "description": "Rosetta Knowledge Base MCP - Access AI agent instructions, workflows, skills, and business context",
-            "capabilities": [
-              "list_instructions",
-              "query_instructions",
-              "get_context_instructions",
-              "list_project_context",
-              "query_project_context",
-              "store_project_context"
-            ],
-            "authentication": "oauth",
-            "datasets": [
-              "aia-r2 (Rosetta R2.0 instructions)",
-              "project-* (User project context)"
-            ]
-          }
-        }
-      }
+      "category": "productivity"
     },
     {
       "name": "rosetta",
@@ -91,35 +54,7 @@
         "cursor",
         "claude-code"
       ],
-      "category": "productivity",
-      "rules": [
-        "./rules/bootstrap.md"
-      ],
-      "mcpServers": {
-        "Rosetta": {
-          "type": "http",
-          "url": "https://rosetta.evergreen.gcp.griddynamics.net/mcp",
-          "transport": {
-            "type": "http"
-          },
-          "metadata": {
-            "description": "Rosetta Knowledge Base MCP - Access AI agent instructions, workflows, skills, and business context",
-            "capabilities": [
-              "list_instructions",
-              "query_instructions",
-              "get_context_instructions",
-              "list_project_context",
-              "query_project_context",
-              "store_project_context"
-            ],
-            "authentication": "oauth",
-            "datasets": [
-              "aia-r2 (Rosetta R2.0 instructions)",
-              "project-* (User project context)"
-            ]
-          }
-        }
-      }
+      "category": "productivity"
     }
   ]
 }
