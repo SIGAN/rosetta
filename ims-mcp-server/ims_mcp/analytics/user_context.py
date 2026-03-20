@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import time
 from typing import Any
 
 from ims_mcp.constants import REPOSITORY_CACHE_TTL_SECONDS
+
+logger = logging.getLogger(__name__)
 
 _cached_username: str | None = None
 _cached_repository: str | None = None
@@ -16,7 +19,13 @@ _cached_agent_name: str | None = None
 _cached_agent_version: str | None = None
 
 
-def get_username() -> str:
+def get_username(call_ctx: Any = None) -> str:
+    # When call_ctx is available (HTTP mode), use the authenticated user email.
+    if call_ctx is not None:
+        email = getattr(call_ctx, "user_email", "") or ""
+        if email:
+            return email
+
     global _cached_username
     if _cached_username is not None:
         return _cached_username
@@ -45,8 +54,12 @@ async def get_repository_from_context(ctx: Any) -> str:
     try:
         session = ctx.request_context.session
         roots_result = await session.list_roots()
+        logger.debug("Received MCP roots: %r", roots_result)
         if roots_result and roots_result.roots:
-            repo_names = [os.path.basename(str(root.uri)).rstrip("/") for root in roots_result.roots]
+            repo_names = sorted(set(
+                name for root in roots_result.roots
+                if (name := os.path.basename(str(root.uri)).rstrip("/"))
+            ))
             result = ", ".join(repo_names)
     except Exception:
         pass

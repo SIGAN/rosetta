@@ -873,14 +873,29 @@ async def main() -> None:
                 errors.append(f"get_context_instructions failed: {text1[:100]}")
             else:
                 print(f"    First call completed in {first_call_time:.2f}s ({len(text1)} chars)")
-                
+
+                # For r2: verify workflow listing is appended with known workflow entry
+                if version.startswith("r2"):
+                    if "## Available Workflows" in text1:
+                        print("    ✓ Workflow listing appended (## Available Workflows found)")
+                    else:
+                        errors.append("get_context_instructions: workflow listing missing (## Available Workflows not found)")
+                    # adhoc-flow and coding-flow both carry tags: [workflow] — at least one must appear with a phrase from its description
+                    adhoc_ok = "adhoc-flow.md" in text1 and "execution plan" in text1
+                    coding_ok = "coding-flow.md" in text1 and "tech specs" in text1
+                    if adhoc_ok or coding_ok:
+                        matched = "adhoc-flow.md (execution plan)" if adhoc_ok else "coding-flow.md (tech specs)"
+                        print(f"    ✓ Known workflow with description found: {matched}")
+                    else:
+                        errors.append("get_context_instructions: expected adhoc-flow.md or coding-flow.md with description phrase not found in workflow listing")
+
                 # Second call immediately - should return cached (fast)
                 print("    Second call (immediate): should return cached...")
                 start_time = time.time()
                 result2 = await client.call_tool("get_context_instructions", {"topic": "cache test"})
                 second_call_time = time.time() - start_time
                 text2 = extract_text(result2)
-                
+
                 if text2 == text1:
                     print(f"    Second call completed in {second_call_time:.2f}s")
                     if second_call_time < first_call_time * 0.5:
@@ -889,7 +904,7 @@ async def main() -> None:
                         print(f"    ⚠ Cache may not be working (second call not faster: {second_call_time:.2f}s vs {first_call_time:.2f}s)")
                 else:
                     errors.append("get_context_instructions: second call returned different content (cache not working)")
-                
+
                 print("    Note: Full TTL expiration (5 minutes) not tested in this quick validation")
                 
         except Exception as exc:

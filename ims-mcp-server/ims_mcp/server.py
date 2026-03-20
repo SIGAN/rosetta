@@ -366,6 +366,7 @@ async def get_context_instructions(
             document_client=_DOCUMENT_CLIENT,
             bundler=_BUNDLER,
             query_builder=_QUERY_BUILDER,
+            doc_cache=_DOC_CACHE,
             topic=None, # no topic, as it creates too many results and noise
         )
     )

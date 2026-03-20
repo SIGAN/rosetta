@@ -7,7 +7,14 @@ from collections.abc import Iterable
 
 from ims_mcp.clients.doc_cache import InstructionDocCache
 from ims_mcp.clients.document import DocumentClient
-from ims_mcp.constants import COMPATIBILITY_MODE_UPGRADE_NOTICE, QUERY_LIST_THRESHOLD, TAG_BOOTSTRAP
+from ims_mcp.constants import (
+    COMPATIBILITY_MODE_UPGRADE_NOTICE,
+    QUERY_LIST_THRESHOLD,
+    TAG_BOOTSTRAP,
+    TAG_WORKFLOW,
+    WORKFLOWS_PATH_PREFIX,
+    WORKFLOWS_PSEUDO_FILE_HEADER,
+)
 from ims_mcp.context import CallContext
 from ims_mcp.services.bundler import Bundler
 from ims_mcp.services.keyword_search import list_docs_with_keyword_fallback
@@ -57,11 +64,68 @@ def _resource_path(doc: DocumentLike) -> str:
     return getattr(meta, "resource_path", "") or ""
 
 
+def _longest_tag(doc: DocumentLike) -> str:
+    tags = list(_extract_tags(doc))
+    return max(tags, key=len, default="") if tags else ""
+
+
+def _frontmatter_description(doc: DocumentLike) -> str:
+    meta = getattr(doc, "meta_fields", {}) or {}
+    if isinstance(meta, str):
+        try:
+            meta = as_json_object(json.loads(meta))
+        except Exception:
+            return ""
+    if not isinstance(meta, dict) and hasattr(meta, "__dict__"):
+        meta = as_json_object({k: v for k, v in vars(meta).items() if k != "rag"})
+    fm = meta.get("frontmatter") if isinstance(meta, dict) else getattr(meta, "frontmatter", None)
+    if fm is None:
+        return ""
+    # Unwrap RAGFlow SDK Base objects
+    if not isinstance(fm, (dict, str)) and hasattr(fm, "__dict__"):
+        fm = {k: v for k, v in vars(fm).items() if k != "rag"}
+    if isinstance(fm, str):
+        try:
+            fm = json.loads(fm)
+        except Exception:
+            return ""
+    if isinstance(fm, dict):
+        desc = fm.get("description", "")
+        return str(desc).strip() if desc else ""
+    return ""
+
+
+def _build_workflows_listing(call_ctx: CallContext, doc_cache: InstructionDocCache) -> str:
+    dataset_name = call_ctx.config.instruction_dataset
+    try:
+        dataset = call_ctx.ragflow.get_dataset(name=dataset_name)
+    except Exception:
+        return ""
+    if not dataset:
+        return ""
+    all_docs = doc_cache.get_all_docs(dataset, dataset_name)
+    prefix = WORKFLOWS_PATH_PREFIX + "/"
+    workflow_docs = [
+        doc for doc in all_docs
+        if _resource_path(doc).startswith(prefix) and TAG_WORKFLOW in _extract_tags(doc)
+    ]
+    if not workflow_docs:
+        return ""
+    lines = [WORKFLOWS_PSEUDO_FILE_HEADER]
+    for doc in sorted(workflow_docs, key=lambda d: _resource_path(d)):
+        tag = _longest_tag(doc)
+        description = _frontmatter_description(doc)
+        desc_part = f" — {description}" if description else ""
+        lines.append(f"- `{tag}`{desc_part}")
+    return "\n".join(lines)
+
+
 async def get_context_instructions(
     call_ctx: CallContext,
     document_client: DocumentClient,
     bundler: Bundler,
     query_builder: QueryBuilder,
+    doc_cache: InstructionDocCache,
     topic: str | None = None,
 ) -> str:
     # Compatibility wrapper: get-context semantics are query-instructions
@@ -76,8 +140,12 @@ async def get_context_instructions(
         topic=topic,
         _skip_list_threshold=True,
     )
-    if call_ctx.config.compatibility_mode:
-        result += COMPATIBILITY_MODE_UPGRADE_NOTICE
+    if result and not result.startswith("Error:"):
+        workflows_listing = _build_workflows_listing(call_ctx, doc_cache)
+        if workflows_listing:
+            result += workflows_listing
+        if call_ctx.config.compatibility_mode:
+            result += COMPATIBILITY_MODE_UPGRADE_NOTICE
     return result
 
 

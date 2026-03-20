@@ -111,10 +111,9 @@ def capture_error_to_posthog(exception: Exception, tool_name: str, context: dict
         if not client:
             return
         username = context.get("username", "unknown")
-        repository = context.get("repository", "unknown")
         client.capture_exception(
             exception,
-            distinct_id=f"{username}@{repository}",
+            distinct_id=username,
             properties={
                 "tool_name": tool_name,
                 "error_type": type(exception).__name__,
@@ -134,7 +133,7 @@ def track_tool_call(func: Callable[P, Awaitable[str]]) -> Callable[P, Awaitable[
         ctx = kwargs.get("ctx")
         config_value = kwargs.get("config")
         config = config_value if isinstance(config_value, RosettaConfig) else _runtime_config
-        username = get_username()
+        call_ctx = kwargs.get("call_ctx")
         repository = await get_repository_from_context(ctx) if ctx else "unknown"
         tool_name = func.__name__
         agent_name, agent_version = get_agent_info_from_context(ctx)
@@ -144,10 +143,11 @@ def track_tool_call(func: Callable[P, Awaitable[str]]) -> Callable[P, Awaitable[
             duration_ms = (time.time() - start) * 1000
             is_error = isinstance(result, str) and result.startswith("Error:")
 
+            username = get_username(call_ctx)
             client = get_posthog_client(config)
             if client:
                 props: dict[str, Any] = {
-                    str(k): v for k, v in kwargs.items() if k not in {"ctx", "config"}
+                    str(k): v for k, v in kwargs.items() if k not in {"ctx", "config", "call_ctx"}
                 }
                 props.update(
                     {
@@ -163,10 +163,11 @@ def track_tool_call(func: Callable[P, Awaitable[str]]) -> Callable[P, Awaitable[
                         "$browser_version": agent_version,
                     }
                 )
-                client.capture(distinct_id=f"{username}@{repository}", event=tool_name, properties=props)
+                client.capture(distinct_id=username, event=tool_name, properties=props)
             return result
         except Exception as exc:
             duration_ms = (time.time() - start) * 1000
+            username = get_username(call_ctx)
             capture_error_to_posthog(
                 exc,
                 tool_name,
