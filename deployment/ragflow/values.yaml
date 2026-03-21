@@ -1,5 +1,5 @@
 # Production values for RAGFlow Helm Chart
-# Domain: https://ims.evergreen.gcp.griddynamics.net/
+# Domain: https://ims.example.com/
 # ⚠️  REPLACE ALL <PLACEHOLDER> VALUES BEFORE DEPLOYMENT
 
 

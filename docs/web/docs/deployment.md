@@ -198,9 +198,9 @@ Required env vars: `ROSETTA_API_KEY`, `ROSETTA_SERVER_URL`, `REDIS_PASSWORD`.
 
 ### Kubernetes / Helm
 
-Rosetta MCP uses the Evergreen shared Helm chart (v1.17.x). Configuration is values-only (no custom chart).
+Rosetta MCP uses a shared Helm chart (v1.17.x). Configuration is values-only (no custom chart).
 
-**Image:** `us-central1-docker.pkg.dev/gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp`
+**Image:** `https://hub.docker.com/repository/docker/griddynamics/rosetta-mcp/general`
 
 **Resources:**
 
@@ -248,13 +248,13 @@ Environment overrides:
 
 | Setting | Dev | Prod |
 |---|---|---|
-| Ingress host | `rosetta-dev.evergreen...` | `rosetta.evergreen...` |
-| `ROSETTA_SERVER_URL` | `http://ims--ragflow--dev....:80` | `http://ims--ragflow--prod....:80` |
+| Ingress host | `rosetta-dev.example.com` | `rosetta.example.com` |
+| `ROSETTA_SERVER_URL` | `http://ragflow-dev.<cluster-domain>:80` | `http://ragflow-prod.<cluster-domain>:80` |
 | `ROSETTA_MODE` | `SOFT` | `SOFT` |
 | `IMS_DEBUG` | `1` | (unset) |
-| Keycloak realm | `evergreen` | `ims` |
-| Service account | `sa-w-ims-dev` | `sa-w-ims-prod` |
-| ESO secret source | `ims-dev-mcp-secrets` | `ims-mcp-secrets` |
+| Keycloak realm | `<dev-realm>` | `<prod-realm>` |
+| Service account | `<dev-service-account>` | `<prod-service-account>` |
+| ESO secret source | `<dev-secret-source>` | `<prod-secret-source>` |
 
 ### Security
 
@@ -314,11 +314,11 @@ values-prod.yaml     # Prod environment overrides
 
 Key differences between environments:
 
-- **Namespaces:** `ims-dev` vs `ims-prod`
-- **Ingress hosts:** `*-dev.evergreen...` vs production domains
-- **Keycloak realms:** `evergreen` (dev) vs `ims` (prod)
-- **Secret sources:** `ims-dev-*` vs `ims-*` in GCP Secret Manager
-- **Service accounts:** `sa-w-ims-dev` vs `sa-w-ims-prod`
+- **Namespaces:** `<dev-namespace>` vs `<prod-namespace>`
+- **Ingress hosts:** `rosetta-dev.example.com` vs `rosetta.example.com`
+- **Keycloak realms:** `<dev-realm>` (dev) vs `<prod-realm>` (prod)
+- **Secret sources:** environment-specific bundles in your secret manager
+- **Service accounts:** environment-specific Kubernetes service accounts
 - **Debug flags:** `IMS_DEBUG=1` in dev only
 
 **CI/CD flow (merge to main auto-deploys to dev):**

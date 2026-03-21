@@ -48,7 +48,7 @@ Use **Sonnet 4.6**, **GPT-5.3-codex-medium**, **gemini-3.1-pro** or better. Avoi
 
 ## Slow or Empty Responses
 
-- Check your network can reach `rosetta.evergreen.gcp.griddynamics.net`
+- Check your network can reach your Rosetta MCP host
 - Rosetta Server (RAGFlow) may be temporarily unavailable. Retry after a few minutes
 - Large repositories take longer on first initialization. This is expected
 

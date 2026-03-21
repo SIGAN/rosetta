@@ -14,7 +14,7 @@
    - See [Contributing Workflow](CONTRIBUTING.md#contributing-workflow) for git-related info
 
 2. **Develop Rosetta using claude code / codex / cursor** or **Use the prompting flow.**
-   - Development: existing rules will kick in, we use HTTP MCP, everything is preconfigured using claude standards. The repo's `.mcp.json` pre-configures Claude Code to connect to the **dev** MCP endpoint (`rosetta-dev.evergreen.gcp.griddynamics.net/mcp`) — this is intentional so contributors see their in-progress instruction changes reflected immediately. End users connect to the production endpoint instead.
+   - Development: existing rules will kick in, we use HTTP MCP, everything is preconfigured using claude standards. The repo's `.mcp.json` pre-configures Claude Code to connect to the **dev** MCP endpoint (`rosetta-dev.example.com/mcp`) — this is intentional so contributors see their in-progress instruction changes reflected immediately. End users connect to the production endpoint instead.
    - Prompting: use the [`coding-agents-prompting-flow` (description + examples)](CONTRIBUTING.md#prompt-changes) to author, refactor, or harden prompts.
 
 3. **Check your output.**

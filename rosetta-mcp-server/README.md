@@ -93,7 +93,7 @@ Rosetta MCP supports two runtime modes:
 | `FERNET_KEY` | Runtime (HTTP OAuth) | Empty | Fernet key for encrypting OAuth token storage in Redis |
 | `ROSETTA_READ_POLICY` | Runtime (authz) | `all` | `all`, `team`, `none` for project dataset reads |
 | `ROSETTA_WRITE_POLICY` | Runtime (authz) | `all` | `all`, `team`, `none` for project dataset writes/creates |
-| `ROSETTA_USER_EMAIL` | Runtime (authz) | `rosetta@griddynamics.net` | STDIO identity and HTTP fallback identity |
+| `ROSETTA_USER_EMAIL` | Runtime (authz) | `rosetta@example.com` | STDIO identity and HTTP fallback identity |
 | `ROSETTA_INVITE_EMAILS` | Runtime (authz) | Empty | Comma-separated invite list for project dataset creation flow |
 | `ROSETTA_MODE` | Runtime (prompts) | `HARD` | Prompt mode selection: `HARD` or `SOFT` |
 | `ROSETTA_PLAN_TTL_DAYS` | Runtime (plan manager) | `5` | Plan expiry in days |
@@ -131,7 +131,7 @@ ROSETTA_TRANSPORT=stdio
 STDIO keeps API-key access and does not use OAuth. User identity for authorization checks comes from:
 
 ```bash
-ROSETTA_USER_EMAIL=rosetta@griddynamics.net
+ROSETTA_USER_EMAIL=rosetta@example.com
 ```
 
 ### HTTP Mode
@@ -177,11 +177,11 @@ Authorization policy variables (dataset-level):
 |----------|-------------|---------|
 | `ROSETTA_READ_POLICY` | `all`, `team`, `none` for read access on `project-*` datasets | `all` |
 | `ROSETTA_WRITE_POLICY` | `all`, `team`, `none` for write/create on `project-*` datasets | `all` |
-| `ROSETTA_USER_EMAIL` | Fallback user email (used in STDIO, and HTTP fallback) | `rosetta@griddynamics.net` |
+| `ROSETTA_USER_EMAIL` | Fallback user email (used in STDIO, and HTTP fallback) | `rosetta@example.com` |
 | `ROSETTA_INVITE_EMAILS` | Comma-separated emails auto-invited on project dataset creation | Empty |
 
 OAuth callback URL examples:
-- Production: `https://rosetta.evergreen.gcp.griddynamics.net/auth/callback`
+- Production: `https://rosetta.example.com/auth/callback`
 - Local: `http://localhost:8000/auth/callback`
 
 ## Usage with MCP Clients
@@ -200,7 +200,7 @@ Add to `.cursor/mcp.json` (or equivalent client config):
         "ROSETTA_TRANSPORT": "stdio",
         "ROSETTA_SERVER_URL": "https://<production server URL>",
         "ROSETTA_API_KEY": "your-rosetta-api-key",
-        "ROSETTA_USER_EMAIL": "you@griddynamics.com"
+        "ROSETTA_USER_EMAIL": "you@example.com"
       }
     }
   }
@@ -217,12 +217,12 @@ ROSETTA_SERVER_URL="https://<production server URL>" \
 ROSETTA_API_KEY="your-rosetta-api-key" \
 ROSETTA_HTTP_HOST=0.0.0.0 \
 ROSETTA_HTTP_PORT=8000 \
-ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/auth" \
-ROSETTA_OAUTH_TOKEN_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/token" \
-ROSETTA_OAUTH_INTROSPECTION_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/token/introspect" \
+ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/auth" \
+ROSETTA_OAUTH_TOKEN_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/token" \
+ROSETTA_OAUTH_INTROSPECTION_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/token/introspect" \
 ROSETTA_OAUTH_CLIENT_ID="<client-id>" \
 ROSETTA_OAUTH_CLIENT_SECRET="<client-secret>" \
-ROSETTA_OAUTH_BASE_URL="https://rosetta.evergreen.gcp.griddynamics.net" \
+ROSETTA_OAUTH_BASE_URL="https://rosetta.example.com" \
 rosetta-mcp
 ```
 
@@ -235,12 +235,12 @@ ROSETTA_API_KEY="your-rosetta-api-key" \
 ROSETTA_HTTP_HOST=0.0.0.0 \
 ROSETTA_HTTP_PORT=8000 \
 REDIS_URL="redis://localhost:6379/0" \
-ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/auth" \
-ROSETTA_OAUTH_TOKEN_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/token" \
-ROSETTA_OAUTH_INTROSPECTION_ENDPOINT="https://keycloak.evergreen.gcp.griddynamics.net/realms/<realm>/protocol/openid-connect/token/introspect" \
+ROSETTA_OAUTH_AUTHORIZATION_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/auth" \
+ROSETTA_OAUTH_TOKEN_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/token" \
+ROSETTA_OAUTH_INTROSPECTION_ENDPOINT="https://idp.example.com/realms/<realm>/protocol/openid-connect/token/introspect" \
 ROSETTA_OAUTH_CLIENT_ID="<client-id>" \
 ROSETTA_OAUTH_CLIENT_SECRET="<client-secret>" \
-ROSETTA_OAUTH_BASE_URL="https://rosetta.evergreen.gcp.griddynamics.net" \
+ROSETTA_OAUTH_BASE_URL="https://rosetta.example.com" \
 rosetta-mcp
 ```
 
@@ -484,11 +484,11 @@ The project includes a GitHub Actions workflow for automated Docker image buildi
 
 **Image Tag Format:** `{version}-{git-short-sha}` (e.g., `2.0.0b59-a1b2c3d`)
 
-**Image Location:** `us-central1-docker.pkg.dev/gd-gcp-rnd-evergreen/evergreen-v2/rosetta-mcp`
+**Image Location:** `https://hub.docker.com/repository/docker/griddynamics/rosetta-mcp/general`
 
 **How it works:**
 1. Extracts version from `pyproject.toml`
-2. Passes version to reusable Evergreen build workflow via `app-version` parameter
+2. Passes version to the reusable build workflow via `app-version` parameter
 3. Builds and tags Docker image as `{version}-{git-sha}`
 
 ## Usage Analytics

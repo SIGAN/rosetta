@@ -220,7 +220,7 @@ Download [bootstrap.md](https://github.com/griddynamics/rosetta/blob/main/instru
 
 - **OAuth prompt does not appear:** restart your IDE and retry the connection. Read more in [Troubleshooting — Connection & Authentication](/rosetta/docs/troubleshooting/#connection--authentication).
 - **Agent ignores Rosetta tools:** confirm the MCP server shows as connected in your IDE's MCP settings. Add a [bootstrap rule](/rosetta/docs/installation/) if the agent still skips Rosetta. Read more in [Troubleshooting — Agent Not Using Rosetta](/rosetta/docs/troubleshooting/#agent-not-using-rosetta).
-- **Slow or empty responses:** check your network can reach `rosetta.evergreen.gcp.griddynamics.net`. See [Troubleshooting](/rosetta/docs/troubleshooting/#slow-or-empty-responses).
+- **Slow or empty responses:** check your network can reach your Rosetta MCP host. See [Troubleshooting](/rosetta/docs/troubleshooting/#slow-or-empty-responses).
 
 ## Next Steps
 
