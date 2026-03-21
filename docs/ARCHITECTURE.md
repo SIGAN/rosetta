@@ -447,8 +447,8 @@ Validation command examples:
 - `cp .env.dev .env && REDIS_URL="redis://localhost:6379/0" VERSION=r2 venv/bin/python ims-mcp-server/validation/verify_mcp.py`
 
 Validation notes discovered during real runs:
-- MCP unit tests: `cd ims-mcp-server && PYTHONPATH=. ../venv/bin/pytest tests/`
-- CLI unit tests: `cd rosetta-cli && PYTHONPATH=. ../venv/bin/pytest tests/`
+- MCP unit tests: `cd ims-mcp-server && PYTHONPATH=. ../venv/bin/pytest tests/` or `PYTHONPATH=ims-mcp-server venv/bin/pytest ims-mcp-server/tests`
+- CLI unit tests: `cd rosetta-cli && PYTHONPATH=. ../venv/bin/pytest tests/` or `PYTHONPATH=rosetta-cli venv/bin/pytest rosetta-cli/tests`
 - `verify_mcp.py` flat-list validation must allow plain filenames for `r1` and hierarchical paths for `r2`.
 
 # RAGFlow
