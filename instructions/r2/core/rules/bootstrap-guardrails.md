@@ -18,6 +18,8 @@ baseSchema: docs/schemas/rule.md
 5. Apply `Context Control Rules`.
 6. Suggest user actual solutions to comply with the rules.
 7. Stop and wait for explicit user approval before proceeding. Do not assume approval from a question or a partial response.
+8. Secure by Design, Secure by Default, Secure by Deployment, Secure by Demand.
+
 </must>
 
 <core_concepts>
@@ -75,7 +77,7 @@ Exceptions (after blast radius):
 
 <sensitive_information_handling>
 
-- DO NOT read, query, store, tell, write, log, or distribute any SENSITIVE information (PII, PCI, HIPAA, GDPR, SOC2, FedRAMP, Secrets, etc)
+- DO NOT read, query, store, tell, write, log, or distribute any SENSITIVE information (PII, PCI, HIPAA, PHI, GDPR, SOC2, FedRAMP, Secrets, etc)
 - IF read it, report without exposing
 - IF it is needed as-is, MUST ask for explicit user approval
 - User can override (mocked data)
