@@ -50,7 +50,7 @@ DEFAULT_HTTP_PORT = 8000
 TRANSPORT_STDIO = "stdio"
 TRANSPORT_HTTP = "http"
 
-DEFAULT_SERVER_URL = "https://ims.evergreen.gcp.griddynamics.net/"
+DEFAULT_SERVER_URL = "http://localhost:80"
 DEFAULT_SERVER_PUBLIC_KEY_PEM = """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArq9XTUSeYr2+N1h3Afl/z8Ds
 e/2yD0ZGrKwx+EEEcdsBLca9Ynmx3nIB5obmLlSfmskLpBo0UACBmB5rEjBp2Q2f3AG3
@@ -137,6 +137,7 @@ TOOL_DISCOVER_PROJECTS = "discover_projects"
 TOOL_PLAN_MANAGER = "plan_manager"
 
 SCOPE_ALLOW_WRITE_DATA = "allow_write_data"
+TAG_WRITE_DATA = "write_data"
 
 REPOSITORY_CACHE_TTL_SECONDS = 300
 

@@ -50,18 +50,22 @@ def test_returns_none_for_stdio():
     assert build_oauth_provider(cfg) is None
 
 
-def test_returns_none_when_oauth_incomplete():
+def test_raises_when_oauth_incomplete():
     cfg = _make_config(
         transport="http",
         oauth_authorization_endpoint="https://kc.example.com/auth",
         # missing token/introspection/client_id/client_secret
     )
-    assert build_oauth_provider(cfg) is None
+    import pytest
+    with pytest.raises(ValueError, match="requires OAuth configuration"):
+        build_oauth_provider(cfg)
 
 
-def test_returns_none_when_all_empty():
+def test_raises_when_all_empty():
     cfg = _make_config(transport="http")
-    assert build_oauth_provider(cfg) is None
+    import pytest
+    with pytest.raises(ValueError, match="requires OAuth configuration"):
+        build_oauth_provider(cfg)
 
 
 def test_returns_provider_when_fully_configured():

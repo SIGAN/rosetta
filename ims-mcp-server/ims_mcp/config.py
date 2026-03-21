@@ -112,6 +112,27 @@ def _has_non_empty_env(name: str) -> bool:
     return bool((os.getenv(name) or "").strip())
 
 
+def _derive_rosetta_url_from_r2r(r2r_api_base: str) -> str:
+    """Derive Rosetta server URL from legacy R2R_API_BASE.
+
+    Replaces the subdomain (everything before the first dot) with 'ims'.
+    E.g. https://ims-r2r-dev.example.com/ -> https://ims.example.com/
+    If the hostname has no dots, returns the URL as-is.
+    """
+    from urllib.parse import urlparse, urlunparse
+
+    parsed = urlparse(r2r_api_base)
+    hostname = parsed.hostname or ""
+    dot_idx = hostname.find(".")
+    if dot_idx < 0:
+        return r2r_api_base
+    new_hostname = "ims" + hostname[dot_idx:]
+    # Reconstruct netloc preserving port if present
+    port = parsed.port
+    new_netloc = f"{new_hostname}:{port}" if port else new_hostname
+    return urlunparse(parsed._replace(netloc=new_netloc))
+
+
 def _legacy_compatibility_requested() -> bool:
     return all(
         _has_non_empty_env(name)
@@ -352,8 +373,10 @@ class RosettaConfig:
             and not config.api_key
             and _legacy_compatibility_requested()
         ):
+            r2r_base = (os.getenv(ENV_LEGACY_R2R_API_BASE) or "").strip()
+            derived_url = _derive_rosetta_url_from_r2r(r2r_base)
             return config.init_legacy_compatibility_mode(
-                base_url=DEFAULT_SERVER_URL.rstrip("/"),
+                base_url=derived_url.rstrip("/"),
             )
         return config
 

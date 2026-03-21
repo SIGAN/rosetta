@@ -160,6 +160,12 @@ async def main() -> None:
     # Connect to the MCP server via in-memory transport
     print("Connecting to MCP server via in-memory transport...")
     async with Client(mcp) as client:
+        # Bootstrap session: call get_context_instructions to enable
+        # scope-gated tools (write_data) for this session.
+        print("\nBootstrapping session via get_context_instructions...")
+        await client.call_tool("get_context_instructions", {})
+        print("Session bootstrapped.")
+
         # 1. Verify tool schemas have parameter descriptions
         print("\n=== Tool Schema Verification ===")
         tools = await client.list_tools()
@@ -871,7 +877,7 @@ async def main() -> None:
             # First call - should load and cache
             print("    First call: loading bootstrap instructions...")
             start_time = time.time()
-            result1 = await client.call_tool("get_context_instructions", {"topic": "cache test"})
+            result1 = await client.call_tool("get_context_instructions", {})
             first_call_time = time.time() - start_time
             text1 = extract_text(result1)
             
@@ -898,7 +904,7 @@ async def main() -> None:
                 # Second call immediately - should return cached (fast)
                 print("    Second call (immediate): should return cached...")
                 start_time = time.time()
-                result2 = await client.call_tool("get_context_instructions", {"topic": "cache test"})
+                result2 = await client.call_tool("get_context_instructions", {})
                 second_call_time = time.time() - start_time
                 text2 = extract_text(result2)
 

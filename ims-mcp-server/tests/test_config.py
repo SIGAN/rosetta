@@ -1,6 +1,8 @@
 import os
 
-from ims_mcp.config import RosettaConfig
+import pytest
+
+from ims_mcp.config import RosettaConfig, _derive_rosetta_url_from_r2r
 
 
 def test_from_env_defaults(monkeypatch):
@@ -9,7 +11,7 @@ def test_from_env_defaults(monkeypatch):
     monkeypatch.delenv("ROSETTA_API_KEY", raising=False)
     monkeypatch.delenv("ROSETTA_OAUTH_CALLBACK_PATH", raising=False)
     cfg = RosettaConfig.from_env()
-    assert cfg.server_url == "https://ims.evergreen.gcp.griddynamics.net"
+    assert cfg.server_url == "http://localhost:80"
     assert cfg.instruction_dataset == "aia-r2"
     assert cfg.oauth_callback_path == "/auth/callback"
 
@@ -52,3 +54,17 @@ def test_allowed_scopes_parsing(monkeypatch):
     monkeypatch.setenv("ROSETTA_ALLOWED_SCOPES", "allow_write_data, project_read beta allow_write_data")
     cfg = RosettaConfig.from_env()
     assert cfg.allowed_scopes == ("allow_write_data", "project_read", "beta")
+
+
+@pytest.mark.parametrize(
+    "r2r_url, expected",
+    [
+        ("https://r2r-dev.corp.example.com/", "https://ims.corp.example.com/"),
+        ("https://anything.example.com/", "https://ims.example.com/"),
+        ("https://r2r-dev.example.com:8443/v1", "https://ims.example.com:8443/v1"),
+        ("http://localhost", "http://localhost"),
+        ("http://localhost:9380", "http://localhost:9380"),
+    ],
+)
+def test_derive_rosetta_url_from_r2r(r2r_url, expected):
+    assert _derive_rosetta_url_from_r2r(r2r_url) == expected

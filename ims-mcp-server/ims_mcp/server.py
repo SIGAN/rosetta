@@ -31,6 +31,7 @@ from ims_mcp.constants import (
     ENV_IMS_DEBUG,
     ENV_ROSETTA_MODE,
     SCOPE_ALLOW_WRITE_DATA,
+    TAG_WRITE_DATA,
     TAG_MCP_SERVER_INSTRUCTIONS,
     TOOL_DISCOVER_PROJECTS,
     TOOL_GET_CONTEXT_INSTRUCTIONS,
@@ -242,6 +243,15 @@ mcp = FastMCP(
     auth=_OAUTH_PROVIDER,
 )
 
+# Write-data tool visibility:
+# - HTTP: hide by default, reveal per-session in get_context_instructions
+#   based on OAuth token scopes.
+# - STDIO: single user — decide once at startup from env var.
+if _CONFIG.transport == TRANSPORT_HTTP:
+    mcp.disable(tags={TAG_WRITE_DATA})
+elif SCOPE_ALLOW_WRITE_DATA not in _CONFIG.allowed_scopes:
+    mcp.disable(tags={TAG_WRITE_DATA})
+
 
 async def _log(ctx: Context | None, level: str, message: str) -> None:
     if not ctx:
@@ -369,6 +379,15 @@ async def _read_resource(path: str, ctx: Context | None = None) -> str:
 async def get_context_instructions(
     ctx: Context | None = None,
 ) -> str:
+    # HTTP only: reveal write_data tools for this session if the user
+    # has the scope.  STDIO visibility is decided once at startup.
+    if (
+        _CONFIG.transport == TRANSPORT_HTTP
+        and ctx is not None
+        and SCOPE_ALLOW_WRITE_DATA in _resolve_allowed_scopes()
+    ):
+        await ctx.enable_components(tags={TAG_WRITE_DATA})
+
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
 
@@ -480,7 +499,7 @@ async def submit_feedback(
     )
 
 
-@mcp.tool(name=TOOL_QUERY_PROJECT_CONTEXT, description=PROMPT_QUERY_PROJECT_CONTEXT)
+@mcp.tool(name=TOOL_QUERY_PROJECT_CONTEXT, description=PROMPT_QUERY_PROJECT_CONTEXT, tags={TAG_WRITE_DATA})
 @track_tool_call
 async def query_project_context(
     repository_name: Annotated[str, Field(description="Project/workspace name.")],
@@ -518,7 +537,7 @@ async def query_project_context(
     )
 
 
-@mcp.tool(name=TOOL_STORE_PROJECT_CONTEXT, description=PROMPT_STORE_PROJECT_CONTEXT)
+@mcp.tool(name=TOOL_STORE_PROJECT_CONTEXT, description=PROMPT_STORE_PROJECT_CONTEXT, tags={TAG_WRITE_DATA})
 @track_tool_call
 async def store_project_context(
     repository_name: Annotated[str, Field(description="Project/workspace name.")],
@@ -562,7 +581,7 @@ async def store_project_context(
     )
 
 
-@mcp.tool(name=TOOL_DISCOVER_PROJECTS, description=PROMPT_DISCOVER_PROJECTS)
+@mcp.tool(name=TOOL_DISCOVER_PROJECTS, description=PROMPT_DISCOVER_PROJECTS, tags={TAG_WRITE_DATA})
 @track_tool_call
 async def discover_projects(
     query: Annotated[str | None, Field(description="Optional search term to filter projects by name.")] = None,
@@ -579,7 +598,7 @@ async def discover_projects(
     return await _retry_once(lambda: discover_projects_tool(call_ctx=call_ctx, query=query))
 
 
-@mcp.tool(name=TOOL_PLAN_MANAGER, description=PROMPT_PLAN_MANAGER)
+@mcp.tool(name=TOOL_PLAN_MANAGER, description=PROMPT_PLAN_MANAGER, tags={TAG_WRITE_DATA})
 @track_tool_call
 async def plan_manager(
     command: Annotated[str, Field(description="Command to execute.")],
@@ -651,7 +670,7 @@ def main() -> None:
                 from fastmcp.server.middleware.caching import ResponseCachingMiddleware
                 mcp.add_middleware(ResponseCachingMiddleware(
                     cache_storage=_REDIS_STORE,
-                    list_tools_settings={"ttl": 3600},
+                    list_tools_settings={"enabled": False},  # disabled: per-session visibility requires fresh list
                     list_resources_settings={"ttl": 300},
                     list_prompts_settings={"ttl": 3600},
                     read_resource_settings={"ttl": 300},
