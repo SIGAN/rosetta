@@ -46,18 +46,27 @@ MYSQL_PASSWORD=<generated>
 
 ### Kubernetes / Helm
 
-The RAGFlow Helm chart lives in `deployment/ragflow/` in the implementation repository. Chart version: 0.2.0, app image: `infiniflow/ragflow:v0.23.1`.
+Use the official upstream RAGFlow Helm chart:
+
+- Chart source: https://github.com/infiniflow/ragflow/tree/main/helm
+- Upstream README: https://github.com/infiniflow/ragflow/blob/main/helm/README.md
+- Upstream values: https://github.com/infiniflow/ragflow/blob/main/helm/values.yaml
 
 **Install:**
 
 ```sh
-helm install ragflow ./deployment/ragflow \
+git clone https://github.com/infiniflow/ragflow.git
+cd ragflow/helm
+
+helm upgrade --install ragflow . \
   -n <namespace> \
-  -f deployment/ragflow/values.yaml \
-  -f values-<env>.yaml
+  --create-namespace \
+  -f values.override.yaml
 ```
 
-**Architecture** (what the chart deploys):
+Maintain your own `values.override.yaml` outside this repository and keep it aligned with the upstream chart version you deploy.
+
+**Upstream chart architecture**:
 
 - RAGFlow application (port 80 web, 9380 API, 9381 admin)
 - Elasticsearch 8.11.3 (20Gi storage)
@@ -67,7 +76,7 @@ helm install ragflow ./deployment/ragflow \
 
 ### Helm Values Reference
 
-Base values (`values.yaml`):
+Use the upstream chart's `values.yaml` as the source of truth. The most important settings to review are:
 
 | Key | Default | Description |
 |---|---|---|
@@ -82,7 +91,7 @@ Base values (`values.yaml`):
 | `ingress.enabled` | `true` | Enable ingress |
 | `env.REGISTER_ENABLED` | (unset) | Set `"0"` to disable self-registration |
 
-Environment overrides (per-env files):
+Typical environment-specific overrides:
 
 | Setting | Dev | Prod |
 |---|---|---|
@@ -92,7 +101,7 @@ Environment overrides (per-env files):
 
 ### Security
 
-**Database credentials:** Create Kubernetes secrets for all passwords. Never put credentials in `values.yaml`.
+**Database credentials:** Create Kubernetes secrets for all passwords. Never put credentials in `values.yaml` or commit them into this repository.
 
 ```sh
 kubectl create secret generic ragflow-mysql \
