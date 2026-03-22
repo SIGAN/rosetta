@@ -100,6 +100,12 @@ Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for workflow and e
 - [Website](https://griddynamics.github.io/rosetta/)
 - [rosetta-support@griddynamics.com](mailto:rosetta-support@griddynamics.com)
 
+## Notice
+
+> [!WARNING]
+> Rosetta is intended for legitimate software engineering workflows.
+> Users are responsible for ensuring their use complies with applicable laws, regulations, and contractual obligations.
+
 ## License
 
 See [LICENSE](LICENSE) for details.
