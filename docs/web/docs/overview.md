@@ -37,7 +37,7 @@ Design principles:
 
 **Security by design.** No source code transfer. Air-gap capable. Runs inside the organization's perimeter. See [Context — Design Philosophy](/rosetta/docs/context/#design-philosophy) for the full set.
 
-**Inversion of control.** Rosetta never sees or processes source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
+**Inversion of control.** Rosetta is designed to not see or process source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
 
 **Batteries included.** Ships proven defaults from real-world projects. Makes the right thing the easy thing.
 

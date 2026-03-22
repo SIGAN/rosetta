@@ -73,7 +73,7 @@ permalink: /roadmap/
       <li>Tokens encrypted at rest; policy-based access control per team and project</li>
       <li>Human-in-the-loop approval gates at every critical decision point</li>
       <li>Sensitive data protection, risk assessment, and scope enforcement built in</li>
-      <li>No source code ever leaves your organization</li>
+      <li>Rosetta is designed so that no source code leaves your organization</li>
     </ul>
   </div>
 

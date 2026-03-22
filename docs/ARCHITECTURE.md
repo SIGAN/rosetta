@@ -67,13 +67,13 @@ The instructions repo defines *how agents should behave*. The target repo is *wh
               └─────────────────────┘
 ```
 
-Instructions flow up: files are published by the CLI into RAGFlow, served by Rosetta MCP to IDEs. The coding agent never sees your source code. Rosetta only delivers knowledge and instructions.
+Instructions flow up: files are published by the CLI into RAGFlow, served by Rosetta MCP to IDEs. Rosetta does not see or process your source code — by design, it only delivers knowledge and instructions.
 
 ---
 
 ## Key Principles
 
-**Inversion of control.** Rosetta never sees or processes source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
+**Inversion of control.** Rosetta is designed to not see or process source code or project data. It exposes guardrails, common best practices, and a menu of available instructions. The coding agent selects only what it needs; Rosetta delivers just those — keeping context lean and IP protected.
 
 ---
 
