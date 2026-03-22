@@ -307,7 +307,8 @@ Your OAuth provider must be configured to allow this scope.
 | `ROSETTA_OAUTH_CLIENT_SECRET` | OAuth client secret |
 | `ROSETTA_JWT_SIGNING_KEY` | JWT token signing. Required for production. |
 | `FERNET_KEY` | Encrypts OAuth tokens stored in Redis. Required for production. |
-| `POSTHOG_API_KEY` | Usage analytics (optional) |
+| `POSTHOG_API_KEY` | Usage analytics — your PostHog project API key (opt-in, disabled by default) |
+| `POSTHOG_HOST` | PostHog instance URL, e.g. `https://posthog.internal.company.com` (defaults to `https://eu.i.posthog.com`) |
 
 **ROSETTA_MODE:**
 

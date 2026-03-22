@@ -29,16 +29,93 @@ Python Software Foundation
 Python is licensed under the PSF License Agreement.
 https://docs.python.org/3/license.html
 
+============================================================================
+Rosetta MCP Server (ims-mcp) Dependencies
+============================================================================
+
 ----------------------------------------------------------------------------
-RAGFlow (ragflow-sdk)
+RAGFlow SDK (ragflow-sdk)
 Copyright InfiniFlow, Inc.
 Licensed under Apache License 2.0
 https://github.com/infiniflow/ragflow
+----------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
-Additional Dependencies
+MCP Python SDK (mcp)
+Copyright Anthropic, PBC
+Licensed under MIT License
+https://github.com/modelcontextprotocol/python-sdk
 ----------------------------------------------------------------------------
-Additional third-party dependencies and their licenses can be found by
-running: pip-licenses --from=mixed --format=table
+
+----------------------------------------------------------------------------
+FastMCP (fastmcp)
+Copyright Jeremiah Lowin
+Licensed under Apache License 2.0
+https://github.com/jlowin/fastmcp
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+PostHog (posthog)
+Copyright PostHog, Inc.
+Licensed under MIT License
+https://github.com/PostHog/posthog-python
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+cryptography
+Copyright The Python Cryptographic Authority and individual contributors
+Licensed under Apache License 2.0 OR BSD 3-Clause License
+https://github.com/pyca/cryptography
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+uuid7-standard
+Copyright Leo Vasanko
+Licensed under MIT License
+https://github.com/Lev135/uuid7-standard
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+py-key-value-aio (optional, Redis support)
+Licensed under Apache License 2.0
+https://pypi.org/project/py-key-value-aio/
+----------------------------------------------------------------------------
+
+============================================================================
+Rosetta CLI (rosetta-cli) Dependencies
+============================================================================
+
+----------------------------------------------------------------------------
+python-dotenv
+Copyright Saurabh Kumar
+Licensed under BSD 3-Clause License
+https://github.com/theskumar/python-dotenv
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+python-frontmatter
+Copyright Chris Amico
+Licensed under MIT License
+https://github.com/eyeseast/python-frontmatter
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+Requests
+Copyright Kenneth Reitz
+Licensed under Apache License 2.0
+https://github.com/psf/requests
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+tqdm
+Copyright tqdm developers
+Licensed under MIT License and Mozilla Public License 2.0
+https://github.com/tqdm/tqdm
+----------------------------------------------------------------------------
+
+============================================================================
+
+Additional third-party dependencies (transitive) and their licenses can be
+found by running: pip-licenses --from=mixed --format=table
 
 Please refer to each dependency's own license file for full terms.

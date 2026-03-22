@@ -34,13 +34,7 @@ jobs:
 
     - name: Build package
       working-directory: ./ims-mcp-server
-      env:
-        POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
-        # POSTHOG_API_KEY is handled by build.sh to inject into __init__.py
-        POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
-        # Even though POSTHOG_HOST is defined, it is ignored in build.sh
       run: |
-        # Use build.sh which copies icon and injects API key before building
         # V2: bootstrap.md no longer bundled (loaded from Rosetta Server at startup)
         chmod +x build.sh
         ./build.sh

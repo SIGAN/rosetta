@@ -123,13 +123,15 @@ Rosetta is designed around a strict separation: it serves instructions and knowl
 **Risk:** Leakage of sensitive data through analytics, telemetry, or logging pipelines.
 
 **Mitigations:**
-- Analytics integration (PostHog) is privacy-scoped. Rosetta intentionally records only limited metadata: public IP address, user identifier, MCP client identifier, and loaded scenario names.
-- Input parameters are structurally restricted to prevent client data from reaching analytics endpoints.
+- Usage analytics is opt-in. No data is collected unless you deploy and configure a PostHog instance on your infrastructure and provide its API key via `POSTHOG_API_KEY`.
+- When enabled, Rosetta records basic operational metadata: IP address, user email, coding agent name and version, MCP tool called, and tool parameters. This matches information already flowing through the MCP server — no additional data surface is introduced.
+- A `before_send` hook strips technical parameters (pagination, model settings) before events leave the server.
+- Disabled by default. Without a valid `POSTHOG_API_KEY`, no analytics events are emitted.
 
 **Deployer Responsibility:**
-- Review all logging and telemetry pipelines for compliance with your organization's data handling and privacy policies.
+- Review collected metadata for compliance with your organization's data handling and privacy policies.
 - If you extend Rosetta with additional logging, ensure sensitive or regulated data is not captured unless explicitly secured and authorized.
-- Consider disabling external analytics in environments with strict data residency requirements.
+- To disable analytics entirely, omit `POSTHOG_API_KEY` or set it to `DISABLED`.
 
 ### 6. AI-Generated Output and Coding Agents
 

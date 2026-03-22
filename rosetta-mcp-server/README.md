@@ -101,7 +101,7 @@ Rosetta MCP supports two runtime modes:
 | `IMS_DEBUG` | Runtime (debug) | Disabled | Enable debug logs (`1`, `true`, `yes`, `on`) |
 | `FASTMCP_LOG_LEVEL` | Runtime (debug) | `INFO` | Set to `DEBUG` alongside `IMS_DEBUG=1` for full FastMCP internals (auth, middleware) |
 | `FASTMCP_ENABLE_RICH_LOGGING` | Runtime (debug) | `true` | Set to `false` to disable Rich formatting — use in production/Grafana to prevent multiline log splitting |
-| `POSTHOG_API_KEY` | Runtime (analytics) | Package-injected key | Set to `""` to disable analytics |
+| `POSTHOG_API_KEY` | Runtime (analytics) | Disabled | Your PostHog project API key (opt-in, set to enable) |
 | `POSTHOG_HOST` | Runtime (analytics) | `https://eu.i.posthog.com` | PostHog endpoint |
 | `USER` | Runtime (analytics context) | OS-dependent | Username source (priority 1) |
 | `USERNAME` | Runtime (analytics context) | OS-dependent | Username source (priority 2) |
@@ -117,7 +117,7 @@ Rosetta MCP supports two runtime modes:
 | `IMS_DEBUG` | Enable debug logging to stderr (`1/true/yes/on`) | Disabled |
 | `FASTMCP_LOG_LEVEL` | Set to `DEBUG` alongside `IMS_DEBUG=1` for full FastMCP internals | `INFO` |
 | `FASTMCP_ENABLE_RICH_LOGGING` | Set to `false` to disable Rich formatting (use in production/Grafana) | `true` |
-| `POSTHOG_API_KEY` | PostHog project API key (set `""` to disable analytics) | Package default |
+| `POSTHOG_API_KEY` | Your PostHog project API key (opt-in, disabled by default) | Disabled |
 | `POSTHOG_HOST` | PostHog host | `https://eu.i.posthog.com` |
 
 ### STDIO Mode (Default)
@@ -497,42 +497,19 @@ Rosetta MCP includes built-in usage analytics via PostHog to help understand fea
 
 ### Default Behavior
 
-**Published packages** (from PyPI via CI/CD): Analytics are **ENABLED BY DEFAULT** with a built-in Project API Key (write-only, safe for client-side use). No configuration required.
+Analytics are **disabled by default**. No data is collected unless you deploy a PostHog instance and provide its API key.
 
-**Local development builds**: Analytics are **DISABLED** (placeholder key remains in source code).
+### Enable Analytics
 
-### Disable Analytics
-
-To **disable** analytics, set `POSTHOG_API_KEY` to an empty string in your MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "Rosetta": {
-      "command": "uvx",
-      "args": ["rosetta-mcp@latest"],
-      "env": {
-        "ROSETTA_TRANSPORT": "stdio",
-        "ROSETTA_SERVER_URL": "https://<production server URL>",
-        "ROSETTA_API_KEY": "your-rosetta-api-key",
-        "POSTHOG_API_KEY": ""
-      }
-    }
-  }
-}
-```
-
-### Use Custom PostHog Project
-
-To track analytics in your own PostHog project, provide your Project API Key:
+To enable usage analytics, set `POSTHOG_API_KEY` and `POSTHOG_HOST` pointing to your PostHog instance:
 
 ```json
 {
   "mcpServers": {
     "Rosetta": {
       "env": {
-        "POSTHOG_API_KEY": "phc_YOUR_CUSTOM_PROJECT_API_KEY",
-        "POSTHOG_HOST": "https://eu.i.posthog.com"
+        "POSTHOG_API_KEY": "phc_YOUR_PROJECT_API_KEY",
+        "POSTHOG_HOST": "https://posthog.internal.company.com"
       }
     }
   }
@@ -541,7 +518,7 @@ To track analytics in your own PostHog project, provide your Project API Key:
 
 **Where to Find Your Project API Key:**
 
-1. Log into PostHog dashboard
+1. Log into your PostHog dashboard
 2. Navigate to: **Project Settings** → **Project API Key**
 3. Copy the key (starts with `phc_`)
 
@@ -549,27 +526,26 @@ To track analytics in your own PostHog project, provide your Project API Key:
 
 ### What's Tracked
 
-**User Context:**
-- Username (from `USER`/`USERNAME`/`LOGNAME` environment variables + `whoami` fallback)
-- Repository names (from MCP `roots/list` protocol request, comma-separated if multiple; fallback to `client_id` parsing; 5-min cache)
-- MCP server identifier (`mcp_server: "Rosetta"`) and runtime package version (`mcp_server_version`)
-- GeoIP enabled via `disable_geoip=False` in client initialization (MCP runs locally on user's machine, IP is user's actual location)
+When enabled, Rosetta records basic operational metadata that matches information already flowing through the MCP server — no additional data surface is introduced.
 
-**Business Parameters** (usage patterns):
-- Tool arguments such as `query`, `tags`, `repository_name`, `request_mode`, `document`, and `force`
+**Per tool call:**
+- IP address (from the HTTP request)
+- User email (from OAuth in HTTP mode) or local username (from OS environment in STDIO mode)
+- Coding agent name and version (e.g. `Claude Code 1.0.17`)
+- MCP tool called (e.g. `query_instructions`) and tool parameters
+- MCP server version, session ID, call duration, success/error status
 
-**Excluded** (technical parameters):
-- `limit`, `offset`, `page` - Pagination
-- `compact_view` - View settings
-- `model`, `temperature`, `max_tokens` - RAG tuning parameters
+**Excluded** (stripped by `before_send` hook):
+- `limit`, `offset`, `page` — pagination
+- `compact_view` — view settings
+- `model`, `temperature`, `max_tokens` — RAG tuning parameters
 
 ### Privacy & Control
 
-- **Opt-out**: Analytics enabled by default with built-in key, easy to disable
+- **Opt-in**: Analytics disabled by default, enable by setting `POSTHOG_API_KEY`
+- **Self-hosted**: You deploy and control the PostHog instance on your infrastructure
 - **Write-only**: Project API key can only send events, cannot read analytics data
 - **Non-blocking**: Analytics never delays or breaks MCP tool responses
-- **User control**: Set `POSTHOG_API_KEY=""` to disable tracking anytime
-- **Custom tracking**: Use your own PostHog project by setting custom API key
 
 ## Requirements
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build script for Rosetta MCP package
-# Copies icon and injects PostHog API key before building
+# Copies icon before building
 
 set -e  # Exit on error
 
@@ -57,31 +57,8 @@ fi
 
 echo -e "${GREEN}  Copied rosetta-icon.png ($ICON_SOURCE_SIZE bytes)${NC}"
 
-# Step 2: Inject PostHog API Key (CI/CD only - optional for local builds)
-INIT_FILE="$SCRIPT_DIR/ims_mcp/__init__.py"
-
-if [ -n "$POSTHOG_API_KEY" ]; then
-    echo -e "${BLUE}Step 2: Injecting PostHog API Key (CI/CD mode)...${NC}"
-
-    # Create backup of original file
-    cp "$INIT_FILE" "$INIT_FILE.bak"
-
-    # Replace placeholder with actual API key in __init__.py
-    sed -i.tmp "s/__POSTHOG_API_KEY_PLACEHOLDER__/$POSTHOG_API_KEY/g" "$INIT_FILE"
-    rm -f "$INIT_FILE.tmp"
-
-    # Verify replacement worked
-    if grep -q "__POSTHOG_API_KEY_PLACEHOLDER__" "$INIT_FILE"; then
-        echo -e "${RED}ERROR: Failed to replace PostHog API key placeholder${NC}"
-        mv "$INIT_FILE.bak" "$INIT_FILE"  # Restore backup
-        exit 1
-    fi
-
-    echo -e "${GREEN}  PostHog API key injected into __init__.py${NC}"
-else
-    echo -e "${BLUE}Step 2: Skipping PostHog key injection (local build mode)${NC}"
-    echo -e "  Analytics will be disabled in this build (placeholder remains)"
-fi
+# Step 2: PostHog analytics (opt-in, disabled by default)
+echo -e "${BLUE}Step 2: Analytics disabled by default (opt-in via POSTHOG_API_KEY env var at deploy time)${NC}"
 
 # Step 3: Clean previous build artifacts
 echo -e "${BLUE}Step 3: Cleaning previous build artifacts...${NC}"
@@ -95,22 +72,10 @@ python -m build
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}ERROR: Build failed${NC}"
-    # Restore original file on build failure (if it was backed up)
-    if [ -f "$INIT_FILE.bak" ]; then
-        mv "$INIT_FILE.bak" "$INIT_FILE"
-        echo -e "${GREEN}  Restored original __init__.py${NC}"
-    fi
     exit 1
 fi
 
-# Step 5: Restore original __init__.py (CI/CD only - if we injected the key)
-if [ -f "$INIT_FILE.bak" ]; then
-    echo -e "${BLUE}Step 5: Restoring original __init__.py...${NC}"
-    mv "$INIT_FILE.bak" "$INIT_FILE"
-    echo -e "${GREEN}  Restored original __init__.py (key injection reverted)${NC}"
-fi
-
-# Step 6: Verify wheel contents
+# Step 5: Verify wheel contents
 echo -e "${BLUE}Step 6: Verifying wheel contents...${NC}"
 WHEEL_FILE=$(ls dist/*.whl | head -n 1)
 

@@ -13,8 +13,9 @@ except Exception:
 
 __author__ = "Igor Solomatov"
 
-# Default PostHog Project API Key (injected during CI/CD build from GitHub secret)
-DEFAULT_POSTHOG_API_KEY = "__POSTHOG_API_KEY_PLACEHOLDER__"
+# Default PostHog Project API Key — disabled by default (opt-in).
+# Deployers set POSTHOG_API_KEY env var to enable usage analytics on their infrastructure.
+DEFAULT_POSTHOG_API_KEY = "DISABLED"
 
 __all__ = ["mcp", "__version__", "DEFAULT_POSTHOG_API_KEY"]
 

@@ -411,7 +411,8 @@ Required for STDIO transport. Optional otherwise.
 | `ROSETTA_INVITE_EMAILS`   | (empty)                    | Comma-separated emails auto-invited on project dataset creation                                                                                             |
 | `INSTRUCTION_ROOT_FILTER` | (empty)                    | Comma-separated root tags filter for instructions                                                                                                           |
 | `IMS_DEBUG`               | disabled                   | Enable debug logs (`1`, `true`, `yes`, `on`)                                                                                                                |
-| `POSTHOG_API_KEY`         | (built-in)                 | Set to `""` to disable usage analytics                                                                                                                      |
+| `POSTHOG_API_KEY`         | (disabled)                 | Your PostHog project API key. Opt-in usage analytics — set to enable, omit or set to `DISABLED` to disable                                                  |
+| `POSTHOG_HOST`            | `https://eu.i.posthog.com` | Your PostHog instance URL, e.g. `https://posthog.internal.company.com`                                                                                      |
 
 Do not set `VERSION`. It uses a server-controlled default for managed upgrades. See [Architecture — Tradeoffs](/rosetta/docs/architecture/#tradeoffs) for rationale.
 
