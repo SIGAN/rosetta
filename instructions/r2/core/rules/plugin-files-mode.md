@@ -96,7 +96,7 @@ USE SKILL `load-context`, if available
 - THIS FILE IS PREP STEP 1.
 - bootstrap-*.md RULES CONTAIN PREP STEP 2 & 3 TO COMPLETE.
 
-# Available workflows
+# Available Workflows
 
 - `coding-flow` - Rosetta coding and implementation workflow, includes discovery, tech specs, tech plan, subagent plan review, user plan review, implementation, subagent review implementation, validation, user review, and final validation with reviewer gates, HITL gates, and subagent delegation.
 - `init-workspace-flow` - Rosetta workflow to initialize or upgrade a workspace, includes identify context, init proxying shells for target skills/agents/commands, workspace discovery, copy rules (optional, not recommended), identify patterns used, generate documentation, clarify questions, verification.
