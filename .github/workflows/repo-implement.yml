@@ -99,6 +99,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: claude-execution-trace
+          name: claude-execution-trace-${{ matrix.story_key }}
           path: /home/runner/work/_temp/claude-execution-output.json
           retention-days: 3
