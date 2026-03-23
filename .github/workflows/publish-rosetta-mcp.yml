@@ -1,12 +1,15 @@
 name: Publish Rosetta MCP
 
 on:
+  workflow_run:
+    workflows: ["Publish IMS MCP"]
+    branches: [main]
+    types: [completed]
   push:
     branches:
       - main
     paths:
       - 'rosetta-mcp-server/**'
-      - 'ims-mcp-server/pyproject.toml'
       - '.github/workflows/publish-rosetta-mcp.yml'
   workflow_dispatch:
 
