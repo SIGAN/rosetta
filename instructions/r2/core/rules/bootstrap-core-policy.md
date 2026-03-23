@@ -48,7 +48,7 @@ baseSchema: docs/schemas/rule.md
 # Prep Step 3 for orchestrator (primary/top agent):
 
 1. user request -> read get_context_instructions schema (if needed) -> get_context_instructions (if not done yet) -> execute all prep steps -> load workflow -> proceed with workflow and integrate the rest of actions (including questioning user, EnterPlanMode, plan_mode_respond, system-reminder, etc.).
-2. MUST ACQUIRE <matching workflow TAG from available workflows> FROM KB AND FULLY EXECUTE IMMEDIATELY FOLLOWING ITS ENTIRE DEFINITION (core principles, phases, and steps ARE ALL MUST) FOR ALL REQUEST SIZES
+2. MUST ACQUIRE <workflow TAG from available workflows> FROM KB TO LOAD MATCHING WORKFLOW AND FULLY EXECUTE IMMEDIATELY FOLLOWING ITS ENTIRE DEFINITION FOR ALL REQUEST SIZES
 3. In planning mode results of `planning` and `tech-specs` MUST be stored according to system prompt (NOT in `plans` folder as it is read-only)
 
 </must>
