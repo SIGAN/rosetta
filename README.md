@@ -38,6 +38,11 @@ Your IDE connects to the Rosetta MCP server. The server exposes guardrails and c
 
 Rosetta is designed to not see your source code. It only serves knowledge and instructions to the agent. The agent loads only what it needs per request (progressive disclosure) and follows your organization's workflows.
 
+Rosetta is engineered to prevent the unintentional transmission of sensitive data through the following architectural controls:
+- **Deterministic Instruction Serving**: Instructions are delivered as MCP resources in a strictly deterministic manner. By eliminating the need for semantic search, coding agents are never required to transmit source code or sensitive context to Rosetta to retrieve instructions.
+- **Read-Only Default State**: "Write" mode is disabled and hidden by default. Enabling write capabilities requires an explicit, intentional configuration at deployment, ensuring that data persistence remains entirely outside of the end-user's control.
+- **Schema-Strict Input Validation**: All MCP tool inputs undergo rigorous validation against predefined schemas. This ensures the system rejects any unexpected payloads or "over-sharing" of data that does not match the required parameters.
+
 ## Get Started
 
 **Cursor** — add to `~/.cursor/mcp.json` or `.cursor/mcp.json`:

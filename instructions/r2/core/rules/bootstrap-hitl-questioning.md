@@ -72,6 +72,7 @@ baseSchema: docs/schemas/rule.md
    - SMALL: MUST HITL after specs and for additional work
    - MEDIUM: FULL HITL
    - LARGE: FULL HITL + HITL for major decisions
+- USER may review by directly providing comments in the files
 
 </user_approval_rules>
 

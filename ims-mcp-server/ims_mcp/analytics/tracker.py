@@ -53,13 +53,6 @@ def get_session_id(ctx: object | None = None) -> str:
     return _session_id
 
 
-def debug_print(config: RosettaConfig | None, msg: str) -> None:
-    active = config or _runtime_config
-    if active and active.debug:
-        print(msg, file=sys.stderr)
-        sys.stderr.flush()
-    logger.debug(msg)
-
 
 def before_send_hook(event: dict[str, Any]) -> dict[str, Any] | None:
     try:

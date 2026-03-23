@@ -146,7 +146,7 @@ Eight tools and one resource exposed to agents:
 | `store_project_context` *(opt-in)* | Create or update a document in a project dataset |
 | `discover_projects` *(opt-in)* | List readable project datasets |
 | `plan_manager` *(opt-in)* | Manage execution plans with phases, steps, dependencies, status. Has a `help` command for plan creators (subagents don't need it). Stores plan in REDIS. |
-| `submit_feedback` | Auto-submit structured feedback on agent sessions |
+| `submit_feedback` *(opt-in)* | Auto-submit structured feedback on agent sessions |
 
 **Resource:** `rosetta://{path}` reads bundled instruction documents by VFS resource path.
 
@@ -437,7 +437,7 @@ Integrate new features to this testing harness if needed and easy.
 Entire `verify_mcp.py` and ALL tests must work.
 Always run `verify_mcp.py`: with R1 and R2.
 If REDIS-dependent feature is affected RUN verify_mcp.py with and without REDIS_URL.
-Must run `./validate-types.sh` if code was changed.
+Must run `validate-types.sh` (repo root) if code was changed.
 Do not tail or limit output of `verify_mcp.py`, it is short already.
 Read first 100 lines of `verify_mcp.py` to get instructions ON HOW exactly it should all be done.
 

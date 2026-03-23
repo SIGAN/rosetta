@@ -75,7 +75,7 @@ Rosetta MCP supports two runtime modes:
 | `ROSETTA_HTTP_HOST` | Runtime (HTTP) | `0.0.0.0` | HTTP bind host |
 | `ROSETTA_HTTP_PORT` | Runtime (HTTP) | `8000` | HTTP bind port |
 | `REDIS_URL` | Runtime (HTTP) | Empty | Optional Redis session store; empty uses in-memory store |
-| `ROSETTA_ALLOWED_SCOPES` | Runtime (STDIO env / HTTP request header) | Empty | Comma-separated scopes. `allow_write_data` is required for `discover_projects`, `query_project_context`, `store_project_context`, and `plan_manager` |
+| `ROSETTA_ALLOWED_SCOPES` | Runtime (STDIO env / HTTP request header) | Empty | Comma-separated scopes. `allow_write_data` is required for `discover_projects`, `query_project_context`, `store_project_context`, `plan_manager`, and `submit_feedback` |
 | `ROSETTA_ALLOWED_ORIGINS` | Runtime (HTTP) | Empty | Comma-separated `Origin` allowlist |
 | `ROSETTA_OAUTH_MODE` | Runtime (HTTP OAuth) | `oauth` | `oauth` (introspection) or `oidc` (JWT via discovery doc) |
 | `ROSETTA_OAUTH_OIDC_CONFIG_URL` | Runtime (HTTP OAuth, oidc) | Empty | IdP OIDC discovery URL (e.g. `https://keycloak.host/realms/x/.well-known/openid-configuration`) |
@@ -160,7 +160,7 @@ Optional HTTP runtime settings:
 
 Project-data tools in HTTP mode read scopes from the `ROSETTA_ALLOWED_SCOPES` request header.
 The header must include `allow_write_data` for `discover_projects`, `query_project_context`,
-`store_project_context`, and `plan_manager`.
+`store_project_context`, `plan_manager`, and `submit_feedback`.
 
 OAuth variables for HTTP mode:
 
@@ -332,6 +332,8 @@ list_instructions(path_prefix="all")
 ```
 
 ### 4. submit_feedback
+
+Requires `allow_write_data` in `ROSETTA_ALLOWED_SCOPES`.
 
 Store workflow feedback for continuous improvement.
 
@@ -546,7 +548,7 @@ To enable usage analytics, set `POSTHOG_API_KEY` and `POSTHOG_HOST` pointing to 
 
 ### What's Tracked
 
-When enabled, Rosetta records basic operational metadata that matches information already flowing through the MCP server — no additional data surface is introduced.
+When enabled, Rosetta records basic operational metadata that matches information already flowing through the MCP server — no additional data is surfaced.
 
 **Per tool call:**
 - IP address (from the HTTP request)

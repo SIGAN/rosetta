@@ -526,7 +526,7 @@ To enable usage analytics, set `POSTHOG_API_KEY` and `POSTHOG_HOST` pointing to 
 
 ### What's Tracked
 
-When enabled, Rosetta records basic operational metadata that matches information already flowing through the MCP server — no additional data surface is introduced.
+When enabled, Rosetta records basic operational metadata that matches information already flowing through the MCP server — no additional data is surfaced.
 
 **Per tool call:**
 - IP address (from the HTTP request)

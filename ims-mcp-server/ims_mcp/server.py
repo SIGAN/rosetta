@@ -17,7 +17,7 @@ from mcp.types import Icon
 from pydantic import Field
 
 from ims_mcp import __version__ as _MCP_VERSION
-from ims_mcp.analytics.tracker import debug_print, register_signal_handlers, set_runtime_config, track_tool_call
+from ims_mcp.analytics.tracker import register_signal_handlers, set_runtime_config, track_tool_call
 from ims_mcp.analytics.user_context import get_repository_from_context, get_username
 from ims_mcp.auth import build_oauth_provider
 from ims_mcp.clients.dataset import DatasetLookup
@@ -28,7 +28,6 @@ from ims_mcp.config import RosettaConfig, parse_scopes
 from ims_mcp.constants import (
     DOC_CACHE_TTL_SECONDS,
     ENV_ALLOWED_SCOPES,
-    ENV_IMS_DEBUG,
     ENV_ROSETTA_MODE,
     SCOPE_ALLOW_WRITE_DATA,
     TAG_WRITE_DATA,
@@ -86,6 +85,16 @@ _CONFIG = RosettaConfig.from_env()
 set_runtime_config(_CONFIG)
 register_signal_handlers()
 
+_logger = logging.getLogger("ims_mcp")
+_MCP_VERSION_TEXT = str(_MCP_VERSION)
+
+if _CONFIG.debug:
+    _logger.setLevel(logging.DEBUG)
+    if _CONFIG.transport == TRANSPORT_STDIO:
+        _handler = logging.StreamHandler(sys.stderr)
+        _logger.addHandler(_handler)
+    _logger.debug("Rosetta v%s debug mode enabled", _MCP_VERSION_TEXT)
+
 
 def _build_redis_store() -> object | None:
     """Return a shared RedisStore if REDIS_URL is configured, else None."""
@@ -95,7 +104,7 @@ def _build_redis_store() -> object | None:
         from key_value.aio.stores.redis import RedisStore
         return cast(object, RedisStore(url=_CONFIG.redis_url))
     except ImportError:
-        debug_print(_CONFIG, "[ims-mcp] py-key-value-aio[redis] not installed; falling back to in-memory stores")
+        _logger.debug("[ims-mcp] py-key-value-aio[redis] not installed; falling back to in-memory stores")
         return None
 
 
@@ -130,7 +139,7 @@ def _build_oauth_client_storage() -> object | None:
             ),
         )
     except ImportError:
-        debug_print(_CONFIG, "[ims-mcp] cryptography not installed; OAuth client_storage unencrypted")
+        _logger.debug("[ims-mcp] cryptography not installed; OAuth client_storage unencrypted")
         return _REDIS_STORE
 
 
@@ -145,19 +154,7 @@ _CONTEXT_INSTRUCTIONS_CACHE: str | None = None
 _CONTEXT_INSTRUCTIONS_CACHE_TIME: float = 0.0
 _AUTHORIZER = Authorizer(_CONFIG.read_policy, _CONFIG.write_policy, config=_CONFIG)
 _OAUTH_PROVIDER = build_oauth_provider(_CONFIG, client_storage=_build_oauth_client_storage())
-_IS_DEBUG = os.getenv(ENV_IMS_DEBUG, "").strip().lower() in {"1", "true", "yes", "on"}
-_MCP_VERSION_TEXT = str(_MCP_VERSION)
 
-
-if _IS_DEBUG:
-    _debug_handler = logging.StreamHandler(sys.stderr)
-    _debug_handler.setLevel(logging.DEBUG)
-    for _log_name in ("ims_mcp", "fastmcp"):
-        _lg = logging.getLogger(_log_name)
-        _lg.setLevel(logging.DEBUG)
-        _lg.addHandler(_debug_handler)
-    print(f"Rosetta v{_MCP_VERSION_TEXT}", file=sys.stderr, flush=True)
-    logging.getLogger("ims_mcp").debug("Rosetta v%s debug mode enabled", _MCP_VERSION_TEXT)
 
 
 def load_rosetta_icon() -> Icon | None:
@@ -188,7 +185,7 @@ def _load_mcp_server_instructions() -> str:
         )
         return _BUNDLER.bundle(docs, dataset_name) if docs else ""
     except Exception as exc:
-        debug_print(_CONFIG, f"[ims-mcp] server instructions load failed: {exc}")
+        _logger.debug(f"[ims-mcp] server instructions load failed: {exc}")
         return ""
 
 
@@ -249,8 +246,10 @@ mcp = FastMCP(
 # - STDIO: single user — decide once at startup from env var.
 if _CONFIG.transport == TRANSPORT_HTTP:
     mcp.disable(tags={TAG_WRITE_DATA})
+    _logger.info("Write-data tools hidden by default (HTTP mode, revealed per-session via scopes)")
 elif SCOPE_ALLOW_WRITE_DATA not in _CONFIG.allowed_scopes:
     mcp.disable(tags={TAG_WRITE_DATA})
+    _logger.info("Write-data tools disabled (STDIO mode, allow_write_data scope not present)")
 
 
 async def _log(ctx: Context | None, level: str, message: str) -> None:
@@ -387,6 +386,7 @@ async def get_context_instructions(
         and SCOPE_ALLOW_WRITE_DATA in _resolve_allowed_scopes()
     ):
         await ctx.enable_components(tags={TAG_WRITE_DATA})
+        await _log(ctx, "info", "Write-data tools enabled for this session (allow_write_data scope present)")
 
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
@@ -473,7 +473,7 @@ async def list_instructions(
     )
 
 
-@mcp.tool(name=TOOL_SUBMIT_FEEDBACK, description=PROMPT_SUBMIT_FEEDBACK)
+@mcp.tool(name=TOOL_SUBMIT_FEEDBACK, description=PROMPT_SUBMIT_FEEDBACK, tags={TAG_WRITE_DATA})
 @track_tool_call
 async def submit_feedback(
     request_mode: Annotated[str, Field(description='Workflow classification. Examples: "coding.md", "help.md", "research.md", "aqa.md".')],
@@ -481,6 +481,9 @@ async def submit_feedback(
     ctx: Context | None = None,
 ) -> str:
 
+    scope_err = _require_write_data_scope()
+    if scope_err:
+        return scope_err
     if not _RAGFLOW:
         return "Error: ROSETTA_API_KEY is required"
     await _log(ctx, "info", "Submitting feedback")
@@ -678,7 +681,7 @@ def main() -> None:
                     call_tool_settings={"enabled": False},
                 ))
             except Exception as exc:
-                debug_print(_CONFIG, f"[ims-mcp] ResponseCachingMiddleware not available: {exc}")
+                _logger.debug(f"[ims-mcp] ResponseCachingMiddleware not available: {exc}")
 
         app = mcp.http_app(
             transport="http",
@@ -691,7 +694,7 @@ def main() -> None:
             app,
             host=_CONFIG.http_host,
             port=_CONFIG.http_port,
-            log_level="debug" if _IS_DEBUG else "info",
+            log_level="debug" if _CONFIG.debug else "info",
             timeout_graceful_shutdown=0,
             lifespan="on",
         )
