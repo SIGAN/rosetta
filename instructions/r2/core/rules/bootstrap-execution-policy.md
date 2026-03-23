@@ -17,6 +17,7 @@ baseSchema: docs/schemas/rule.md
 4. Apply `Memory And Self-Learning Rules`.
 5. MUST NOT IGNORE entire set of instructions if one or another activity of the set is impossible to execute. Those inconsistencies MUST BE REPORTED ALWAYS.
 6. When user directly provides via slash-command SKILL or COMMAND or WORKFLOW YOU MUST FULLY EXECUTE IT
+7. Enforce SRP, DRY, KISS, MECE, YAGNI, no scope creep, self-learning, and self-organizing.
 
 </must>
 

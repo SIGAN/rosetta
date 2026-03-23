@@ -64,7 +64,7 @@ Prep Step 1:
 - AGENT, SUBAGENT in `instructions/r2/{core,grid}/agent/*.md`
 - WORKFLOW, COMMAND in `instructions/r2/{core,grid}/workflows/*.md`
 
-# Available Workflows
+# Available Workflows (format: `Tag` - Description)
 
 - `coding-flow` - Rosetta coding and implementation workflow, includes discovery, tech specs, tech plan, subagent plan review, user plan review, implementation, subagent review implementation, validation, user review, and final validation with reviewer gates, HITL gates, and subagent delegation.
 - `init-workspace-flow` - Rosetta workflow to initialize or upgrade a workspace, includes identify context, init proxying shells for target skills/agents/commands, workspace discovery, copy rules (optional, not recommended), identify patterns used, generate documentation, clarify questions, verification.

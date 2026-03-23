@@ -79,7 +79,7 @@ TAG_BOOTSTRAP = "rosetta-bootstrap"
 TAG_WORKFLOW = "workflow"
 
 WORKFLOWS_PATH_PREFIX = "workflows"
-WORKFLOWS_PSEUDO_FILE_HEADER = "\n\n## Available Workflows:\n"
+WORKFLOWS_PSEUDO_FILE_HEADER = "\n\n## Available Workflows (format: `Tag` - Description):\n"
 
 INSTRUCTION_DATASET_TEMPLATE = "aia-{version}"
 
