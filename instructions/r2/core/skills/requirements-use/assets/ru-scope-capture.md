@@ -20,7 +20,7 @@ Fill all sections and get explicit user approval before mapping or execution.
 <template>
 
 ```xml
-<scope_capture goal="[single measurable delivery goal]" audience="[stakeholders and reviewers]">
+<scope_capture goal="[single measurable delivery goal]" audience="[stakeholders and reviewers]" ticketId="JIRA-0000">
   <source_requirements>
     - [file or source reference]
   </source_requirements>
