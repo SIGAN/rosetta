@@ -1,6 +1,6 @@
 ---
 name: adhoc-flow
-description: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Especially useful for small and medium sized workflows. If none other matches start here."
+description: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Useful for small or simple tasks if none other workflows matches. Lightweight."
 tags: ["workflow"]
 baseSchema: docs/schemas/workflow.md
 ---
