@@ -60,16 +60,22 @@ jobs:
         run: |
           echo "Detecting changed files in instructions/ folder..."
 
-          # Get the base branch (target of the PR)
-          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
-          echo "Base branch: $BASE_BRANCH"
+          if [ -n "${{ github.event.pull_request.base.ref }}" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            git fetch origin "$BASE_BRANCH"
+            BASE_REF="origin/$BASE_BRANCH"
+          else
+            BASE_REF="HEAD^"
+          fi
+
+          echo "Base ref: $BASE_REF"
 
           # Get changed files in instructions/ folder
-          git fetch origin "$BASE_BRANCH"
-          CHANGED_FILES=$(git diff --name-only "origin/$BASE_BRANCH"...HEAD -- 'instructions/**/*.md' | tr '\n' ' ')
+          CHANGED_FILES=$(git diff --name-only "$BASE_REF"...HEAD -- 'instructions/**/*.md' 2>/dev/null | tr '\n' ' ' || true)
 
           echo "Changed files: $CHANGED_FILES"
           echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "base_ref=$BASE_REF" >> $GITHUB_OUTPUT
 
           # Count files
           if [ -z "$CHANGED_FILES" ]; then
@@ -84,7 +90,7 @@ jobs:
         if: steps.changed-files.outputs.count > 0
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          BASE_REF: ${{ steps.changed-files.outputs.base_ref }}
         run: |
           echo "Validating prompts..."
 
@@ -99,7 +105,7 @@ jobs:
 
             # Get base version - REQUIRED for comparison
             BASE_FILE="$BASE_VERSIONS_DIR/$(basename "$FILE")"
-            if git show "origin/$BASE_BRANCH:$FILE" > "$BASE_FILE" 2>/dev/null; then
+            if git show "$BASE_REF:$FILE" > "$BASE_FILE" 2>/dev/null; then
               echo "::notice::Base version found, running comparison"
               PROMPT="Compare and evaluate the prompt file versions: 
                 NEW: $FILE
@@ -140,7 +146,7 @@ jobs:
           echo "::notice::No high/critical issues found"
 
       - name: Generate PR comment
-        if: always() && steps.changed-files.outputs.count > 0
+        if: always() && github.event_name == 'pull_request' && steps.changed-files.outputs.count > 0
         run: |
           cat > $PR_COMMENT_FILE <<EOF
           ## :clipboard: Prompt Quality Validation Report
@@ -245,7 +251,7 @@ jobs:
           done
 
       - name: Post PR comment
-        if: always() && steps.changed-files.outputs.count > 0
+        if: always() && github.event_name == 'pull_request' && steps.changed-files.outputs.count > 0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
