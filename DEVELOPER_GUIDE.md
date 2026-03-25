@@ -257,6 +257,37 @@ venv/bin/pytest rosetta-cli/tests
 
 Run this after any Python code change.
 
+### Git pre-commit hook
+
+The repository ships a native Git pre-commit hook shim in `.githooks/pre-commit`.
+It runs the Python entrypoint at `scripts/pre_commit.py`, which first regenerates plugin payloads and then executes type validation.
+The generated plugin trees are:
+
+- `plugins/core-claude` — mirrored from `instructions/r2/core` with Claude `model:` frontmatter normalized to `opus`, `sonnet`, `haiku`, or `inherit`
+- `plugins/core-cursor` — mirrored from `instructions/r2/core` without model rewriting
+
+Use the root repo virtualenv for hook execution:
+
+```bash
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+git config core.hooksPath .githooks
+```
+
+On Windows, use the matching root-venv interpreter and pip executable:
+
+```powershell
+py -3 -m venv venv
+venv\Scripts\pip.exe install -r requirements.txt
+git config core.hooksPath .githooks
+```
+
+You can test the hook entrypoint directly:
+
+```bash
+venv/bin/python scripts/pre_commit.py
+```
+
 ---
 
 ## Dev Environment: Integration Testing

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -eu
+
+HOOK_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$HOOK_DIR/.." && pwd)
+
+PYTHON_UNIX="$REPO_ROOT/venv/bin/python"
+PYTHON_WINDOWS="$REPO_ROOT/venv/Scripts/python.exe"
+SCRIPT_PATH="$REPO_ROOT/scripts/pre_commit.py"
+
+if [ -x "$PYTHON_UNIX" ]; then
+    exec "$PYTHON_UNIX" "$SCRIPT_PATH"
+fi
+
+if [ -x "$PYTHON_WINDOWS" ]; then
+    exec "$PYTHON_WINDOWS" "$SCRIPT_PATH"
+fi
+
+echo "ERROR: Repo virtualenv Python not found." >&2
+echo "Create the root venv first, then rerun:" >&2
+echo "  python3 -m venv venv" >&2
+echo "  venv/bin/pip install -r requirements.txt" >&2
+echo "  git config core.hooksPath .githooks" >&2
+exit 1

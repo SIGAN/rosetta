@@ -91,10 +91,10 @@ for f in \
     printf "  %-55s %s\n" "[toml]        ${f#$ROOT/}" "$(get_toml_version "$f")"
 done
 for f in \
+    "$ROOT/plugins/core-claude/.claude-plugin/plugin.json" \
+    "$ROOT/plugins/core-cursor/.cursor-plugin/plugin.json" \
     "$ROOT/plugins/rosetta/.claude-plugin/plugin.json" \
-    "$ROOT/plugins/rosetta/.cursor-plugin/plugin.json" \
-    "$ROOT/instructions/r2/core/.claude-plugin/plugin.json" \
-    "$ROOT/instructions/r2/core/.cursor-plugin/plugin.json"; do
+    "$ROOT/plugins/rosetta/.cursor-plugin/plugin.json"; do
     printf "  %-55s %s\n" "[plugin.json] ${f#$ROOT/}" "$(get_json_version "$f")"
 done
 for f in \
@@ -155,10 +155,10 @@ fi
 
 echo ""
 echo "--- plugin.json files ---"
+bump_file_json "$ROOT/plugins/core-claude/.claude-plugin/plugin.json"  "y"
+bump_file_json "$ROOT/plugins/core-cursor/.cursor-plugin/plugin.json"  "y"
 bump_file_json "$ROOT/plugins/rosetta/.claude-plugin/plugin.json"      "n"
 bump_file_json "$ROOT/plugins/rosetta/.cursor-plugin/plugin.json"      "n"
-bump_file_json "$ROOT/instructions/r2/core/.claude-plugin/plugin.json" "y"
-bump_file_json "$ROOT/instructions/r2/core/.cursor-plugin/plugin.json" "y"
 
 echo ""
 echo "--- marketplace.json files (default: N) ---"

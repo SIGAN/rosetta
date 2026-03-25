@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "core",
-      "source": "./instructions/r2/core",
+      "source": "./plugins/core-claude",
       "description": "Rosetta Core 2.0 - OSS foundation for AI agent instructions, workflows, and guardrails. Includes Rosetta MCP for knowledge base access.",
       "version": "2.0.1",
       "author": {

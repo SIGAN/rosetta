@@ -58,6 +58,8 @@ For detailed change history, use git history and PRs instead of expanding this f
 - Workflow maintenance included:
   - Bun runtime override for Claude workflows
   - build/publish pipeline repairs
+  - native Git pre-commit hook shim with a shared Python entrypoint under `scripts/`
+  - generated `plugins/core-claude` and `plugins/core-cursor` trees sourced from `instructions/r2/core`
   - Jira loader recovery after upstream API changes
   - shared type-validation entrypoint
 - Some GitHub Pages actions remain upstream-limited and may still depend on older Node runtimes until upstream changes.

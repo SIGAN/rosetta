@@ -424,7 +424,7 @@ uvx rosetta-cli@latest publish instructions
 
 ### Reference Sources (readonly, packages currently used)
 
-`refsrc/fastmcp-3.1.0` contains source code of FastMCP v3.
+`refsrc/fastmcp-3.1.1` contains source code of FastMCP v3.
 `refsrc/python-sdk-1.26.0` contains source code of MCP Python SDK.
 `refsrc/ragflow-0.24.0` contains source code of RAGFlow Python SDK (v0.23.1+).
 
