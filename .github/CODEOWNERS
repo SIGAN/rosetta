@@ -5,12 +5,12 @@
 docs/web/** @omaiesh
 
 # Granular code ownership
-/instructions/ @k-bieniek @scappuccino-grid @vveseliak-ops 
-/docs/ @k-bieniek @scappuccino-grid @vveseliak-ops
-/plans/ @k-bieniek @scappuccino-grid @vveseliak-ops
-/*.md @k-bieniek @scappuccino-grid @vveseliak-ops
+/instructions/ @k-bieniek @scappuccino-grid @YevheniiaLementova
+/docs/ @k-bieniek @scappuccino-grid @YevheniiaLementova
+/plans/ @k-bieniek @scappuccino-grid @YevheniiaLementova
+/*.md @k-bieniek @scappuccino-grid @YevheniiaLementova
 
-.github/ @kkhristenko51
-/tools @kkhristenko51
-/ims-mcp-server @kkhristenko51
-/deployment @kkhristenko51
+.github/ @kkhristenko51 @omaiesh
+/tools @kkhristenko51 @omaiesh
+/ims-mcp-server @kkhristenko51 @omaiesh
+/deployment @kkhristenko51 @omaiesh
