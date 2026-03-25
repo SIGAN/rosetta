@@ -1,0 +1,7 @@
+/plugins/core-cursor/
+!/plugins/core-cursor/.cursor-plugin/plugin.json
+/plugins/core-claude/
+!/plugins/core-claude/.claude-plugin/plugin.json
+/plugins/rosetta/
+!/plugins/rosetta/.cursor-plugin/plugin.json
+!/plugins/rosetta/.claude-plugin/plugin.json
