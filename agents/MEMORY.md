@@ -22,6 +22,9 @@ When env vars can trigger real authentication, add an autouse fixture that strip
 ### Approved Workaround Shape Wins Over Narrower Substitutions [ACTIVE]
 When a user explicitly approves a concrete workaround implementation shape, execute that shape or ask before deviating; do not silently replace it with a “safer” variant.
 
+### Wait For PyPI Visibility Before Publishing Dependent Packages [ACTIVE]
+When one package pins a just-published sibling package version, gate the dependent publish on the upstream PyPI JSON endpoint returning 200 for that exact version instead of trusting workflow completion timing alone.
+
 ## What Worked
 
 ### Inspecting Upstream `action.yml` With `gh api` Separates Repo Fixes From Upstream Limits [ACTIVE]

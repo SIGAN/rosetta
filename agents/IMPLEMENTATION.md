@@ -59,6 +59,7 @@ For detailed change history, use git history and PRs instead of expanding this f
 - Workflow maintenance included:
   - Bun runtime override for Claude workflows
   - build/publish pipeline repairs
+  - rosetta-mcp publish gating that waits for the matching `ims-mcp` version to appear on PyPI before upload
   - native Git pre-commit hook shim with a shared Python entrypoint under `scripts/`
   - generated `plugins/core-claude` and `plugins/core-cursor` trees sourced from `instructions/r2/core`
   - Jira loader recovery after upstream API changes
