@@ -1,7 +1,7 @@
 ---
-name: adhoc-flow
-description: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Especially useful for small and medium sized workflows. If none other matches start here."
-tags: ["workflow"]
+name: adhoc-flow-with-plan-manager
+description: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Useful for small or simple tasks if none other workflows matches."
+tags: []
 baseSchema: docs/schemas/workflow.md
 ---
 
@@ -10,7 +10,7 @@ baseSchema: docs/schemas/workflow.md
 <description_and_purpose>
 
 Problem: Fixed workflows cannot cover the combinatorial space of real requests; orchestrators lock into rigid classification.
-Solution: Meta-workflow — construct a bespoke plan from building blocks, persist via todo tasks or TEMP folder, review, execute with tracking. Each user turn can extend, adapt, or restart.
+Solution: Meta-workflow — construct a bespoke plan from building blocks, persist via `plan_manager`, review, execute with tracking. Each user turn can extend, adapt, or restart.
 
 </description_and_purpose>
 
@@ -23,6 +23,45 @@ Solution: Meta-workflow — construct a bespoke plan from building blocks, persi
 Match to cognitive demand.
 
 </models>
+
+<plan_manager>
+
+Orchestrator and subagents:
+- MUST use Rosetta's `plan_manager` tool as main execution planner, while todo tasks/built-in planners are for tracking INSIDE step execution.
+- MUST USE `next` to get steps whose dependencies are complete to drive the plan itself.
+- MUST USE loop before all `next` are drained.
+- MUST USE `update_status` after each step by subagents.
+- MUST USE `upsert` to adapt changes to add/remove phases/steps.
+
+Orchestrator:
+- MUST tell subagents all above MUST as MUST (BUT within THEIR SCOPE of work).
+- MUST tell subagents "MUST tell orchestrator to modify a plan if outside of the subagent scope".
+
+```
+data:
+  name: str
+  description?: str
+  phases[]:
+    id: str  # unique across plan
+    name: str
+    description?: str
+    status: open|in_progress|complete|blocked|failed
+    depends_on?: [phase-id, ...]
+    subagent?: str  # name
+    role?: str  # specialization, brilliant and short
+    model?: str
+    steps[]:
+      id: str  # unique across plan
+      name: str
+      prompt: str
+      status: open|in_progress|complete|blocked|failed
+      depends_on?: [step-id, ...]  # cross-phase allowed
+      subagent?: str
+      role?: str
+      model?: str
+```
+
+</plan_manager>
 
 <building_blocks>
 

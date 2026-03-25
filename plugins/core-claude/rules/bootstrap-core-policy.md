@@ -33,9 +33,9 @@ baseSchema: docs/schemas/rule.md
    - MEDIUM: up to ~10 file changes/activities and only one area affected
    - LARGE: more than 10 file changes/activities or multiple areas affected
 9. Additional requirements based on request size:
-   - SMALL: MUST USE todo tasks for planning, MUST OUTPUT tech specs as message;
-   - MEDIUM: MUST keep documentation concise, light, and short; MUST use subagents;
-   - LARGE: MUST use subagents extensively as orchestrator context will be overloaded;
+   - SMALL: MUST USE todo tasks for planning, MUST OUTPUT tech specs as message, MUST use workflows;
+   - MEDIUM: MUST keep documentation concise, light, and short; MUST use subagents, MUST use workflows;
+   - LARGE: MUST use subagents extensively as orchestrator context will be overloaded, MUST use workflows;
 10. Reevaluate request size and workflow when scope changes or new information is received
 11. If CONTEXT.md, ARCHITECTURE.md, IMPLEMENTATION.md, or MEMORY.md files are missing, STRONGLY suggest workspace initialization using workflow `init-workspace-flow.md`, and MUST continue with the prep steps 3.
 
