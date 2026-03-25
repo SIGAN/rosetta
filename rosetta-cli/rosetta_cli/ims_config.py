@@ -5,6 +5,7 @@ Handles environment variables and configuration loading for RAGFlow-based
 IMS publishing tools.
 """
 
+import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,6 +14,8 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 from .typing_utils import JsonDict
+
+logger = logging.getLogger(__name__)
 
 ENV_FILE_ENV_VAR = "ROSETTA_CLI_ENV_FILE"
 
@@ -265,9 +268,7 @@ class IMSConfig:
             )
         
         if not self.api_key.startswith("ragflow-"):
-            print(
-                f"Warning: API key should start with 'ragflow-', got: {self.api_key[:10]}..."
-            )
+            logger.warning("API key should start with 'ragflow-', got: %s...", self.api_key[:10])
         
         return True
     
