@@ -73,6 +73,18 @@ HITL gates (use when):
 
 </core_concepts>
 
+<process>
+
+1. Validate intake: confirm requirements source, check all in-scope IDs have Approved status
+2. Map each in-scope requirement ID to planned tasks
+3. Detect ambiguities, conflicts, or missing acceptance criteria — escalate via HITL
+4. Execute with continuous matrix updates (do not batch)
+5. Report coverage gaps and over-implementation risks
+6. Run validation rubric before claiming completion
+7. HITL: get final coverage approval
+
+</process>
+
 <core_principles_to_enforce>
 
 - Follow SRP always

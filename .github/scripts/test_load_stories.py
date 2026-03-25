@@ -27,7 +27,7 @@ def test_fetch_story_issues_uses_enhanced_search_endpoint():
                 "payload": payload,
             }
         )
-        return {"issues": []}
+        return {"issues": [], "total": 0}
 
     result = module.fetch_story_issues(
         "https://example.atlassian.net",
@@ -40,11 +40,39 @@ def test_fetch_story_issues_uses_enhanced_search_endpoint():
         {
             "jira_base": "https://example.atlassian.net",
             "auth_header": "encoded-auth",
-            "path": "/rest/api/3/search/jql?maxResults=50",
+            "path": "/rest/api/3/search/jql?maxResults=50&startAt=0",
             "method": "POST",
             "payload": {"jql": module.JQL, "fields": module.FIELDS},
         }
     ]
+
+
+def test_fetch_story_issues_paginates_all_results():
+    module = load_script_module()
+
+    issue_a = {"key": "CTORNDGAIN-10", "fields": {"summary": "A", "status": {"name": "Planned"}, "labels": []}}
+    issue_b = {"key": "CTORNDGAIN-11", "fields": {"summary": "B", "status": {"name": "Planned"}, "labels": []}}
+    issue_c = {"key": "CTORNDGAIN-12", "fields": {"summary": "C", "status": {"name": "Planned"}, "labels": []}}
+
+    pages = [
+        {"issues": [issue_a, issue_b], "total": 3},
+        {"issues": [issue_c], "total": 3},
+    ]
+    call_count = {"n": 0}
+
+    def fake_request(jira_base, auth_header, path, *, method="GET", payload=None):
+        idx = call_count["n"]
+        call_count["n"] += 1
+        return pages[idx]
+
+    result = module.fetch_story_issues(
+        "https://example.atlassian.net",
+        "encoded-auth",
+        request_fn=fake_request,
+    )
+
+    assert result == {"issues": [issue_a, issue_b, issue_c]}
+    assert call_count["n"] == 2
 
 
 def test_collect_story_matrices_filters_labels_and_statuses():
