@@ -406,6 +406,7 @@ Instructions Repo ──► CLI (publish) ──► RAGFlow ──► Rosetta MC
 ### Prerequisites
 
 - Python 3.12 (virtual environment at repo root: `venv/`)
+- Pre-commit hook exists
 
 ### MCP and Server
 
@@ -434,9 +435,10 @@ This is for reference purposes only: do not change, do not copy.
 
 MUST validate MCP changes using `.env.dev` and `ims-mcp-server/validation/verify_mcp.py` (testing harness of MCP itself).
 Integrate new features to this testing harness if needed and easy.
+MUST execute `venv/bin/python scripts/pre_commit.py` from repository root.
 Entire `verify_mcp.py` and ALL tests must work.
-Always run `verify_mcp.py`: with R1 and R2.
-If REDIS-dependent feature is affected RUN verify_mcp.py with and without REDIS_URL.
+Always run `verify_mcp.py`: with R2 only.
+If REDIS-dependent feature is affected RUN verify_mcp.py with and without REDIS_URL (example: `plan_manager` tool).
 Must run `validate-types.sh` (repo root) if code was changed.
 Do not tail or limit output of `verify_mcp.py`, it is short already.
 Read first 100 lines of `verify_mcp.py` to get instructions ON HOW exactly it should all be done.
