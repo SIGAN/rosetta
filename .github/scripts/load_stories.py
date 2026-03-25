@@ -59,14 +59,29 @@ def fetch_story_issues(
     auth_header: str,
     request_fn=jira_request,
 ) -> dict:
-    params = urllib.parse.urlencode({"maxResults": 50})
-    return request_fn(
-        jira_base,
-        auth_header,
-        f"/rest/api/3/search/jql?{params}",
-        method="POST",
-        payload={"jql": JQL, "fields": FIELDS},
-    )
+    page_size = 50
+    start_at = 0
+    all_issues: list = []
+    total = None
+
+    while True:
+        params = urllib.parse.urlencode({"maxResults": page_size, "startAt": start_at})
+        data = request_fn(
+            jira_base,
+            auth_header,
+            f"/rest/api/3/search/jql?{params}",
+            method="POST",
+            payload={"jql": JQL, "fields": FIELDS},
+        )
+        page = data.get("issues", [])
+        all_issues.extend(page)
+        if total is None:
+            total = data.get("total", 0)
+        start_at += len(page)
+        if not page or start_at >= total:
+            break
+
+    return {"issues": all_issues}
 
 
 def collect_story_matrices(data: dict) -> tuple[list[dict], list[dict]]:
