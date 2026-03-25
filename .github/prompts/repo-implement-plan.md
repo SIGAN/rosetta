@@ -11,6 +11,14 @@ and tech specs for a single Jira story, then write them back to the story.
 
 The story key is provided in the prompt that invoked you.
 
+## Rosetta Context
+
+MUST read docs/CONTEXT.md and docs/ARCHITECTURE.md.
+REMEMBER: `instructions` folder contains AI coding agent **instructions**, it is **not documentation**.
+AI Coding Agents uses MCP to load bootstrap instructions `instructions/r2/core/rules/bootstrap-*.md` as first thing (exactly the same you have loaded too).
+After that AI Coding Agent instructed to follow one workflow and to load skills/agents/rules when needed.
+You always must "simulate" how entire AI coding agent flow works if instructions are modified.
+
 ## Constraints
 
 - ONLY access the story provided. Do NOT read or modify other Jira issues.

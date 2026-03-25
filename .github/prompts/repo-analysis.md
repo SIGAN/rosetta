@@ -8,6 +8,14 @@
 
 You are an automated agent. Review this repository for improvements and manage Jira stories under epic CTORNDGAIN-1174.
 
+## Rosetta Context
+
+MUST read docs/CONTEXT.md and docs/ARCHITECTURE.md.
+REMEMBER: `instructions` folder contains AI coding agent **instructions**, it is **not documentation**.
+AI Coding Agents uses MCP to load bootstrap instructions `instructions/r2/core/rules/bootstrap-*.md` as first thing (exactly the same you have loaded too).
+After that AI Coding Agent instructed to follow one workflow and to load skills/agents/rules when needed.
+You always must "simulate" how entire AI coding agent flow works if instructions are modified.
+
 ## Constraints
 
 - ONLY create or update issues that are direct children of epic **CTORNDGAIN-1174**. Touch nothing else in Jira.

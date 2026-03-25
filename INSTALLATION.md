@@ -181,7 +181,7 @@ STDIO runs Rosetta MCP as a local process. Your IDE launches it and communicates
 
 #### Get Your API Key
 
-1. Open [Rosetta Server (RAGFlow)](https://<production server URL>/)
+1. Open Rosetta Server (RAGFlow) using `https://<production server URL>/`
 2. Create an account or sign in
 3. Generate an API key from your profile
 
