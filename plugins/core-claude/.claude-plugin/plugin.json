@@ -46,10 +46,7 @@
         "capabilities": [
           "list_instructions",
           "query_instructions",
-          "get_context_instructions",
-          "list_project_context",
-          "query_project_context",
-          "store_project_context"
+          "get_context_instructions"
         ],
         "authentication": "oauth",
         "datasets": [

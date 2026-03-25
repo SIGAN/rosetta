@@ -1,5 +1,6 @@
 """Unit tests for the OAuth provider builder."""
 
+import pytest
 from unittest.mock import patch
 
 from ims_mcp.auth.oauth import build_oauth_provider
@@ -56,14 +57,12 @@ def test_raises_when_oauth_incomplete():
         oauth_authorization_endpoint="https://kc.example.com/auth",
         # missing token/introspection/client_id/client_secret
     )
-    import pytest
     with pytest.raises(ValueError, match="requires OAuth configuration"):
         build_oauth_provider(cfg)
 
 
 def test_raises_when_all_empty():
     cfg = _make_config(transport="http")
-    import pytest
     with pytest.raises(ValueError, match="requires OAuth configuration"):
         build_oauth_provider(cfg)
 
@@ -373,3 +372,45 @@ def test_oidc_proxy_receives_base_url():
         provider = build_oauth_provider(cfg)
     assert provider is not None
     assert our_url in str(provider.base_url)
+
+
+def test_loopback_redirect_fix_accepts_localhost_with_different_port():
+    from fastmcp.server.auth.cimd import CIMDDocument
+    from fastmcp.server.auth.oauth_proxy.models import ProxyDCRClient
+    from pydantic import AnyHttpUrl, AnyUrl
+
+    build_oauth_provider(_make_full_http_config())
+
+    client = ProxyDCRClient(
+        client_id="https://claude.ai/oauth/claude-code-client-metadata",
+        client_secret=None,
+        redirect_uris=None,
+        cimd_document=CIMDDocument(
+            client_id=AnyHttpUrl("https://claude.ai/oauth/claude-code-client-metadata"),
+            redirect_uris=["http://localhost:3000/callback"],
+        ),
+    )
+
+    validated = client.validate_redirect_uri(AnyUrl("http://localhost:52605/callback"))
+    assert str(validated) == "http://localhost:52605/callback"
+
+
+def test_loopback_redirect_fix_does_not_relax_non_loopback_hosts():
+    from fastmcp.server.auth.cimd import CIMDDocument
+    from fastmcp.server.auth.oauth_proxy.models import ProxyDCRClient
+    from pydantic import AnyHttpUrl, AnyUrl
+
+    build_oauth_provider(_make_full_http_config())
+
+    client = ProxyDCRClient(
+        client_id="https://example.com/client.json",
+        client_secret=None,
+        redirect_uris=None,
+        cimd_document=CIMDDocument(
+            client_id=AnyHttpUrl("https://example.com/client.json"),
+            redirect_uris=["https://app.example.com:3000/callback"],
+        ),
+    )
+
+    with pytest.raises(Exception, match="does not match CIMD redirect_uris"):
+        client.validate_redirect_uri(AnyUrl("https://app.example.com:52605/callback"))

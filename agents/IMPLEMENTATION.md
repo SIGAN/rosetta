@@ -34,6 +34,7 @@ For detailed change history, use git history and PRs instead of expanding this f
 - Added HTTP transport support on top of the existing `stdio` mode.
 - Added Redis-backed session and plan storage with in-memory fallbacks for local development.
 - Added OAuth/OIDC integration for HTTP deployments, including introspection-based validation and offline-refresh handling.
+- Added a FastMCP loopback redirect compatibility patch so CIMD-based OAuth clients using ephemeral localhost callback ports can complete HTTP authentication.
 - Added origin validation and cross-tool hardening around invalid inputs, malformed requests, and wrapper failures.
 - Added response-shape and schema cleanup so tool contracts are more predictable for coding agents.
 

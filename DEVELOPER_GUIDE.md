@@ -274,6 +274,9 @@ venv/bin/pip install -r requirements.txt
 git config core.hooksPath .githooks
 ```
 
+Git does not automatically use the repository's `.githooks/` directory.
+Each developer must run `git config core.hooksPath .githooks` once in their local clone to enable the native pre-commit hook.
+
 On Windows, use the matching root-venv interpreter and pip executable:
 
 ```powershell

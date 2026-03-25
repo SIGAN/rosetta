@@ -19,6 +19,9 @@ If an upstream composite action exposes a path override for an internal runtime 
 ### Clear Live Auth Environment Triggers In Unit Test Fixtures [ACTIVE]
 When env vars can trigger real authentication, add an autouse fixture that strips them so CI and local unit suites never reach shared services by accident.
 
+### Approved Workaround Shape Wins Over Narrower Substitutions [ACTIVE]
+When a user explicitly approves a concrete workaround implementation shape, execute that shape or ask before deviating; do not silently replace it with a “safer” variant.
+
 ## What Worked
 
 ### Inspecting Upstream `action.yml` With `gh api` Separates Repo Fixes From Upstream Limits [ACTIVE]

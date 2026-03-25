@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from ims_mcp.config import RosettaConfig
 
 from ims_mcp.auth.offline_refresh_fix import with_offline_refresh_fix
+from ims_mcp.auth.loopback_redirect_fix import with_loopback_redirect_fix
 from ims_mcp.constants import OAUTH_MODE_OIDC, TRANSPORT_HTTP
 
 
@@ -52,6 +53,7 @@ def build_oauth_provider(
         from fastmcp.server.auth.oidc_proxy import OIDCProxy
 
         OIDCProxy = with_offline_refresh_fix(OIDCProxy)
+        OIDCProxy = with_loopback_redirect_fix(OIDCProxy)
         extra_authorize_params: dict[str, str] | None = (
             {"scope": config.oauth_extra_scopes} if config.oauth_extra_scopes else None
         )
@@ -77,6 +79,7 @@ def build_oauth_provider(
     from fastmcp.server.auth.providers.introspection import IntrospectionTokenVerifier
 
     OAuthProxy = with_offline_refresh_fix(OAuthProxy)
+    OAuthProxy = with_loopback_redirect_fix(OAuthProxy)
 
     from ims_mcp.constants import INTROSPECTION_CACHE_TTL_SECONDS
 
