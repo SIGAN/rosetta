@@ -7,7 +7,6 @@ on:
     paths:
       - 'rosetta-cli/**'
       - 'requirements.txt'
-      - '.github/workflows/publish-rosetta-cli.yml'
   workflow_dispatch:
 
 jobs:

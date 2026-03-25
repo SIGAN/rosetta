@@ -1,21 +1,15 @@
 name: Publish Rosetta MCP
 
 on:
-  workflow_run:
-    workflows: ["Publish IMS MCP"]
-    branches: [main]
-    types: [completed]
   push:
     branches:
       - main
     paths:
       - 'rosetta-mcp-server/**'
-      - '.github/workflows/publish-rosetta-mcp.yml'
   workflow_dispatch:
 
 jobs:
   build-test-deploy:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:

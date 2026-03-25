@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'ims-mcp-server/**'
-      - '.github/workflows/publish-ims-mcp.yml'
   workflow_dispatch:
 
 jobs:
