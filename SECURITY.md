@@ -82,7 +82,7 @@ For custom implementations, we recommend the following best practices:
 - **Source Verification**: Prohibit the introduction of unverified or dynamically generated instruction sources into the production pipeline to mitigate injection risks.
 - **Version Pinning**: Explicitly pin instruction versions in production environments to ensure execution consistency and prevent "silent" updates from introducing vulnerabilities.
 
-# MCP Transport Security
+### MCP Transport Security
 
 To mitigate Man-in-the-Middle (MITM) attacks—including interception or unauthorized tampering of messages between the MCP client (IDE) and the Rosetta server—deployments must adhere to the following standards:
 - **Encrypted Communication**: All MCP connections utilize TLS-encrypted HTTP (HTTPS) for both streamable-HTTP and Server-Sent Events (SSE) transports, ensuring data-in-transit confidentiality.
@@ -102,7 +102,7 @@ If you are extending Rosetta's observability features or enabling telemetry in a
 - **Policy Alignment**: Review the baseline operational metadata collected by Rosetta to ensure strict compliance with your organization's internal data handling and privacy policies.
 - **Custom Logging Guardrails**: If you introduce custom logging pipelines, implement strict filters to ensure regulated or sensitive data (such as proprietary source code or system prompts) is never captured without explicit, secure authorization.
 
-# Authentication, Authorization and Access Control
+### Authentication, Authorization and Access Control
 Rosetta employs a "Secure by Default" posture to prevent unauthorized access to MCP services, RAGFlow, or administrative control planes:
 - **Mandatory Authentication**: Rosetta and RAGFlow require authenticated access for all operations; anonymous or unverified requests are rejected by default.
 - **Controlled Network Exposure**: All internal services, including RAGFlow, are architected for deployment within private network boundaries and are not publicly addressable.
@@ -133,21 +133,24 @@ Use of an LLM gateway is strongly recommended  in sensitive environments to cent
 - Monitor dependencies for known vulnerabilities using tools such as `pip-audit`, Dependabot, or equivalent.
 - Review the project's `requirements.txt` and transitive dependencies before deploying in sensitive environments.
 
-### AI-Generated Output and Coding Agents
+---
+
+## AI-Generated Output and Coding Agents
 
 While agentic coding accelerates development, it introduces the inherent risk of AI agents producing unsafe, vulnerable, or logically incorrect code. Rosetta addresses this through a combination of structural safeguards and required human-in-the-loop validation.
 
-#### Rosetta's Built-In Guardrails
+### Rosetta's Built-In Guardrails
 Rosetta is designed to constrain erratic agent behavior and enforce safe execution paths:
 - **Structured Workflows**: Agents are guided through a strict, deterministic execution model (Prepare → Research → Plan → Act) to enforce logical consistency and prevent unprompted actions.
 - **Approval Gates & Risk Assessment**: Critical actions trigger automated risk assessment prompts and require explicit approval gates, significantly reducing the likelihood of unsafe autonomous operations.
 - **Contextual Limitations**: While Rosetta provides robust guardrails and rich context, it is a guidance engine, not a deterministic compiler. AI-generated outputs can still contain security vulnerabilities or logical flaws regardless of the instructions provided.
 
-#### Shared Responsibility: Human-in-the-Loop Controls
+### Shared Responsibility: Human-in-the-Loop Controls
 To maintain a secure software supply chain, custom deployments and end-users must implement the following operational controls:
 - **Mandatory Code Review**: Treat all AI-generated output as an untrusted third-party contribution. Thoroughly review, test, and validate all generated code before execution, commit, or deployment.
 - **Audit High-Risk Operations**: Continuously audit the tool calls executed by coding agents. Apply maximum scrutiny to operations that write data, modify state, or interact with external integrations.
 - **Zero-Trust Assumption**: Never assume the inherent safety, correctness, or security of AI-generated output.
+
 ---
 
 ## General Security Recommendations
