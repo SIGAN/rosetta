@@ -7,6 +7,7 @@
   <statement>The Rosetta CLI shall treat the current working directory as the workspace root for all configure operations.</statement>
   <rationale>Aligns with standard CLI conventions where the current directory is the project being configured.</rationale>
   <source>User request</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -20,6 +21,7 @@
   <statement>The Rosetta CLI shall create and maintain a `rosetta.json` file in the workspace root that stores workspace configuration state.</statement>
   <rationale>Enables version control of Rosetta configuration and persistence of user choices across runs.</rationale>
   <source>User request</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -33,6 +35,7 @@
   <statement>The `rosetta.json` file shall store: configured IDE targets, selected MCP preset name, server URL, dataset name, and any non-secret parameter overrides.</statement>
   <rationale>Allows team members to share IDE configuration choices via version control.</rationale>
   <source>User request</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -46,6 +49,7 @@
   <statement>The `rosetta.json` file shall not contain API keys, passwords, OAuth secrets, or any other credential values.</statement>
   <rationale>The file is intended for version control; secrets in VCS are a security risk.</rationale>
   <source>Security</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Inspection</verification>
@@ -59,6 +63,7 @@
   <statement>When `rosetta.json` exists in the workspace root, the Rosetta CLI shall read it and apply stored values as defaults, which command-line flags may override.</statement>
   <rationale>Enables `npx rosetta configure` without arguments to re-apply the previously saved configuration.</rationale>
   <source>Usability</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -72,6 +77,7 @@
   <statement>When the Rosetta CLI runs with different parameters than stored in `rosetta.json`, it shall update `rosetta.json` to reflect the new configuration.</statement>
   <rationale>The file shall always represent the last applied configuration.</rationale>
   <source>Consistency</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -87,6 +93,7 @@
   <statement>The Rosetta CLI shall accept the command `npx rosetta configure <targets>` where `<targets>` is a comma-separated list of IDE target names.</statement>
   <rationale>Single command to configure one or more IDEs reduces onboarding friction.</rationale>
   <source>User request</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -100,6 +107,7 @@
   <statement>The Rosetta CLI shall resolve each target name to an IDE configuration handler using case-insensitive matching and documented aliases.</statement>
   <rationale>Users may type targets in varying cases or use shorthand names.</rationale>
   <source>Usability</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -114,6 +122,7 @@
   <statement>When a user provides an unrecognized target name, the Rosetta CLI shall exit with a non-zero code and display the list of valid target names.</statement>
   <rationale>Clear error messages prevent user confusion.</rationale>
   <source>Usability</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -130,6 +139,7 @@
   <statement>The Rosetta CLI shall register the MCP server entry with the name "Rosetta" in all IDE configurations.</statement>
   <rationale>Consistent branding across all IDEs.</rationale>
   <source>User decision</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -143,6 +153,7 @@
   <statement>When an MCP config file already exists, the Rosetta CLI shall merge the Rosetta server entry without modifying other existing server entries.</statement>
   <rationale>Users may have other MCP servers configured that must not be disrupted.</rationale>
   <source>Safety</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -157,6 +168,7 @@
   <statement>The Rosetta CLI shall configure each target IDE using the MCP configuration method, file path, JSON schema, and command line template defined in that target's application profile.</statement>
   <rationale>Native CLI tools handle config format, merging, and validation correctly. JSON file writing is used only for IDEs without a native CLI.</rationale>
   <source>User decision, IDE documentation</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -173,6 +185,7 @@
   <statement>The Rosetta CLI npm package shall bundle bootstrap content from the single source of truth (`instructions/r1/bootstrap.md`) at build time without duplicating the file in the repository.</statement>
   <rationale>Avoids content drift between the canonical bootstrap file and the CLI package.</rationale>
   <source>User decision</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Inspection</verification>
@@ -187,6 +200,7 @@
   <statement>For each target IDE, the Rosetta CLI shall write the bundled bootstrap content to the bootstrap file path defined in the target's application profile, applying the formatting rules from that profile.</statement>
   <rationale>Bootstrap ensures Rosetta MCP is invoked on every AI interaction.</rationale>
   <source>QUICKSTART.md Step 3</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -201,6 +215,7 @@
   <statement>When a bootstrap file already exists, the Rosetta CLI shall prepend or merge bootstrap content without removing existing user content.</statement>
   <rationale>Users may have custom rules in their bootstrap file.</rationale>
   <source>Safety</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -216,6 +231,7 @@
   <statement>When the user specifies `--dry-run`, the Rosetta CLI shall display all changes that would be made without writing any files or executing any CLI commands.</statement>
   <rationale>Allows users to preview changes before applying.</rationale>
   <source>Safety</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -229,6 +245,7 @@
   <statement>The Rosetta CLI shall produce the same result when run multiple times with the same parameters.</statement>
   <rationale>Safe to re-run without side effects.</rationale>
   <source>Robustness</source>
+  <ticketId></ticketId>
   <priority>Must</priority>
   <status>Draft</status>
   <verification>Test</verification>
@@ -242,6 +259,7 @@
   <statement>The Rosetta CLI shall accept a `--scope` flag with values `global` (default) or `project` to control whether MCP config is written to the user's home directory or the current project directory.</statement>
   <rationale>Some IDEs support both global and project-level MCP configuration.</rationale>
   <source>Cursor and VS Code support both scopes</source>
+  <ticketId></ticketId>
   <priority>Should</priority>
   <status>Draft</status>
   <verification>Test</verification>

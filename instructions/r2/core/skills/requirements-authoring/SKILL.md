@@ -230,6 +230,7 @@ HITL gates (use when):
   <statement>...</statement>
   <rationale>...</rationale>
   <source>...</source>
+  <ticketId>JIRA-0000</ticketId>
   <priority>Must|Should|Could|Wont</priority>
   <status>Draft|Approved|Deprecated</status>
   <approved_by>[user login approved]</approved_by>

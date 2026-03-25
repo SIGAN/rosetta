@@ -21,7 +21,7 @@ capture intent, restate intent, confirm scope and goals, list assumptions, ask t
 <template>
 
 ```xml
-<intent_capture goal="[single measurable goal]" audience="[stakeholders and reviewers]">
+<intent_capture goal="[single measurable goal]" audience="[stakeholders and reviewers]" ticketId="JIRA-0000">
   <intent_summary>
     - [succinct restatement of user intent]
   </intent_summary>
