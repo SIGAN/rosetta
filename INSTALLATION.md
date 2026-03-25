@@ -431,7 +431,7 @@ claude plugin install grid@rosetta           # Enterprise (optional, requires co
 
 #### Cursor
 
-Not available for now.
+Cursor plugin cannot be installed locally. 
 
 ### Offline Installation (No MCP)
 
