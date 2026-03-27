@@ -70,7 +70,7 @@ def build_oauth_provider(
                 client_storage=client_storage,
                 jwt_signing_key=config.oauth_jwt_signing_key,
                 redirect_path=config.oauth_callback_path,
-                require_authorization_consent=False,
+                require_authorization_consent=True,
             ),
         )
 
@@ -112,7 +112,7 @@ def build_oauth_provider(
             token_verifier=token_verifier,
             base_url=base_url,
             redirect_path=config.oauth_callback_path,
-            require_authorization_consent=False,
+            require_authorization_consent=True,
             client_storage=client_storage,
             valid_scopes=valid_scopes,
             extra_authorize_params=extra_authorize_params_oauth,
