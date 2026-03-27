@@ -21,6 +21,7 @@ You always must "simulate" how entire AI coding agent flow works if instructions
 
 ## Constraints
 
+- MUST NOT create or modify files under `.github/workflows/` — the CI token cannot push workflow files. Instead, include exact required changes as a fenced diff in the PR description under `## CI Workflow Changes (Manual)` and as a Jira comment labeled `⚠️ Manual CI Change Required`.
 - ONLY access the story provided. Do NOT read or modify other Jira issues.
 - ONLY work within the current repository. Do NOT push to forks or other remotes.
 - The story must be under epic CTORNDGAIN-1174. Abort and comment if it is not.

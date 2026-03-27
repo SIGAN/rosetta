@@ -51,7 +51,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      workflows: write
 
     strategy:
       matrix: ${{ fromJSON(needs.load-stories.outputs.matrix) }}
