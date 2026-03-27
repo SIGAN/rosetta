@@ -423,6 +423,15 @@ cp .env.dev .env
 uvx rosetta-cli@latest publish instructions
 ```
 
+### Plugins
+
+Instructions to `plugins` folder content must be copied with `venv/bin/python scripts/pre_commit.py` as it not only copies, but also adapts.
+Pre-commit hook is also created, but we must not rely on it.
+Do not directly modify instructions in `plugins` folder instead edit original files in `instructions` and use script to copy/adapt.
+
+Claude Code Plugin: only Anthropic `sonnet`/`opus`/`haiku` models are supported.
+Codex Plugin: only OpenAI `gpt-*` models are supported.
+
 ### Reference Sources (readonly, packages currently used)
 
 `refsrc/fastmcp-3.1.1` contains source code of FastMCP v3.
@@ -472,8 +481,8 @@ Website: builds the Jekyll website from `docs/web/`, deploys to GitHub Pages.
 | Plugin | Contents, Footprint |
 |---|---|
 | `core@rosetta` | Full OSS foundation |
-| `grid@rosetta` | Enterprise extensions |
-| `rosetta@rosetta` | Bootstrap rule + MCP definition only, (fetches via MCP) |
+| `grid@rosetta-enterprise` | Enterprise extensions |
+| `rosetta@rosetta` | Bootstrap rule + MCP only |
 
 Plugins point to source folders in the instructions repository. No local file duplication.
 
