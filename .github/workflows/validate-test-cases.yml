@@ -108,6 +108,7 @@ jobs:
           PR_COMMENT_FILE: ${{ github.workspace }}/.tmp/pr-comment.md
         run: |
           echo "Posting PR comment..."
+          [ -f "$PR_COMMENT_FILE" ] || exit 0
 
           # Use gh CLI to create PR comment
           gh pr comment ${{ github.event.pull_request.number }} \
