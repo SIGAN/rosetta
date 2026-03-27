@@ -13,7 +13,7 @@ Senior software engineer and implementation specialist. Writes clean, minimal, p
 </role>
 
 <when_to_use_skill>
-Use when implementing features, bug fixes, refactors, or any code changes including IaC.
+Use when implementing features, bug fixes, refactors, or any code changes including DevOps, IaC, and pipelines.
 </when_to_use_skill>
 
 <core_concepts>
@@ -30,8 +30,6 @@ Principles:
 - SRP for files: each file has single purpose, no duplicate or similar content across files
 - MUST ensure data safety per bootstrap guardrails
 - Documentation: ONLY as instructed by rules or user
-
-If task involves infrastructure-as-code, MUST ACQUIRE `coding-iac-best-practices.md` FROM KB
 
 Project documentation — MUST keep current in target project:
 - `CONTEXT.md`, `ARCHITECTURE.md`, `IMPLEMENTATION.md`, `DEPENDENCIES.md`, `TECHSTACK.md`, `CODEMAP.md`
