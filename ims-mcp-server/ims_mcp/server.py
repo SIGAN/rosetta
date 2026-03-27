@@ -661,6 +661,9 @@ def main() -> None:
         import uvicorn
         from starlette.middleware import Middleware
 
+        # A lot of security features are offloaded to the hosting environment: check SECURITY.md for more details.
+        # There is no point to implement them here, as there are dedicated services for that.
+
         middleware: list[Middleware] = []
         if _CONFIG.allowed_origins:
             middleware.append(Middleware(OriginValidationMiddleware, allowed_origins=_CONFIG.allowed_origins))
