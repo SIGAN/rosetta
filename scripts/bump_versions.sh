@@ -22,9 +22,25 @@ get_json_version() {
     grep '"version"' "$1" | head -1 | sed 's/.*"version": "\(.*\)".*/\1/'
 }
 
+bump_pre() {
+    local version="$1"
+    if [[ "$version" =~ ^([0-9]+\.[0-9]+\.[0-9]+)b([0-9]+)$ ]]; then
+        local base="${BASH_REMATCH[1]}"
+        local pre="${BASH_REMATCH[2]}"
+        printf "%sb%02d" "$base" "$((10#$pre + 1))"
+    else
+        # Normal version: bump patch, then introduce b00
+        local bumped
+        bumped="$(bump_semver "$version" patch)"
+        echo "${bumped}b00"
+    fi
+}
+
 bump_semver() {
     local version="$1" type="$2"
-    IFS='.' read -r major minor patch <<< "$version"
+    # Strip pre-release suffix (e.g. 2.0.13b01 -> 2.0.13) before bumping
+    local base_version="${version%%b*}"
+    IFS='.' read -r major minor patch <<< "$base_version"
     case "$type" in
         major) echo "$((major + 1)).0.0" ;;
         minor) echo "${major}.$((minor + 1)).0" ;;
@@ -51,6 +67,8 @@ bump_file_toml() {
     rel="${f#$ROOT/}"
     if [[ "$bump_choice" == "4" ]]; then
         new_version="$CUSTOM_VERSION"
+    elif [[ "$bump_type" == "pre" ]]; then
+        new_version="$(bump_pre "$current")"
     else
         new_version="$(bump_semver "$current" "$bump_type")"
     fi
@@ -64,13 +82,15 @@ bump_file_toml() {
 
 bump_file_json() {
     local f="$1" default="$2"
-    local current new_version rel
+    local current new_version rel effective_type
     current="$(get_json_version "$f")"
     rel="${f#$ROOT/}"
+    # JSON files don't support pre-release; fall back to patch
+    effective_type="${bump_type/pre/patch}"
     if [[ "$bump_choice" == "4" ]]; then
         new_version="$CUSTOM_VERSION"
     else
-        new_version="$(bump_semver "$current" "$bump_type")"
+        new_version="$(bump_semver "$current" "$effective_type")"
     fi
     if ask_yn "Bump $rel  ($current → $new_version)?" "$default"; then
         sedi "s/\"version\": \"${current}\"/\"version\": \"${new_version}\"/g" "$f"
@@ -105,12 +125,13 @@ done
 
 echo ""
 echo "Bump type:"
-echo "  [1] patch   [2] minor   [3] major   [4] custom"
-read -r -p "Choose (default: 1 = patch): " bump_choice
-bump_choice="${bump_choice:-1}"
+echo "  [0] pre   [1] patch   [2] minor   [3] major   [4] custom"
+read -r -p "Choose (default: 0 = pre): " bump_choice
+bump_choice="${bump_choice:-0}"
 
 CUSTOM_VERSION=""
 case "$bump_choice" in
+    0) bump_type="pre" ;;
     1) bump_type="patch" ;;
     2) bump_type="minor" ;;
     3) bump_type="major" ;;
@@ -141,6 +162,8 @@ current="$(get_toml_version "$f")"
 rel="${f#$ROOT/}"
 if [[ "$bump_choice" == "4" ]]; then
     new_version="$CUSTOM_VERSION"
+elif [[ "$bump_type" == "pre" ]]; then
+    new_version="$(bump_pre "$current")"
 else
     new_version="$(bump_semver "$current" "$bump_type")"
 fi
