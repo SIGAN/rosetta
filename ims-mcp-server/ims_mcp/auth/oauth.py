@@ -43,6 +43,11 @@ def build_oauth_provider(
     if config.transport != TRANSPORT_HTTP:
         return None
 
+    # Notes for security reviewers:
+    # 1. MCP uses two-leg auth: Client (IDE) -> MCP (mcp internal tokens) -> IdP (upstream tokens). Upstream tokens are never exposed to the client.
+    # 2. MCP uses DCR/CIMD and fully implements MCP Authentication specification.
+    # 3. It is impossible to know in advance which redirect URI will be used by the client. Moreover, it is common practice to use http://localhost as the redirect URI.
+
     # Security by default: require OAuth/OIDC configuration!
     if not config.oauth_configured:
         raise ValueError("Rosetta HTTP mode requires OAuth configuration!")

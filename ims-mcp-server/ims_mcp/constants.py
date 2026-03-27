@@ -50,6 +50,8 @@ DEFAULT_HTTP_PORT = 8000
 TRANSPORT_STDIO = "stdio"
 TRANSPORT_HTTP = "http"
 
+# RAGFlow configuration. Note, public key is only used for ADDITIONALLY encrypting password fields.
+
 DEFAULT_SERVER_URL = "http://localhost:80"
 DEFAULT_SERVER_PUBLIC_KEY_PEM = """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArq9XTUSeYr2+N1h3Afl/z8Ds
@@ -59,6 +61,9 @@ VO3apEyCCt0lOQK6PuksduOjVxtltDav+guVAA068NrPYmRNabVKRNLJpL8w4D44sfth
 5RvZ3q9t+6RTArpEtc5sh5ChzvqPOzKGMXW83C95TxmXqpbK6olN4RevSfVjEAgCydH6H
 N6OhtOQEcnrU97r9H0iZOWwbw3pVrZiUkuRD1R56Wzs2wIDAQAB
 -----END PUBLIC KEY-----"""
+
+# Default values
+
 DEFAULT_VERSION = "r2"
 DEFAULT_POSTHOG_HOST = "https://eu.i.posthog.com"
 DEFAULT_SORT_ORDER = 1_000_000

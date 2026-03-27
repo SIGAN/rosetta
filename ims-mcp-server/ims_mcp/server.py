@@ -281,6 +281,7 @@ def _resolve_user_email() -> str:
             pass
     return _CONFIG.user_email
 
+# ROSETTA_ALLOWED_SCOPES is not a security feature, it is only used to control tool visibility as OPT-IN mechanism.
 
 def _resolve_allowed_scopes() -> tuple[str, ...]:
     if _CONFIG.transport == TRANSPORT_HTTP:
