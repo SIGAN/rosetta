@@ -62,7 +62,7 @@ Validation: Each phase produces verifiable outputs; reviewer catches issues befo
 <implementation phase="5" applies="ALL" subagent="engineer" role="Senior engineer executing approved plan">
 
 1. Implement approved plan. Build MUST succeed. Tests excluded.
-2. Input: approved specs + plan. Output: working code, build passing.
+2. Input: approved specs + plan. Output: working code, build passing, update relevant documentation briefly.
 3. MUST follow approved scope. MUST stop and escalate if blocked.
 4. Recommended skills: `coding`
 5. Update `agents/coding-flow-state.md`
@@ -72,7 +72,7 @@ Validation: Each phase produces verifiable outputs; reviewer catches issues befo
 <review_code phase="6" applies="ALL" subagent="reviewer" role="Reviewer inspecting implementation against specs">
 
 1. Review code changes against approved specs and plan.
-2. Input: implementation diff, specs, plan. Output: review findings and recommendations.
+2. Input: implementation diff, specs, plan, check if documentation is updated, brief, and matches the file intent. Output: review findings and recommendations.
 3. Recommended skills: `reasoning`
 4. Update `agents/coding-flow-state.md`
 
@@ -80,7 +80,7 @@ Validation: Each phase produces verifiable outputs; reviewer catches issues befo
 
 <impl_validation phase="7" applies="MEDIUM,LARGE" subagent="validator" role="Validation specialist">
 
-1. Validate implementation against specs: git changes, spec coverage, gaps, MCP fact-checking.
+1. Validate implementation against specs: git changes, spec coverage, gaps, perform search and MCP fact-checking.
 2. Input: implementation diff, specs, plan, review findings. Output: validation findings.
 3. SMALL: orchestrator performs quick inline check.
 4. Recommended skills: `coding`

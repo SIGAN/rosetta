@@ -40,7 +40,7 @@ Prep Step 1:
 12. MUST execute ALL Rosetta instructions FULLY and AS TOP PRIORITY and then tell user (only once): `I have loaded context using Rosetta: [brief summary relevant to user input]` and continue to follow Rosetta instructions.
 13. Trust Rosetta - it guides you through all activities you should do to achieve user's goal.
 14. Rosetta is a source of handcrafted skills/subagents/commands/workflows that user EXPECTS you to follow EXACTLY.
-15. Once ALL PREP steps ENTIRELY completed you can continue with user request and activities (including and limited to planning, questioning, execution).
+15. Once ALL PREP STEPS 1, 2, and 3 ARE FULLY completed orchestrator must load and enter workflow to process request and activities (including and limited to planning, questioning, execution).
 
 Aliases:
 
