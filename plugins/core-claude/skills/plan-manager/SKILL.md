@@ -4,7 +4,7 @@ description: "Rosetta skill for plan creation, tracking, and execution coordinat
 dependencies: node.js
 disable-model-invocation: false
 user-invocable: true
-argument-hint: plan-name
+argument-hint: feature-name plan-name
 allowed-tools: Bash(node:*)
 model: sonnet
 tags:
@@ -31,8 +31,9 @@ Use when `plan_manager` MCP tool is unavailable. Provides local JSON fallback wi
 <core_concepts>
 
 - Rosetta prep steps completed
-- Plan file convention: `plans/<plan-name>/plan.json`
-- Helper CLI: `node agents/TEMP/plan_manager.js <cmd> <plan-file> [args...]` — no npm install needed
+- Plan file lives in FEATURE PLAN folder: `<feature_plan_folder_full_path>/plan.json`
+- Helper CLI: `node <plan_manager_full_path>/plan_manager.js <cmd> <feature_plan_folder_full_path>/plan.json [args...]` — no npm install needed
+- Always use full absolute paths for both `plan_manager.js` and the plan file
 - Seven commands: `help`, `create`, `next`, `update_status`, `show_status`, `query`, `upsert`
 - Resume behavior: `next` returns `in_progress` steps first with `resume: true`, then `open` steps with `resume: false`
 - Status propagation: bottom-up (steps → phases → plan); plan root is always derived
@@ -44,28 +45,29 @@ Use when `plan_manager` MCP tool is unavailable. Provides local JSON fallback wi
 
 **Setup (every session):**
 
-1. ACQUIRE `plan-manager/assets/plan_manager.js` FROM KB → write to `agents/TEMP/plan_manager.js`
+- If context already contains `RUNNING AS A PLUGIN`: `plan_manager.js` is already available at `<skill_base_dir>/assets/plan_manager.js` — execute directly, no copy needed
+- Otherwise: ACQUIRE `plan-manager/assets/plan_manager.js` FROM KB → write to AGENTS TEMP folder
 
 **Orchestrator flow:**
 
-1. Create plan: `node agents/TEMP/plan_manager.js create plans/<name>/plan.json <json>` — see pm-schema.md for JSON structure
-2. Upsert phases and steps: `node agents/TEMP/plan_manager.js upsert plans/<name>/plan.json entire_plan <json>`
+1. Create plan: `node <plan_manager_full_path>/plan_manager.js create <feature_plan_folder_full_path>/plan.json <json>` — see pm-schema.md for JSON structure
+2. Upsert phases and steps: `node <plan_manager_full_path>/plan_manager.js upsert <feature_plan_folder_full_path>/plan.json entire_plan <json>`
 3. Delegate steps to subagents — pass plan file path and step IDs
 4. Loop: call `next` until `plan_status: complete` and `count: 0`
 
 **Subagent flow:**
 
-1. Get next steps: `node agents/TEMP/plan_manager.js next plans/<name>/plan.json [limit]`
+1. Get next steps: `node <plan_manager_full_path>/plan_manager.js next <feature_plan_folder_full_path>/plan.json [limit]`
 2. Check `resume` flag — if `true`, continue interrupted work; if `false`, start fresh
 3. Execute step
-4. Update: `node agents/TEMP/plan_manager.js update_status plans/<name>/plan.json <step-id> complete`
+4. Update: `node <plan_manager_full_path>/plan_manager.js update_status <feature_plan_folder_full_path>/plan.json <step-id> complete`
 5. Repeat from step 1
 
 </process>
 
 <validation_checklist>
 
-- `node agents/TEMP/plan_manager.js help` exits without error
+- `node <plan_manager_full_path>/plan_manager.js help` exits without error
 - `show_status` output: plan root status is derived (never manually set)
 - `next` output: `in_progress` steps appear before `open` steps when both exist
 - `show_status` phase status matches aggregate of its steps after `update_status`

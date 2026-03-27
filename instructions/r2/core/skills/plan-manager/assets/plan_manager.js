@@ -286,7 +286,10 @@ function cmdHelp() {
     tool: 'plan_manager.js',
     description: 'Local plan manager for coding agents — creates, tracks, and executes execution plans as local JSON files. Implements the same interface as the plan_manager MCP tool. No MCP server required.',
     usage: 'node plan_manager.js <cmd> <plan-file> [args...]',
-    setup: 'ACQUIRE plan-manager/assets/plan_manager.js FROM KB → save to agents/TEMP/plan_manager.js (AGENTS TEMP folder)',
+    setup: {
+      plugin_mode: 'If context already contains RUNNING AS A PLUGIN: plan_manager.js is at <skill_base_dir>/assets/plan_manager.js — execute directly, no copy needed',
+      standard_mode: 'ACQUIRE plan-manager/assets/plan_manager.js FROM KB → save to agents/TEMP/plan_manager.js (AGENTS TEMP folder)',
+    },
     plan_file: {
       convention: 'plans/<feature>/plan.json',
       note: 'Plan file lives in the FEATURE PLAN folder: plans/<feature>/',
@@ -364,8 +367,8 @@ function cmdHelp() {
       { label: 'Query a step',       cmd: 'node plan_manager.js query plans/my-feature/plan.json s1' },
     ],
     next_steps_for_ai: [
-      '1. ACQUIRE plan-manager/assets/plan_manager.js FROM KB → save to agents/TEMP/plan_manager.js (AGENTS TEMP folder)',
-      '2. Create plan: node plan_manager.js create plans/<feature>/plan.json \'<json>\'',
+      '1. Setup: if context already contains RUNNING AS A PLUGIN, use <skill_base_dir>/assets/plan_manager.js directly; otherwise ACQUIRE plan-manager/assets/plan_manager.js FROM KB → save to AGENTS TEMP folder',
+      '2. Create plan: node <plan_manager_full_path>/plan_manager.js create <feature_plan_folder_full_path>/plan.json \'<json>\'',
       '3. Loop: call next → check resume flag → execute step → update_status complete → repeat',
       '4. resume:true = continue interrupted work; resume:false = start fresh',
       '5. Done when next returns count:0 and plan_status:complete',
