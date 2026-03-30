@@ -2,7 +2,7 @@
 'use strict';
 
 /**
- * plan_manager.js — plan_manager equivalent for JS-capable coding agents.
+ * plan_manager.js — plan manager for coding agents.
  * Plans are stored as JSON files with two levels: phases contain steps.
  * Status propagates bottom-up: steps → phases → plan.
  *
@@ -284,7 +284,7 @@ function cmdUpsert(planFile, targetId, data) {
 function cmdHelp() {
   out({
     tool: 'plan_manager.js',
-    description: 'Local plan manager for coding agents — creates, tracks, and executes execution plans as local JSON files. Implements the same interface as the plan_manager MCP tool. No MCP server required.',
+    description: 'Plan manager for coding agents — creates, tracks, and executes execution plans as local JSON files. No dependencies required.',
     usage: 'node plan_manager.js <cmd> <plan-file> [args...]',
     setup: {
       plugin_mode: 'If context already contains RUNNING AS A PLUGIN: plan_manager.js is at <skill_base_dir>/assets/plan_manager.js — execute directly, no copy needed',

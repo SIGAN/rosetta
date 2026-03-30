@@ -27,7 +27,7 @@ Match to cognitive demand. Match to current tool.
 
 <plan_manager>
 
-USE SKILL `plan-manager` as the main execution planner (file-based, JS). When Rosetta MCP is available, the `plan_manager` MCP tool can be used instead with identical command semantics.
+USE SKILL `plan-manager` as the main execution planner (file-based, JS).
 
 Orchestrator and subagents:
 - MUST use plan-manager as main execution planner; todo tasks/built-in planners are for tracking INSIDE step execution only.
@@ -82,7 +82,7 @@ Compose these into plan phases/steps to build any execution workflow.
 <review_plan phase="3" if="MEDIUM, LARGE" subagent="reviewer" role="Plan reviewer of AI automated tasks">
 
 1. Review: completeness, sequencing, dependency correctness, prompt clarity, etc.
-2. Subagent to query by plan_name. Orchestrator to upsert fixes.
+2. Subagent to query by full path to plan.json. Orchestrator to upsert fixes.
 3. hitl-gate — present summary, block until approved.
 
 </review_plan>

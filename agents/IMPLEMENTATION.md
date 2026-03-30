@@ -55,7 +55,7 @@ For detailed change history, use git history and PRs instead of expanding this f
 
 ### Instructions and Skills
 
-- Added `plan-manager` skill under `instructions/r2/core/skills/plan-manager/` providing a JavaScript-based alternative to the `plan_manager` MCP tool.
+- Added `plan-manager` skill under `instructions/r2/core/skills/plan-manager/` — primary plan manager for coding agents via local JSON files.
 - Skill assets: `plan_manager.js` (CLI, no npm deps), `pm-schema.md` (data structure reference), `plan_manager.test.js` (60 unit tests).
 - Key behaviors: resume-safe `next` command returns `in_progress` steps with `resume: true` before `open` steps; plans stored at `plans/<name>/plan.json`; self-describing `help` command.
 - Converted `adhoc-flow-with-plan-manager` workflow to `USE SKILL plan-manager`; data structure externalized to `pm-schema.md`.

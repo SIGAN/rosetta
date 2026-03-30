@@ -1,6 +1,6 @@
 ---
 name: plan-manager
-description: "Rosetta skill for plan creation, tracking, and execution coordination via local JSON files when plan_manager MCP is unavailable."
+description: "Rosetta skill for plan creation, tracking, and execution coordination via local JSON files."
 dependencies: node.js
 disable-model-invocation: false
 user-invocable: true
@@ -24,7 +24,7 @@ Senior execution planner and tracker for plan-driven workflows.
 
 <when_to_use_skill>
 
-Use when `plan_manager` MCP tool is unavailable. Provides local JSON fallback with identical command semantics for both orchestrators and subagents.
+Primary plan manager for orchestrators and subagents. Creates, tracks, and executes plans as local JSON files.
 
 </when_to_use_skill>
 
