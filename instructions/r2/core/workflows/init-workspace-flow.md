@@ -26,9 +26,10 @@ Validation: State file tracks every phase with file inventory; verification conf
 - IF state.file_count >= 50 (set by Phase 3): pass "ACQUIRE `large-workspace-handling/SKILL.md` FROM KB" to Phase 5, 6, 8 subagents.
 - Before Phase 1: create `agents/init-workspace-flow-state.md`.
 - Conditional phases:
-  - If you have already in context "RUNNING AS A PLUGIN": MUST NOT EXECUTE "shells" phase 2 AND "rules" phase 4
+  - If you have already in context "RUNNING AS A PLUGIN" and plugin type is not `rosetta@rosetta`: MUST NOT EXECUTE "shells" phase 2 AND "rules" phase 4
   - Else if user explicitly requested to HAVE ALL RULES LOCALLY: MUST NOT EXECUTE "shells" phase 2, BUT MUST EXECUTE "rules" phase 4
   - Else MUST EXECUTE "shells" phase 2, BUT MUST NOT EXECUTE "rules" phase 4
+- Note: `rosetta@rosetta` is an MCP connector, not a plugin — it follows the normal path (shells phase 2 executes)
 - If user says to initialize rules, subagents, agents, workflows, commands it still means to execute "shells" phase 2.
 - Upgrade from R1 to R2 is exactly the same process as define here, but you already have some files available, which you can reuse.
 - Additionally tell subagents: "If you want to use shell commands, prefer to combine individual shell commands into single **simple** shell script in `agents/TEMP` and execute it, but already available tools ALWAYS take precedence."
