@@ -17,9 +17,16 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CORE_SOURCE = REPO_ROOT / "instructions" / "r2" / "core"
 CORE_CLAUDE_DEST = REPO_ROOT / "plugins" / "core-claude"
 CORE_CURSOR_DEST = REPO_ROOT / "plugins" / "core-cursor"
+CORE_COPILOT_DEST = REPO_ROOT / "plugins" / "core-copilot"
 TYPECHECK_SCRIPT = REPO_ROOT / "validate-types.sh"
 MYPY_CONFIG = REPO_ROOT / "mypy.ini"
 ALLOWED_CLAUDE_MODELS = {"opus", "sonnet", "haiku", "inherit"}
+
+COPILOT_MODEL_MAP: dict[str, str] = {
+    "opus": "claude-opus-4.6",
+    "sonnet": "claude-sonnet-4.6",
+    "haiku": "claude-haiku-4.5",
+}
 
 
 @dataclass(frozen=True)
@@ -33,7 +40,10 @@ class PluginSyncSpec:
     name: str
     destination: Path
     preserved_folder: str
+    preserved_files: tuple[str, ...] = ()
     normalize_models: bool = False
+    copilot_models: bool = False
+    rename_agents: bool = False
 
 
 def run_command(command: list[str]) -> int:
@@ -54,7 +64,15 @@ def normalize_claude_model(value: str) -> str:
     return "inherit"
 
 
-def rewrite_frontmatter_models(content: str) -> str:
+def normalize_copilot_model(value: str) -> str:
+    lowered = value.strip().lower()
+    for key, mapped in COPILOT_MODEL_MAP.items():
+        if key in lowered:
+            return mapped
+    return lowered
+
+
+def rewrite_frontmatter_models(content: str, normalizer: Callable[[str], str] = normalize_claude_model) -> str:
     if not content.startswith("---\n"):
         return content
 
@@ -68,7 +86,7 @@ def rewrite_frontmatter_models(content: str) -> str:
         prefix = match.group("prefix")
         value = match.group("value")
         suffix = match.group("suffix")
-        return f"{prefix}{normalize_claude_model(value)}{suffix}"
+        return f"{prefix}{normalizer(value)}{suffix}"
 
     updated = re.sub(
         r"(?m)^(?P<prefix>model:\s*)(?P<value>.*?)(?P<suffix>\s*)$",
@@ -78,11 +96,16 @@ def rewrite_frontmatter_models(content: str) -> str:
     return f"---\n{updated}{content[end:]}"
 
 
-def reset_generated_tree(destination: Path, preserved_folder: str) -> None:
+def reset_generated_tree(
+    destination: Path,
+    preserved_folder: str,
+    preserved_files: tuple[str, ...] = (),
+) -> None:
     destination.mkdir(parents=True, exist_ok=True)
+    preserved = {preserved_folder, *preserved_files}
     deleted_count = 0
     for child in destination.iterdir():
-        if child.name == preserved_folder:
+        if child.name in preserved:
             continue
         if child.is_dir():
             shutil.rmtree(child)
@@ -91,13 +114,23 @@ def reset_generated_tree(destination: Path, preserved_folder: str) -> None:
         deleted_count += 1
 
     print(
-        f"      deleted {deleted_count} item(s) from {destination} preserving {preserved_folder}",
+        f"      deleted {deleted_count} item(s) from {destination} preserving {', '.join(sorted(preserved))}",
         flush=True,
     )
 
 
-def copy_core_tree(destination: Path, normalize_models: bool) -> None:
+def copy_core_tree(spec: PluginSyncSpec) -> None:
+    destination = spec.destination
     copied_count = 0
+    renamed_count = 0
+
+    if spec.copilot_models:
+        normalizer = normalize_copilot_model
+    else:
+        normalizer = normalize_claude_model
+
+    should_normalize = spec.normalize_models or spec.copilot_models
+
     for source_file in sorted(CORE_SOURCE.rglob("*")):
         relative_path = source_file.relative_to(CORE_SOURCE)
         target = destination / relative_path
@@ -106,10 +139,18 @@ def copy_core_tree(destination: Path, normalize_models: bool) -> None:
             target.mkdir(parents=True, exist_ok=True)
             continue
 
+        # Rename agents/*.md → agents/*.agent.md for Copilot
+        if spec.rename_agents and _is_agent_file(relative_path):
+            target = target.with_suffix(".agent.md")
+            renamed_count += 1
+
         target.parent.mkdir(parents=True, exist_ok=True)
 
-        if normalize_models and source_file.suffix == ".md":
-            rewritten = rewrite_frontmatter_models(source_file.read_text(encoding="utf-8"))
+        if should_normalize and source_file.suffix == ".md":
+            rewritten = rewrite_frontmatter_models(
+                source_file.read_text(encoding="utf-8"),
+                normalizer=normalizer,
+            )
             target.write_text(rewritten, encoding="utf-8")
             shutil.copystat(source_file, target, follow_symlinks=True)
             copied_count += 1
@@ -118,7 +159,66 @@ def copy_core_tree(destination: Path, normalize_models: bool) -> None:
         shutil.copy2(source_file, target)
         copied_count += 1
 
-    print(f"      copied {copied_count} item(s) to {destination}", flush=True)
+    msg = f"      copied {copied_count} item(s) to {destination}"
+    if renamed_count:
+        msg += f" (renamed {renamed_count} agent(s) to .agent.md)"
+    print(msg, flush=True)
+
+
+def _extract_frontmatter_field(content: str, field: str) -> str:
+    """Extract a field value from YAML frontmatter."""
+    if not content.startswith("---\n"):
+        return ""
+    end = content.find("\n---\n", 4)
+    if end == -1:
+        return ""
+    frontmatter = content[4:end]
+    match = re.search(rf"(?m)^{field}:\s*(.+)$", frontmatter)
+    return match.group(1).strip() if match else ""
+
+
+def generate_rules_index(destination: Path) -> None:
+    """Generate rules/INDEX.md listing all rule files with descriptions."""
+    rules_dir = destination / "rules"
+    if not rules_dir.is_dir():
+        return
+
+    entries: list[tuple[str, str]] = []
+    for rule_file in sorted(rules_dir.iterdir()):
+        if rule_file.name == "INDEX.md" or rule_file.suffix != ".md":
+            continue
+        content = rule_file.read_text(encoding="utf-8")
+        description = _extract_frontmatter_field(content, "description")
+        if not description:
+            description = rule_file.stem.replace("-", " ").title()
+        entries.append((rule_file.name, description))
+
+    if not entries:
+        return
+
+    lines = [
+        "# Rosetta Rules Index",
+        "",
+        "All paths are relative to Rosetta Core Plugin Path.",
+        "",
+    ]
+    for filename, description in entries:
+        lines.append(f"- `rules/{filename}`: {description}")
+    lines.append("")
+
+    index_path = rules_dir / "INDEX.md"
+    index_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"      generated rules/INDEX.md with {len(entries)} entries", flush=True)
+
+
+def _is_agent_file(relative_path: Path) -> bool:
+    """Check if a relative path is an agent markdown file (agents/<name>.md)."""
+    parts = relative_path.parts
+    return (
+        len(parts) == 2
+        and parts[0] == "agents"
+        and relative_path.suffix == ".md"
+    )
 
 
 def sync_generated_plugins() -> int:
@@ -138,12 +238,21 @@ def sync_generated_plugins() -> int:
             destination=CORE_CURSOR_DEST,
             preserved_folder=".cursor-plugin",
         ),
+        PluginSyncSpec(
+            name="core-copilot",
+            destination=CORE_COPILOT_DEST,
+            preserved_folder=".github",
+            preserved_files=(".mcp.json",),
+            copilot_models=True,
+            rename_agents=True,
+        ),
     ]
 
     for spec in plugin_specs:
         print(f"   syncing {spec.name}", flush=True)
-        reset_generated_tree(spec.destination, spec.preserved_folder)
-        copy_core_tree(spec.destination, normalize_models=spec.normalize_models)
+        reset_generated_tree(spec.destination, spec.preserved_folder, spec.preserved_files)
+        copy_core_tree(spec)
+        generate_rules_index(spec.destination)
     return 0
 
 

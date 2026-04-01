@@ -1,0 +1,34 @@
+{
+  "name": "core",
+  "description": "Rosetta Core 2.0 - OSS foundation for AI agent instructions, workflows, and guardrails. Includes Rosetta MCP for knowledge base access.",
+  "version": "2.0.16",
+  "author": {
+    "name": "Grid Dynamics",
+    "email": "rosetta-support@griddynamics.com"
+  },
+  "homepage": "https://griddynamics.github.io/rosetta/",
+  "repository": "https://github.com/griddynamics/rosetta",
+  "license": "Apache-2.0",
+  "keywords": [
+    "rosetta",
+    "ai-agents",
+    "workflows",
+    "instructions",
+    "guardrails",
+    "planning",
+    "coding",
+    "knowledge-base"
+  ],
+  "category": "productivity",
+  "agents": [
+    "./agents"
+  ],
+  "skills": [
+    "./skills"
+  ],
+  "commands": [
+    "./workflows"
+  ],
+  "hooks": "./hooks.json",
+  "mcpServers": "./.mcp.json"
+}

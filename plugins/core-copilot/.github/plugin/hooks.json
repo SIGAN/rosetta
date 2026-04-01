@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "cat \"${PLUGIN_ROOT}/rules/bootstrap-core-policy.md\" \"${PLUGIN_ROOT}/rules/bootstrap-execution-policy.md\" \"${PLUGIN_ROOT}/rules/bootstrap-guardrails.md\" \"${PLUGIN_ROOT}/rules/bootstrap-hitl-questioning.md\" \"${PLUGIN_ROOT}/rules/bootstrap-rosetta-files.md\" \"${PLUGIN_ROOT}/rules/plugin-files-mode.md\" \"${PLUGIN_ROOT}/rules/INDEX.md\"",
+        "powershell": "Get-Content -Raw -Path \"${PLUGIN_ROOT}/rules/bootstrap-core-policy.md\", \"${PLUGIN_ROOT}/rules/bootstrap-execution-policy.md\", \"${PLUGIN_ROOT}/rules/bootstrap-guardrails.md\", \"${PLUGIN_ROOT}/rules/bootstrap-hitl-questioning.md\", \"${PLUGIN_ROOT}/rules/bootstrap-rosetta-files.md\", \"${PLUGIN_ROOT}/rules/plugin-files-mode.md\", \"${PLUGIN_ROOT}/rules/INDEX.md\"",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
