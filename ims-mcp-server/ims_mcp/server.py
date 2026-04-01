@@ -81,6 +81,8 @@ from ims_mcp.typing_utils import JsonObject
 
 AsyncStringFactory: TypeAlias = Callable[[], Awaitable[str]]
 
+# MUST READ: docs/ARCHITECTURE.md, docs/CONTEXT.md, docs/SECURITY.md to understand the solution and how it works.
+
 _CONFIG = RosettaConfig.from_env()
 set_runtime_config(_CONFIG)
 register_signal_handlers()
