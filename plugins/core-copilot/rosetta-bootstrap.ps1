@@ -7,7 +7,7 @@ Get-ChildItem "$env:TEMP\rosetta-bootstrap-*.lock" -ErrorAction SilentlyContinue
 if (Test-Path $LockFile) { exit 0 }
 New-Item -Path $LockFile -ItemType File -Force | Out-Null
 $PluginRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-Get-Content -Raw -Path "$PluginRoot\rules\bootstrap-core-policy.md",
+$Content = Get-Content -Raw -Path "$PluginRoot\rules\bootstrap-core-policy.md",
     "$PluginRoot\rules\bootstrap-execution-policy.md",
     "$PluginRoot\rules\bootstrap-guardrails.md",
     "$PluginRoot\rules\bootstrap-hitl-questioning.md",
@@ -15,5 +15,6 @@ Get-Content -Raw -Path "$PluginRoot\rules\bootstrap-core-policy.md",
     "$PluginRoot\rules\plugin-files-mode.md",
     "$PluginRoot\rules\INDEX.md",
     "$PluginRoot\workflows\INDEX.md"
-Write-Output ""
-Write-Output "Rosetta Core Plugin Path: $PluginRoot"
+$Content = "$Content`n`nRosetta Core Plugin Path: $PluginRoot"
+$Escaped = $Content.Replace('\', '\\').Replace('"', '\"').Replace("`r`n", '\n').Replace("`n", '\n')
+[Console]::Write("{`"hookSpecificOutput`":{`"hookEventName`":`"SessionStart`",`"additionalContext`":`"$Escaped`"}}")

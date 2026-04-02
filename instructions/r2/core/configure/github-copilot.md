@@ -269,9 +269,15 @@ Create a new React component named ${input:componentName:MyComponent}.
 
 ## Agent Skills
 
-**Location:** `.github/skills/[skill-name]/SKILL.md`
-
 **Works with:** Copilot coding agent, GitHub Copilot CLI, VS Code agent mode
+
+**Skill Locations (cross-tool):**
+
+| Path | Tool |
+|------|------|
+| `.github/skills/<name>/` | Copilot |
+| `.agents/skills/<name>/` | Codex |
+| `.claude/skills/<name>/` | Claude Code |
 
 **Format:** Markdown with YAML frontmatter (file must be named `SKILL.md`)
 
@@ -449,29 +455,54 @@ The `source` field path is relative to the root of the repository.
 
 ## Hooks
 
-Hooks execute scripts at specific lifecycle events. Configured via `hooks` field in `plugin.json` or standalone config file. Two formats exist: [VS Code](https://code.visualstudio.com/docs/copilot/customization/hooks#_hook-lifecycle-events) uses PascalCase events and `command` field, [Copilot CLI](https://docs.github.com/en/copilot/reference/hooks-configuration) uses camelCase events and `bash`/`powershell` fields. VS Code [transparently converts](https://code.visualstudio.com/docs/copilot/customization/agent-plugins#_hooks-in-plugins) CLI-format hooks. This section documents the CLI format.
+Hooks execute scripts at specific lifecycle events. Two formats exist: [VS Code](https://code.visualstudio.com/docs/copilot/customization/hooks#_hook-lifecycle-events) uses PascalCase events and `command` field, [Copilot CLI](https://docs.github.com/en/copilot/reference/hooks-configuration) uses camelCase events and `bash`/`powershell` fields. VS Code [transparently converts](https://code.visualstudio.com/docs/copilot/customization/agent-plugins#_hooks-in-plugins) CLI-format hooks.
+
+### Hook Locations
+
+| Path | Scope |
+|------|-------|
+| `.github/hooks/*.json` | Workspace (team-shared) |
+| `.claude/settings.json` | Workspace (Claude Code) |
+| `~/.claude/settings.json` | User profile (Claude Code) |
+| Plugin `hooks.json` at root | Plugin hooks (auto-discovered) |
 
 ### Supported Events
 
-| Event | Trigger | Output |
-|-------|---------|--------|
-| `sessionStart` | New session begins or resumes | Ignored |
-| `sessionEnd` | Session completes or terminates | Ignored |
-| `userPromptSubmitted` | User submits a prompt | Ignored |
-| `preToolUse` | Before any tool executes | Can approve or deny tool execution |
-| `postToolUse` | After tool completes | Ignored |
-| `errorOccurred` | Any error during execution | Ignored (logging only) |
+**Copilot CLI** (camelCase):
 
-### Handler Configuration
+| Event | Trigger |
+|-------|---------|
+| `sessionStart` | New session begins or resumes |
+| `sessionEnd` | Session completes or terminates |
+| `userPromptSubmitted` | User submits a prompt |
+| `preToolUse` | Before any tool executes |
+| `postToolUse` | After tool completes |
+| `errorOccurred` | Any error during execution |
+
+**VS Code** (PascalCase, superset of CLI events):
+
+| Event | Trigger |
+|-------|---------|
+| `SessionStart` | First prompt of a new agent session |
+| `UserPromptSubmit` | User submits a prompt |
+| `PreToolUse` | Before tool invocation |
+| `PostToolUse` | After successful tool invocation |
+| `PreCompact` | Before context compaction |
+| `SubagentStart` | Subagent starts |
+| `SubagentStop` | Subagent ends |
+| `Stop` | Agent session ends |
+
+### Handler Configuration (CLI Format)
 
 ```json
 {
   "version": 1,
   "hooks": {
-    "preToolUse": [
+    "sessionStart": [
       {
         "type": "command",
         "bash": "path/to/script.sh",
+        "powershell": "path/to/script.ps1",
         "cwd": ".",
         "timeoutSec": 30
       }
@@ -480,9 +511,36 @@ Hooks execute scripts at specific lifecycle events. Configured via `hooks` field
 }
 ```
 
-**Input (stdin JSON for `preToolUse`):** `timestamp` (unix ms), `cwd`, `toolName`, `toolArgs` (JSON string)
+### Output Contract
 
-**Output (stdout JSON for `preToolUse`):** `{ "permissionDecision": "allow" | "deny" | "ask", "permissionDecisionReason": "reason" }`. All other hooks: output ignored.
+Hooks receive JSON on stdin and return JSON on stdout. Plain text stdout does **not** reach the AI — output must use the `hookSpecificOutput` JSON structure:
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "Content injected into the AI session"
+  }
+}
+```
+
+**`preToolUse` permissions:**
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "allow",
+    "permissionDecisionReason": "Reason"
+  }
+}
+```
+
+`permissionDecision` values: `allow`, `deny`, `ask`.
+
+**Exit codes:** `0` success, `2` blocking error, other values produce non-blocking warnings.
+
+**CLI `preToolUse` input (stdin JSON):** `timestamp` (unix ms), `cwd`, `toolName`, `toolArgs` (JSON string).
 
 ---
 
