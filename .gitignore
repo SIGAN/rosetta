@@ -65,8 +65,6 @@ temporary/
 *.tmp
 *.temp
 rosetta-cli/test-remote-*.sh
-refsrc/
-!refsrc/INDEX.md
 
 # Jekyll / GitHub Pages
 docs/web/_site/
@@ -77,3 +75,5 @@ _site/
 
 # Rosetta
 agents/TEMP/
+refsrc/
+!refsrc/INDEX.md
