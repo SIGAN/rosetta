@@ -449,7 +449,7 @@ The `source` field path is relative to the root of the repository.
 
 ## Hooks
 
-Hooks execute scripts at specific lifecycle events. Configured via `hooks` field in `plugin.json` or standalone config file.
+Hooks execute scripts at specific lifecycle events. Configured via `hooks` field in `plugin.json` or standalone config file. Two formats exist: [VS Code](https://code.visualstudio.com/docs/copilot/customization/hooks#_hook-lifecycle-events) uses PascalCase events and `command` field, [Copilot CLI](https://docs.github.com/en/copilot/reference/hooks-configuration) uses camelCase events and `bash`/`powershell` fields. VS Code [transparently converts](https://code.visualstudio.com/docs/copilot/customization/agent-plugins#_hooks-in-plugins) CLI-format hooks. This section documents the CLI format.
 
 ### Supported Events
 
@@ -671,6 +671,8 @@ Copilot reads configuration from other AI coding tools' directories:
 - [VS Code Copilot Customization](https://code.visualstudio.com/docs/copilot/copilot-customization)
 - [Prompt Files](https://code.visualstudio.com/docs/copilot/chat/prompt-files)
 - [MCP Integration](https://docs.github.com/en/copilot/customizing-copilot/extending-copilot-chat-in-vs-code-with-mcp)
+- [VS Code Hooks](https://code.visualstudio.com/docs/copilot/customization/hooks#_hook-lifecycle-events)
+- [VS Code Plugin Hooks](https://code.visualstudio.com/docs/copilot/customization/agent-plugins#_hooks-in-plugins)
 
 ---
 
