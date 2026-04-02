@@ -324,6 +324,17 @@ def generate_codex_subagents(destination: Path, core_source: Path) -> None:
     print(f"      generated .codex/agents with {generated_count} subagent(s)", flush=True)
 
 
+def generate_copilot_runtime_layout(destination: Path) -> None:
+    plugin_dir = destination / ".github" / "plugin"
+    copied = 0
+    for filename in ("hooks.json", ".mcp.json"):
+        source = plugin_dir / filename
+        if source.is_file():
+            shutil.copy2(source, destination / filename)
+            copied += 1
+    print(f"      copied {copied} config(s) from .github/plugin/ to plugin root", flush=True)
+
+
 def generate_codex_runtime_layout(destination: Path) -> None:
     source_hooks = destination / ".codex-plugin" / "hooks.json"
     codex_hooks = destination / ".codex" / "hooks.json"
@@ -383,7 +394,6 @@ def sync_generated_plugins(repo_root: Path) -> int:
             name="core-copilot",
             destination=repo_root / "plugins" / "core-copilot",
             preserved_folder=".github",
-            preserved_files=(".mcp.json",),
             copilot_models=True,
             rename_agents=True,
             generated_indexes=("rules",),
@@ -403,6 +413,8 @@ def sync_generated_plugins(repo_root: Path) -> int:
         copy_core_tree(spec, core_source)
         for folder_name in spec.generated_indexes:
             generate_folder_index(spec.destination, folder_name)
+        if spec.name == "core-copilot":
+            generate_copilot_runtime_layout(spec.destination)
         if spec.name == "core-codex":
             generate_codex_subagents(spec.destination, core_source)
             generate_codex_runtime_layout(spec.destination)

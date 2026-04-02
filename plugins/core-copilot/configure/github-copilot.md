@@ -360,16 +360,16 @@ Plugins bundle agents, skills, commands, hooks, MCP servers, and LSP servers int
 
 - `description`, `version`, `author` (object with `name`, `email`, `url`), `homepage`, `repository`, `license`, `keywords`, `category`, `tags`
 
-**Component path fields (all optional, CLI uses defaults if omitted):**
+**Component path fields (all optional, type: `string | string[]`). Paths are relative to the plugin root directory:**
 
 | Field | Default | Description |
 |-------|---------|-------------|
 | `agents` | `agents/` | Path(s) to agent directories (`.agent.md` files) |
 | `skills` | `skills/` | Path(s) to skill directories (`SKILL.md` files) |
 | `commands` | - | Path(s) to command directories |
-| `hooks` | - | Path to hooks config file, or inline hooks object |
-| `mcpServers` | - | Path to MCP config file (e.g., `.mcp.json`), or inline server definitions |
-| `lspServers` | - | Path to LSP config file, or inline server definitions |
+| `hooks` | `hooks.json` or `hooks/hooks.json` | Path to hooks config file, or inline hooks object |
+| `mcpServers` | `.mcp.json`, `.vscode/mcp.json`, `.devcontainer/devcontainer.json`, `.github/mcp.json` | Path to MCP config file, or inline server definitions |
+| `lspServers` | `lsp.json` or `.github/lsp.json` | Path to LSP config file, or inline server definitions |
 
 **Interface metadata:** `displayName`, `shortDescription`, `longDescription`, `category`, `capabilities`, `defaultPrompt`, `brandColor`
 
@@ -379,13 +379,19 @@ Plugins bundle agents, skills, commands, hooks, MCP servers, and LSP servers int
 
 ```json
 {
-  "name": "my-plugin",
-  "version": "1.0.0",
-  "description": "What this plugin does",
-  "agents": "./agents/",
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
-  "hooks": "./hooks.json"
+  "name": "my-dev-tools",
+  "description": "React development utilities",
+  "version": "1.2.0",
+  "author": {
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "license": "MIT",
+  "keywords": ["react", "frontend"],
+  "agents": "agents/",
+  "skills": ["skills/", "extra-skills/"],
+  "hooks": "hooks.json",
+  "mcpServers": ".mcp.json"
 }
 ```
 
@@ -393,21 +399,29 @@ Plugins bundle agents, skills, commands, hooks, MCP servers, and LSP servers int
 
 ```
 my-plugin/
-├── .github/plugin/
-│   └── plugin.json          # Required: manifest
+├── plugin.json              # Required: manifest
 ├── agents/                  # Optional: bundled agents
 │   └── my-agent.agent.md
 ├── skills/                  # Optional: bundled skills
 │   └── my-skill/
 │       └── SKILL.md
-├── .mcp.json                # Optional: bundled MCP servers
 ├── hooks.json               # Optional: lifecycle hooks
-└── assets/                  # Optional: icons, logos, screenshots
+└── .mcp.json                # Optional: bundled MCP servers
 ```
 
 ### Marketplace
 
-Marketplaces catalog plugins as JSON files in `.github/plugin/marketplace.json`.
+Marketplaces catalog plugins as JSON files. Discovery order: `marketplace.json` → `.plugin/marketplace.json` → `.github/plugin/marketplace.json` → `.claude-plugin/marketplace.json`.
+
+**Required fields:** `name` (string, kebab-case, max 64), `owner` (object with `name`, optional `email`), `plugins` (array).
+
+**Optional:** `metadata` (object with `description`, `version`, `pluginRoot`).
+
+**Plugin entry required fields:** `name` (string), `source` (string or object — relative path, `OWNER/REPO`, or URL).
+
+**Plugin entry optional fields:** `description`, `version`, `author`, `homepage`, `repository`, `license`, `keywords`, `category`, `tags`, `commands`, `agents`, `skills`, `hooks`, `mcpServers`, `lspServers`, `strict` (boolean, default true — when false, relaxed validation).
+
+The `source` field path is relative to the root of the repository.
 
 **Structure:**
 
@@ -441,19 +455,20 @@ Hooks execute scripts at specific lifecycle events. Configured via `hooks` field
 
 | Event | Trigger | Output |
 |-------|---------|--------|
-| `SessionStart` | New session begins or resumes | Ignored |
-| `SessionEnd` | Session completes or terminates | Ignored |
-| `UserPromptSubmitted` | User submits a prompt | Ignored |
-| `PreToolUse` | Before any tool executes | Can approve or deny tool execution |
-| `PostToolUse` | After tool completes | Ignored |
-| `ErrorOccurred` | Any error during execution | Ignored (logging only) |
+| `sessionStart` | New session begins or resumes | Ignored |
+| `sessionEnd` | Session completes or terminates | Ignored |
+| `userPromptSubmitted` | User submits a prompt | Ignored |
+| `preToolUse` | Before any tool executes | Can approve or deny tool execution |
+| `postToolUse` | After tool completes | Ignored |
+| `errorOccurred` | Any error during execution | Ignored (logging only) |
 
 ### Handler Configuration
 
 ```json
 {
+  "version": 1,
   "hooks": {
-    "PreToolUse": [
+    "preToolUse": [
       {
         "type": "command",
         "bash": "path/to/script.sh",
@@ -465,9 +480,9 @@ Hooks execute scripts at specific lifecycle events. Configured via `hooks` field
 }
 ```
 
-**Input (stdin JSON):** `session_id`, `transcript_path`, `cwd`, `hook_event_name`, `model`, `turn_id`
+**Input (stdin JSON for `preToolUse`):** `timestamp` (unix ms), `cwd`, `toolName`, `toolArgs` (JSON string)
 
-**Output (stdout JSON):** Pre-Tool Use hooks can output `{ "deny": true, "explanation": "reason" }` to block tool execution. All other hooks: output ignored.
+**Output (stdout JSON for `preToolUse`):** `{ "permissionDecision": "allow" | "deny" | "ask", "permissionDecisionReason": "reason" }`. All other hooks: output ignored.
 
 ---
 
