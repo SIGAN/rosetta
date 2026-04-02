@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import cast
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from fastmcp.server.auth import AuthProvider
+    from key_value.aio.protocols.key_value import AsyncKeyValue
     from ims_mcp.config import RosettaConfig
 
 from ims_mcp.auth.offline_refresh_fix import with_offline_refresh_fix
@@ -15,8 +16,8 @@ from ims_mcp.constants import OAUTH_MODE_OIDC, TRANSPORT_HTTP
 
 def build_oauth_provider(
     config: "RosettaConfig",
-    client_storage: object | None = None,
-) -> object | None:
+    client_storage: "AsyncKeyValue | None" = None,
+) -> "AuthProvider | None":
     """Build a FastMCP ``OAuthProxy`` or ``OIDCProxy`` for HTTP transports.
 
     Returns ``None`` when the transport is not HTTP or when required OAuth
@@ -64,20 +65,17 @@ def build_oauth_provider(
             {"scope": config.oauth_extra_scopes} if config.oauth_extra_scopes else None
         )
 
-        return cast(
-            object,
-            OIDCProxy(
-                config_url=config.oauth_oidc_config_url,
-                client_id=config.oauth_client_id,
-                client_secret=config.oauth_client_secret,
-                base_url=base_url,
-                required_scopes=config.oauth_required_scopes,
-                extra_authorize_params=extra_authorize_params,
-                client_storage=client_storage,
-                jwt_signing_key=config.oauth_jwt_signing_key,
-                redirect_path=config.oauth_callback_path,
-                require_authorization_consent=True,
-            ),
+        return OIDCProxy(
+            config_url=config.oauth_oidc_config_url,
+            client_id=config.oauth_client_id,
+            client_secret=config.oauth_client_secret,
+            base_url=base_url,
+            required_scopes=config.oauth_required_scopes,
+            extra_authorize_params=extra_authorize_params,
+            client_storage=client_storage,
+            jwt_signing_key=config.oauth_jwt_signing_key,
+            redirect_path=config.oauth_callback_path,
+            require_authorization_consent=True,
         )
 
     # mode=oauth (default)
@@ -107,22 +105,19 @@ def build_oauth_provider(
         {"scope": config.oauth_extra_scopes} if config.oauth_extra_scopes else None
     )
 
-    return cast(
-        object,
-        OAuthProxy(
-            upstream_authorization_endpoint=config.oauth_authorization_endpoint,
-            upstream_token_endpoint=config.oauth_token_endpoint,
-            upstream_client_id=config.oauth_client_id,
-            upstream_client_secret=config.oauth_client_secret,
-            upstream_revocation_endpoint=config.oauth_revocation_endpoint or None,
-            token_verifier=token_verifier,
-            base_url=base_url,
-            redirect_path=config.oauth_callback_path,
-            require_authorization_consent=True,
-            client_storage=client_storage,
-            valid_scopes=valid_scopes,
-            extra_authorize_params=extra_authorize_params_oauth,
-            jwt_signing_key=config.oauth_jwt_signing_key,
-            enable_cimd=True,
-        ),
+    return OAuthProxy(
+        upstream_authorization_endpoint=config.oauth_authorization_endpoint,
+        upstream_token_endpoint=config.oauth_token_endpoint,
+        upstream_client_id=config.oauth_client_id,
+        upstream_client_secret=config.oauth_client_secret,
+        upstream_revocation_endpoint=config.oauth_revocation_endpoint or None,
+        token_verifier=token_verifier,
+        base_url=base_url,
+        redirect_path=config.oauth_callback_path,
+        require_authorization_consent=True,
+        client_storage=client_storage,
+        valid_scopes=valid_scopes,
+        extra_authorize_params=extra_authorize_params_oauth,
+        jwt_signing_key=config.oauth_jwt_signing_key,
+        enable_cimd=True,
     )

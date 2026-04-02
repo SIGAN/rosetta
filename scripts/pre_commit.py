@@ -15,6 +15,7 @@ from plugin_generator import sync_generated_plugins
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TYPECHECK_SCRIPT = REPO_ROOT / "validate-types.sh"
+TEST_SCRIPT = REPO_ROOT / "run-tests.sh"
 MYPY_CONFIG = REPO_ROOT / "mypy.ini"
 
 
@@ -63,10 +64,21 @@ def run_type_validation() -> int:
     return 1
 
 
+def run_tests() -> int:
+    if os.name != "nt" and TEST_SCRIPT.is_file():
+        bash_path = shutil.which("bash")
+        if bash_path:
+            return run_command([bash_path, str(TEST_SCRIPT)])
+
+    print(f"ERROR: test runner script not found or unsupported platform: {TEST_SCRIPT}", file=sys.stderr)
+    return 1
+
+
 def main() -> int:
     checks = [
         Check(name="plugin sync", runner=lambda: sync_generated_plugins(REPO_ROOT)),
         Check(name="type validation", runner=run_type_validation),
+        Check(name="tests", runner=run_tests),
     ]
 
     for check in checks:
