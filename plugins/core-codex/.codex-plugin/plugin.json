@@ -21,8 +21,8 @@
     "coding",
     "knowledge-base"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "skills": "./.codex/skills/",
+  "mcpServers": "./.codex-plugin/.mcp.json",
   "interface": {
     "displayName": "Rosetta Core",
     "shortDescription": "Rosetta core skills, MCP config, and bundled local references for Codex.",
