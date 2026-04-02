@@ -397,7 +397,7 @@ def sync_generated_plugins(repo_root: Path) -> int:
             preserved_files=("hooks",),
             copilot_models=True,
             rename_agents=True,
-            generated_indexes=("rules",),
+            generated_indexes=("rules", "workflows"),
         ),
         PluginSyncSpec(
             name="core-codex",
