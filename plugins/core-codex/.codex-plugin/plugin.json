@@ -21,7 +21,7 @@
     "coding",
     "knowledge-base"
   ],
-  "skills": "./.codex/skills/",
+  "skills": "./.agents/skills/",
   "mcpServers": "./.codex-plugin/.mcp.json",
   "interface": {
     "displayName": "Rosetta Core",
