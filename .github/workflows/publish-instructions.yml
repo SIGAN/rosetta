@@ -84,7 +84,7 @@ jobs:
           ARCHIVES=""
           for plugin_dir in plugins/*/; do
             folder=$(basename "$plugin_dir")
-            plugin_json=$(find "$plugin_dir" -name "plugin.json" -maxdepth 2 | head -1)
+            plugin_json=$(find "$plugin_dir" -name "plugin.json" -maxdepth 3 | head -1)
             if [ -z "$plugin_json" ]; then
               echo "WARNING: No plugin.json found in $plugin_dir, skipping"
               continue
