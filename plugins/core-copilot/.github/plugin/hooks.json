@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/Library/Application\\ Support/Code/agentPlugins/github.com/griddynamics/rosetta/plugins/core-copilot/rosetta-bootstrap.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

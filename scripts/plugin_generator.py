@@ -327,7 +327,7 @@ def generate_codex_subagents(destination: Path, core_source: Path) -> None:
 def generate_copilot_runtime_layout(destination: Path) -> None:
     plugin_dir = destination / ".github" / "plugin"
     copied = 0
-    for filename in (".mcp.json",):
+    for filename in ("hooks.json", ".mcp.json", "rosetta-bootstrap.sh"):
         source = plugin_dir / filename
         if source.is_file():
             shutil.copy2(source, destination / filename)
@@ -394,7 +394,6 @@ def sync_generated_plugins(repo_root: Path) -> int:
             name="core-copilot",
             destination=repo_root / "plugins" / "core-copilot",
             preserved_folder=".github",
-            preserved_files=("hooks",),
             copilot_models=True,
             rename_agents=True,
             generated_indexes=("rules", "workflows"),
