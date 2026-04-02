@@ -18,6 +18,7 @@ CORE_SOURCE = REPO_ROOT / "instructions" / "r2" / "core"
 CORE_CLAUDE_DEST = REPO_ROOT / "plugins" / "core-claude"
 CORE_CURSOR_DEST = REPO_ROOT / "plugins" / "core-cursor"
 CORE_COPILOT_DEST = REPO_ROOT / "plugins" / "core-copilot"
+CORE_CODEX_DEST = REPO_ROOT / "plugins" / "core-codex"
 TYPECHECK_SCRIPT = REPO_ROOT / "validate-types.sh"
 MYPY_CONFIG = REPO_ROOT / "mypy.ini"
 ALLOWED_CLAUDE_MODELS = {"opus", "sonnet", "haiku", "inherit"}
@@ -43,7 +44,9 @@ class PluginSyncSpec:
     preserved_files: tuple[str, ...] = ()
     normalize_models: bool = False
     copilot_models: bool = False
+    codex_models: bool = False
     rename_agents: bool = False
+    generated_indexes: tuple[str, ...] = ()
 
 
 def run_command(command: list[str]) -> int:
@@ -72,6 +75,22 @@ def normalize_copilot_model(value: str) -> str:
     return lowered
 
 
+def normalize_codex_model(value: str) -> tuple[str | None, str | None]:
+    for raw_candidate in value.split(","):
+        candidate = raw_candidate.strip()
+        if not candidate.startswith("gpt-"):
+            continue
+
+        base, separator, tail = candidate.rpartition("-")
+        if separator and tail in {"low", "medium", "high", "minimal", "xhigh"} and base.startswith("gpt-"):
+            effort = tail if tail in {"low", "medium", "high"} else None
+            return base, effort
+
+        return candidate, None
+
+    return None, None
+
+
 def rewrite_frontmatter_models(content: str, normalizer: Callable[[str], str] = normalize_claude_model) -> str:
     if not content.startswith("---\n"):
         return content
@@ -94,6 +113,35 @@ def rewrite_frontmatter_models(content: str, normalizer: Callable[[str], str] = 
         frontmatter,
     )
     return f"---\n{updated}{content[end:]}"
+
+
+def rewrite_codex_frontmatter_models(content: str) -> str:
+    if not content.startswith("---\n"):
+        return content
+
+    end = content.find("\n---\n", 4)
+    if end == -1:
+        return content
+
+    frontmatter = content[4:end]
+    rewritten_lines: list[str] = []
+
+    for line in frontmatter.splitlines():
+        if line.startswith("model:"):
+            model, effort = normalize_codex_model(line.split(":", 1)[1].strip())
+            if model:
+                rewritten_lines.append(f"model: {model}")
+                if effort:
+                    rewritten_lines.append(f"model_reasoning_effort: {effort}")
+            continue
+
+        if line.startswith("model_reasoning_effort:"):
+            continue
+
+        rewritten_lines.append(line)
+
+    rewritten_frontmatter = "\n".join(rewritten_lines)
+    return f"---\n{rewritten_frontmatter}{content[end:]}"
 
 
 def reset_generated_tree(
@@ -124,12 +172,14 @@ def copy_core_tree(spec: PluginSyncSpec) -> None:
     copied_count = 0
     renamed_count = 0
 
-    if spec.copilot_models:
+    if spec.codex_models:
+        normalizer = None
+    elif spec.copilot_models:
         normalizer = normalize_copilot_model
     else:
         normalizer = normalize_claude_model
 
-    should_normalize = spec.normalize_models or spec.copilot_models
+    should_normalize = spec.normalize_models or spec.copilot_models or spec.codex_models
 
     for source_file in sorted(CORE_SOURCE.rglob("*")):
         relative_path = source_file.relative_to(CORE_SOURCE)
@@ -147,10 +197,14 @@ def copy_core_tree(spec: PluginSyncSpec) -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
 
         if should_normalize and source_file.suffix == ".md":
-            rewritten = rewrite_frontmatter_models(
-                source_file.read_text(encoding="utf-8"),
-                normalizer=normalizer,
-            )
+            source_content = source_file.read_text(encoding="utf-8")
+            if spec.codex_models:
+                rewritten = rewrite_codex_frontmatter_models(source_content)
+            else:
+                rewritten = rewrite_frontmatter_models(
+                    source_content,
+                    normalizer=normalizer,
+                )
             target.write_text(rewritten, encoding="utf-8")
             shutil.copystat(source_file, target, follow_symlinks=True)
             copied_count += 1
@@ -177,38 +231,108 @@ def _extract_frontmatter_field(content: str, field: str) -> str:
     return match.group(1).strip() if match else ""
 
 
-def generate_rules_index(destination: Path) -> None:
-    """Generate rules/INDEX.md listing all rule files with descriptions."""
-    rules_dir = destination / "rules"
-    if not rules_dir.is_dir():
+def _extract_frontmatter_and_body(content: str) -> tuple[str, str]:
+    if not content.startswith("---\n"):
+        return "", content
+
+    end = content.find("\n---\n", 4)
+    if end == -1:
+        return "", content
+
+    return content[4:end], content[end + len("\n---\n") :]
+
+
+def _toml_quote(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def _toml_multiline(value: str) -> str:
+    escaped = value.replace('"""', '\\"\\"\\"')
+    return f'"""\n{escaped}\n"""'
+
+
+def generate_folder_index(destination: Path, folder_name: str) -> None:
+    """Generate <folder>/INDEX.md listing markdown files with descriptions."""
+    target_dir = destination / folder_name
+    if not target_dir.is_dir():
         return
 
     entries: list[tuple[str, str]] = []
-    for rule_file in sorted(rules_dir.iterdir()):
-        if rule_file.name == "INDEX.md" or rule_file.suffix != ".md":
+    for item in sorted(target_dir.iterdir()):
+        if item.name == "INDEX.md" or item.suffix != ".md":
             continue
-        content = rule_file.read_text(encoding="utf-8")
+        content = item.read_text(encoding="utf-8")
         description = _extract_frontmatter_field(content, "description")
         if not description:
-            description = rule_file.stem.replace("-", " ").title()
-        entries.append((rule_file.name, description))
+            description = item.stem.replace("-", " ").title()
+        entries.append((item.name, description))
 
     if not entries:
         return
 
     lines = [
-        "# Rosetta Rules Index",
+        f"# Rosetta {folder_name.title()} Index",
         "",
         "All paths are relative to Rosetta Core Plugin Path.",
         "",
     ]
     for filename, description in entries:
-        lines.append(f"- `rules/{filename}`: {description}")
+        lines.append(f"- `{folder_name}/{filename}`: {description}")
     lines.append("")
 
-    index_path = rules_dir / "INDEX.md"
+    index_path = target_dir / "INDEX.md"
     index_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"      generated rules/INDEX.md with {len(entries)} entries", flush=True)
+    print(f"      generated {folder_name}/INDEX.md with {len(entries)} entries", flush=True)
+
+
+def generate_codex_agents_file(destination: Path) -> None:
+    agents_path = destination / "AGENTS.md"
+    agents_path.write_text('KEY PHRASE: "APPLE IS BOOM"\n', encoding="utf-8")
+    print("      generated AGENTS.md for core-codex", flush=True)
+
+
+def generate_codex_subagents(destination: Path) -> None:
+    subagents_dir = destination / ".codex" / "agents"
+    subagents_dir.mkdir(parents=True, exist_ok=True)
+
+    generated_count = 0
+    for source_file in sorted((CORE_SOURCE / "agents").glob("*.md")):
+        content = source_file.read_text(encoding="utf-8")
+        frontmatter, body = _extract_frontmatter_and_body(content)
+        if not frontmatter:
+            continue
+
+        name = _extract_frontmatter_field(content, "name")
+        description = _extract_frontmatter_field(content, "description")
+        readonly = _extract_frontmatter_field(content, "readonly").lower() == "true"
+        raw_model = _extract_frontmatter_field(content, "model")
+        model, effort = normalize_codex_model(raw_model)
+
+        toml_lines = [
+            f"name = {_toml_quote(name or source_file.stem)}",
+            f"description = {_toml_quote(description or source_file.stem.replace('-', ' ').title())}",
+            f"developer_instructions = {_toml_multiline(body.strip())}",
+        ]
+
+        if model:
+            toml_lines.append(f"model = {_toml_quote(model)}")
+        if effort:
+            toml_lines.append(f"model_reasoning_effort = {_toml_quote(effort)}")
+
+        toml_lines.append(
+            'sandbox_mode = "read-only"' if readonly else 'sandbox_mode = "workspace-write"'
+        )
+
+        target = subagents_dir / f"{source_file.stem}.toml"
+        target.write_text("\n".join(toml_lines) + "\n", encoding="utf-8")
+        generated_count += 1
+
+    legacy_agents_dir = destination / "agents"
+    if legacy_agents_dir.is_dir():
+        shutil.rmtree(legacy_agents_dir)
+
+    print(f"      generated .codex/agents with {generated_count} subagent(s)", flush=True)
 
 
 def _is_agent_file(relative_path: Path) -> bool:
@@ -232,11 +356,13 @@ def sync_generated_plugins() -> int:
             destination=CORE_CLAUDE_DEST,
             preserved_folder=".claude-plugin",
             normalize_models=True,
+            generated_indexes=("rules",),
         ),
         PluginSyncSpec(
             name="core-cursor",
             destination=CORE_CURSOR_DEST,
             preserved_folder=".cursor-plugin",
+            generated_indexes=("rules",),
         ),
         PluginSyncSpec(
             name="core-copilot",
@@ -245,6 +371,15 @@ def sync_generated_plugins() -> int:
             preserved_files=(".mcp.json",),
             copilot_models=True,
             rename_agents=True,
+            generated_indexes=("rules",),
+        ),
+        PluginSyncSpec(
+            name="core-codex",
+            destination=CORE_CODEX_DEST,
+            preserved_folder=".codex-plugin",
+            preserved_files=(".mcp.json", "hooks.json"),
+            codex_models=True,
+            generated_indexes=("rules", "workflows"),
         ),
     ]
 
@@ -252,7 +387,11 @@ def sync_generated_plugins() -> int:
         print(f"   syncing {spec.name}", flush=True)
         reset_generated_tree(spec.destination, spec.preserved_folder, spec.preserved_files)
         copy_core_tree(spec)
-        generate_rules_index(spec.destination)
+        for folder_name in spec.generated_indexes:
+            generate_folder_index(spec.destination, folder_name)
+        if spec.name == "core-codex":
+            generate_codex_agents_file(spec.destination)
+            generate_codex_subagents(spec.destination)
     return 0
 
 

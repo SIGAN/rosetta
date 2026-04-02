@@ -61,7 +61,8 @@ For detailed change history, use git history and PRs instead of expanding this f
   - build/publish pipeline repairs
   - rosetta-mcp publish gating that waits for the matching `ims-mcp` version to appear on PyPI before upload
   - native Git pre-commit hook shim with a shared Python entrypoint under `scripts/`
-  - generated `plugins/core-claude` and `plugins/core-cursor` trees sourced from `instructions/r2/core`
+  - generated `plugins/core-claude`, `plugins/core-cursor`, `plugins/core-copilot`, and `plugins/core-codex` trees sourced from `instructions/r2/core`
+  - plugin-specific packaging transforms for model metadata, generated indexes, and local marketplace/manifests
   - Jira loader recovery after upstream API changes
   - shared type-validation entrypoint
 - Some GitHub Pages actions remain upstream-limited and may still depend on older Node runtimes until upstream changes.

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/bootstrap-core-policy.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/bootstrap-execution-policy.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/bootstrap-guardrails.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/bootstrap-hitl-questioning.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/bootstrap-rosetta-files.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/plugin-files-mode.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/rules/INDEX.md\" \"$(git rev-parse --show-toplevel)/plugins/core-codex/workflows/INDEX.md\" && echo \"\" && echo \"Rosetta Core Plugin Path: $(git rev-parse --show-toplevel)/plugins/core-codex\"",
+            "statusMessage": "Loading Rosetta Codex bootstrap",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
