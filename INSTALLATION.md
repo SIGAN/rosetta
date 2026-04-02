@@ -435,7 +435,7 @@ claude plugin install grid@rosetta           # Enterprise (optional, requires co
 
 #### Cursor
 
-Cursor uses `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json` manifests. See the plugin repository for Cursor-specific setup.
+Cursor plugin cannot be installed locally. 
 
 ### Offline Installation (No MCP)
 
