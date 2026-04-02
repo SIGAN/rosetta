@@ -1,14 +1,11 @@
 {
+  "version": 1,
   "hooks": {
-    "SessionStart": [
+    "sessionStart": [
       {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/Library/Application\\ Support/Code/agentPlugins/github.com/griddynamics/rosetta/plugins/core-copilot/rosetta-bootstrap.sh"
-          }
-        ]
+        "type": "command",
+        "bash": "~/Library/Application\\ Support/Code/agentPlugins/github.com/griddynamics/rosetta/plugins/core-copilot/rosetta-bootstrap.sh",
+        "powershell": "& \"$env:LOCALAPPDATA\\Code\\agentPlugins\\github.com\\griddynamics\\rosetta\\plugins\\core-copilot\\rosetta-bootstrap.ps1\""
       }
     ]
   }
