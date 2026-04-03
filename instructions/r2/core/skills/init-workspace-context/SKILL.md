@@ -22,7 +22,7 @@ Initialization must behave differently for fresh, existing, or plugin workspaces
 </core_concepts>
 
 <process>
-1. Check LLM context for "RUNNING AS A PLUGIN":
+1. Check existing LLM context for "RUNNING AS A PLUGIN": If already there → set mode = plugin
    - If found AND context contains "rosetta@rosetta" → fall through to step 2 (not a plugin)
    - If found and plugin type is anything else → set mode = plugin
 2. If not plugin, scan workspace for existing files per `bootstrap_rosetta_files`
