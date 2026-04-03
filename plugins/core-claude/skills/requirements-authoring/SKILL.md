@@ -225,12 +225,11 @@ HITL gates (use when):
 <requirement_unit_template>
 
 ```xml
-<req id="FR-AREA-0001" type="FR" level="System">
+<req id="FR-AREA-0001" type="FR" level="System" ticketId="JIRA-0000" classification="business|technical">
   <title>...</title>
   <statement>...</statement>
   <rationale>...</rationale>
   <source>...</source>
-  <ticketId>JIRA-0000</ticketId>
   <priority>Must|Should|Could|Wont</priority>
   <status>Draft|Approved|Deprecated</status>
   <approved_by>[user login approved]</approved_by>
