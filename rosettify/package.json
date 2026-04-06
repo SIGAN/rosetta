@@ -1,8 +1,17 @@
 {
   "name": "rosettify",
-  "version": "0.1.0",
-  "description": "Unified tool runner for Rosetta with dual CLI/MCP frontend",
+  "version": "2.0.0",
+  "description": "Local utility for Rosetta — manage plans, install agents, and support AI coding workflows via CLI or MCP",
   "license": "Apache-2.0",
+  "author": "Rosetta Team <rosetta-support@griddynamics.com>",
+  "homepage": "https://griddynamics.github.io/rosetta/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/griddynamics/rosetta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/griddynamics/rosetta/issues"
+  },
   "type": "module",
   "bin": {
     "rosettify": "./dist/bin/rosettify.js"

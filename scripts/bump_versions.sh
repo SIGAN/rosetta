@@ -110,6 +110,7 @@ for f in \
     "$ROOT/rosetta-mcp-server/pyproject.toml"; do
     printf "  %-55s %s\n" "[toml]        ${f#$ROOT/}" "$(get_toml_version "$f")"
 done
+printf "  %-55s %s\n" "[package.json] rosettify/package.json" "$(get_json_version "$ROOT/rosettify/package.json")"
 for f in \
     "$ROOT/plugins/core-claude/.claude-plugin/plugin.json" \
     "$ROOT/plugins/core-cursor/.cursor-plugin/plugin.json" \
@@ -157,6 +158,10 @@ echo ""
 echo "--- pyproject.toml files ---"
 bump_file_toml "$ROOT/rosetta-cli/pyproject.toml"    "n"
 bump_file_toml "$ROOT/ims-mcp-server/pyproject.toml" "y"
+
+echo ""
+echo "--- rosettify/package.json ---"
+bump_file_json "$ROOT/rosettify/package.json" "y"
 
 # rosetta-mcp-server: bump version + sync ims-mcp dependency to match ims-mcp-server
 IMS_VERSION="$(get_toml_version "$ROOT/ims-mcp-server/pyproject.toml")"
