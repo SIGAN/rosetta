@@ -159,10 +159,6 @@ echo "--- pyproject.toml files ---"
 bump_file_toml "$ROOT/rosetta-cli/pyproject.toml"    "n"
 bump_file_toml "$ROOT/ims-mcp-server/pyproject.toml" "y"
 
-echo ""
-echo "--- rosettify/package.json ---"
-bump_file_json "$ROOT/rosettify/package.json" "y"
-
 # rosetta-mcp-server: bump version + sync ims-mcp dependency to match ims-mcp-server
 IMS_VERSION="$(get_toml_version "$ROOT/ims-mcp-server/pyproject.toml")"
 f="$ROOT/rosetta-mcp-server/pyproject.toml"
@@ -183,6 +179,10 @@ if ask_yn "Bump $rel  ($current → $new_version, ims-mcp → $IMS_VERSION)?" "y
 else
     echo "  Skipped"
 fi
+
+echo ""
+echo "--- rosettify/package.json ---"
+bump_file_json "$ROOT/rosettify/package.json" "y"
 
 echo ""
 echo "--- plugin.json files ---"
