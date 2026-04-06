@@ -315,6 +315,23 @@ For deployment details, see [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md).
 
 ---
 
+## Rosettify
+
+Local CLI/MCP utility for AI coding agents and users. Purpose: deterministic local AI coding workflow execution and single entry point for Rosetta tooling in any project. All data and IP stays local — zero network calls during operation.
+
+Published on npm as `rosettify`. Invoked via `npx rosettify <command> [subcommand] [args]` or as a local MCP server (`rosettify --mcp`) over stdio.
+
+**Key points:**
+- **Dual frontend.** One CLI and one MCP server backed by the same run delegates. Identical behavior in both modes.
+- **Plan management** (current feature). `npx rosettify plan <subcommand> <plan_file>` — create, track, and advance execution plans as local JSON files. Subcommands: `create`, `next`, `update_status`, `show_status`, `query`, `upsert`.
+- **Sequential phase enforcement.** `next` returns work from the earliest incomplete phase only; later phases are blocked until all earlier phases are done.
+- **Static tool registry.** Each command is a `ToolDef` with name, description, input/output schema, CLI and MCP flags, and a typed run delegate.
+- **No network calls.** All data stays local — safe for IP-sensitive projects.
+
+Validated with `npm run typecheck`, `npm run test` (vitest, 90% line + branch coverage). Published via `.github/workflows/publish-rosettify.yml`. Version managed via `scripts/bump_versions.sh`.
+
+---
+
 ## Instruction Structure
 
 Instructions live in `/instructions/r2/` in the instructions repository, using a layered folder structure.
