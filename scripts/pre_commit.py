@@ -185,6 +185,8 @@ def main() -> int:
     checks = [
         Check(name="plugin sync", runner=sync_generated_plugins),
         Check(name="type validation", runner=run_type_validation),
+        Check("rosettify typecheck", lambda: run_command(["npm", "--prefix", "rosettify", "run", "typecheck"])),
+        Check("rosettify tests",     lambda: run_command(["npm", "--prefix", "rosettify", "run", "test"])),
     ]
 
     for check in checks:
