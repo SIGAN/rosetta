@@ -79,8 +79,6 @@ def main() -> int:
         Check(name="plugin sync", runner=lambda: sync_generated_plugins(REPO_ROOT)),
         Check(name="type validation", runner=run_type_validation),
         Check(name="tests", runner=run_tests),
-        Check("rosettify typecheck", lambda: run_command(["npm", "--prefix", "rosettify", "run", "typecheck"])),
-        Check("rosettify tests",     lambda: run_command(["npm", "--prefix", "rosettify", "run", "test"])),
     ]
 
     for check in checks:

@@ -23,7 +23,10 @@ if [ ! -x "$PYTHON_BIN" ]; then
     exit 1
 fi
 
-echo -e "${BLUE}Running type validation...${NC}"
+echo -e "${BLUE}Running Python type validation...${NC}"
 "$PYTHON_BIN" -m mypy --config-file "$CONFIG_FILE"
+
+echo -e "${BLUE}Running rosettify TypeScript type validation...${NC}"
+npm --prefix "$SCRIPT_DIR/rosettify" run typecheck
 
 echo -e "${GREEN}Type validation passed${NC}"

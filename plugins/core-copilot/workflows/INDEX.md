@@ -2,7 +2,6 @@
 
 All paths are relative to Rosetta Core Plugin Path.
 
-- `workflows/adhoc-flow-with-plan-manager.md`: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Useful for small or simple tasks if none other workflows matches."
 - `workflows/adhoc-flow.md`: "Rosetta ad-hoc adaptive meta-workflow that constructs, tracks, reviews, and executes a tailored execution plan per user request using building blocks and available instructions. Useful for small or simple tasks if none other workflows matches. Lightweight."
 - `workflows/coding-flow.md`: "Rosetta coding and implementation workflow, includes discovery, tech specs, tech plan, subagent plan review, user plan review, implementation, subagent review implementation, validation, user review, and final validation with reviewer gates, HITL gates, and subagent delegation."
 - `workflows/init-workspace-flow-context.md`: "Phase 1 of init-workspace-flow, contains detect workspace mode, composite status, and existing file inventory."
