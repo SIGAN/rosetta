@@ -101,6 +101,8 @@ HITL gates (use when):
 - Use strong success criteria
 - Avoid implementation details unless requested
 - Keep project terms and contracts explicit
+- Spec statements contain only requirements — never explanations of why a previous draft was wrong, how the author arrived at the wording, or definitions of concepts the reader should already know.
+- If a sentence would not survive in a spec that was never revised, delete it.
 
 </core_principles_to_enforce>
 
@@ -229,7 +231,7 @@ HITL gates (use when):
   <title>...</title>
   <statement>...</statement>
   <rationale>...</rationale>
-  <source>...</source>
+  <source>User|Inferred|Sources|Documentation</source>
   <priority>Must|Should|Could|Wont</priority>
   <status>Draft|Approved|Deprecated</status>
   <approved_by>[user login approved]</approved_by>
@@ -350,6 +352,9 @@ HITL gates (use when):
 - Run quality gate checks
 - Summarize changes clearly
 - Check against current best practices
+- Once drafting is done proactively seek user approval
+- Read (if needed), Review yourself, and Present to the user as a story (explaining how it will work)
+- Explicit approval, do not assume approval, user questions/comments do not mean it was approved
 
 </authoring_flow>
 
