@@ -90,6 +90,12 @@ To mitigate Man-in-the-Middle (MITM) attacks—including interception or unautho
 - **Network Isolation**: For high-security or air-gapped environments, STDIO transport is available. This enables fully local process communication, effectively eliminating the network attack surface
 - **Credential Hygiene**: Rotate OAuth tokens and API keys on a predefined regular cadence to minimize the impact of potential credential compromise.
 - **Secret Management**: Strictly avoid embedding API keys or OAuth secrets in version-controlled configuration files; instead, use secure environment variables or a dedicated secret management vault.
+- **Rate limiting**: Implement rate limiting:
+  - `/register` — 1 requests per IP per minute.
+  - `/token` — 20 requests per IP per minute.
+  - `/authorize` — 20 requests per IP per minute.
+  - `/revoke` — 20 requests per IP per minute.
+- **HSTS**: Enforce HSTS headers with ingress controller or services terminating HTTPS. `Strict-Transport-Security`: `max-age=31536000; includeSubDomains`
 
 ### Data leakage through observability
 

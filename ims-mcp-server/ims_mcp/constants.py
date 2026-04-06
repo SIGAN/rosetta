@@ -1,5 +1,7 @@
 """Shared constants for Rosetta MCP V2."""
 
+from typing import Literal
+
 ENV_ROSETTA_SERVER_URL = "ROSETTA_SERVER_URL"
 ENV_VERSION = "VERSION"
 ENV_ROSETTA_API_KEY = "ROSETTA_API_KEY"
@@ -47,8 +49,8 @@ HEADER_API_KEY = "x-rosetta-api-key"
 
 DEFAULT_HTTP_HOST = "0.0.0.0"
 DEFAULT_HTTP_PORT = 8000
-TRANSPORT_STDIO = "stdio"
-TRANSPORT_HTTP = "http"
+TRANSPORT_STDIO: Literal["stdio"] = "stdio"
+TRANSPORT_HTTP: Literal["http"] = "http"
 
 # RAGFlow configuration. Note, public key is only used for ADDITIONALLY encrypting password fields.
 
