@@ -53,6 +53,18 @@ For detailed change history, use git history and PRs instead of expanding this f
 - A dedicated `version` command was added so package version inspection does not require config loading or auth.
 - Package metadata and publish flows were repaired to keep CI/CD and PyPI publishing functional.
 
+### Workspace Initialization
+
+- Rosetta workspace initialized (upgrade mode, 512 files): proxy shells generated for 17 skills, 7 agents, and 12 workflow commands under `.claude/`.
+- `gain.json` created defining SDLC setup and Rosetta file locations.
+- Workspace docs created: `TECHSTACK.md`, `CODEMAP.md`, `DEPENDENCIES.md`, `ASSUMPTIONS.md`.
+
+### Hooks — IDE Input Normalization
+
+- Added `instructions/r2/core/hooks/adapter.js`: normalizes IDE stdin to Claude Code canonical format. Exports `detectIDE`, `normalize`, `formatOutput`, `readStdin`. Stub placeholders for Cursor/Codex/Windsurf/Copilot (activated when real fixtures are captured).
+- Added `instructions/r2/core/hooks/loose-files.js`: PostToolUse hook that nudges AI when `.py`/`.js` files lack a module marker (`__init__.py`/`package.json`). Exports `shouldCheck`, `isLooseFile`, `buildNudgeOutput` with injected `fs` for testability.
+- TDD: both modules have full test coverage in `*.test.js` using `node:test` (zero deps). Test files and `test-fixtures/` are excluded from plugin sync via `scripts/pre_commit.py`.
+
 ### Workflows and Automation
 
 - GitHub Actions were updated to remove most deprecated Node 20-era dependencies and align with newer action runtimes where upstream allowed it.

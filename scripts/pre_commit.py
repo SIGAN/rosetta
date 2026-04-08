@@ -102,6 +102,12 @@ def copy_core_tree(destination: Path, normalize_models: bool) -> None:
         relative_path = source_file.relative_to(CORE_SOURCE)
         target = destination / relative_path
 
+        # Exclude test artifacts — never distribute into plugins
+        if source_file.name.endswith(".test.js"):
+            continue
+        if "test-fixtures" in relative_path.parts:
+            continue
+
         if source_file.is_dir():
             target.mkdir(parents=True, exist_ok=True)
             continue

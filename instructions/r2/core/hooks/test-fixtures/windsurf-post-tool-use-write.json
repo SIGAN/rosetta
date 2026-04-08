@@ -1,0 +1,1 @@
+{ "TODO": true, "_ide": "windsurf", "_note": "Replace with real Windsurf stdin capture. Run dump-stdin.js in a Windsurf project and trigger a file Write." }
