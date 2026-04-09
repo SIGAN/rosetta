@@ -73,6 +73,7 @@ For detailed change history, use git history and PRs instead of expanding this f
   - plugin-specific packaging transforms for model metadata, generated indexes, and local marketplace/manifests
   - Jira loader recovery after upstream API changes
   - shared type-validation entrypoint
+  - script existence guards added before `chmod +x` in `publish-ims-mcp.yml` and `validate-test-cases.yml` (CTORNDGAIN-1178)
 - Some GitHub Pages actions remain upstream-limited and may still depend on older Node runtimes until upstream changes.
 
 ### Documentation and Public Surface
