@@ -51,7 +51,9 @@ Rosetta is a prompt engineering system. Prompt changes have outsized impact and 
 
 **Use the prompting flow.** The [`coding-agents-prompting-flow`](USAGE_GUIDE.md#workflows) with `coding-agents-prompt-authoring` skill helps you author, design, refactor, harden, and modernize prompt families (agents, skills, workflows, workflow phases, rules). It understands Rosetta internals. Use it with Opus 4.6 model.
 
-Examples:
+> **Note:** The path `instructions/r2/grid/workflows/coding-agents-prompting-flow.md` in the examples below is a **Rosetta knowledge base path**, not a file in this repository. The `grid` scope is an enterprise extension served via [Rosetta MCP](USAGE_GUIDE.md#plugins) and is not included in the open-source repo file tree. These example prompts require Rosetta MCP to be active so the path resolves from the knowledge base.
+
+Examples (all require Rosetta MCP to resolve the `grid` scope from the knowledge base):
 
 1. Refactoring old rosetta prompt to new:
    ```
@@ -63,7 +65,7 @@ Examples:
    MUST FULLY EXECUTE `instructions/r2/grid/workflows/coding-agents-prompting-flow.md` to author a new R2 Rosetta <skill/agent/workflow/rule/prompt family> `<name>` in `grid` scope: <description of what it should be>
    ```
    
-3. Using Rosetta MCP
+3. Explicit KB acquisition (alternative syntax):
    ```
    MUST ACQUIRE coding-agents-prompting-flow.md FROM KB AND FULLY EXECUTE IT to author a new R2 Rosetta <skill/agent/workflow/rule/prompt family> `<name>` in `grid` scope: <description of what it should be>
    ```
