@@ -127,7 +127,8 @@ Empty or whitespace-only query means no filter.
 """
 
 PROMPT_PLAN_MANAGER = """
-Manage execution plans/phases/steps
+Manage execution plans/phases/steps. Primary execution coordinator — all Rosetta sessions use plan_manager from step zero.
+Bootstrap pattern: after get_context_instructions, call upsert with plan_name="rosetta-session" to register the standard phase map (Phase 0: Preparation, Phase 1: Guardrails, Phase 2: HITL, Phase 3: Implementation, Phase 4: Documentation, Phase 5: Review). Then call `next` to begin Phase 0. Drive all execution via `next` → execute → update_status loop.
 Commands:
 - help: commands and examples
 - upsert: create or patch using plan_name, target_id?, data
@@ -135,7 +136,7 @@ Commands:
 - show_status: plan_name, target_id?
 - update_status: plan_name, target_id?, new_status
 - next: plan_name, target_id?, limit?
-Call `next` for steps ready for execution
+Call `next` to get the current step. Resume-safe: in_progress steps return first with resume=true after context compaction.
 """
 
 PROMPT_PLAN_MANAGER_HELP = """\
