@@ -46,8 +46,9 @@ Plan Manager Session Bootstrap:
 
 After `get_context_instructions` returns, immediately register the session execution plan. All remaining prep steps, guardrails, HITL gates, risk assessment, implementation, documentation, and review phases become explicit plan_manager phases and steps. The plan is the source of truth — MUST call `next` to know what to do; never decide free-form.
 
-Use `plan-manager`: `npx rosettify plan create agents/TEMP/rosetta-session/plan.json '<phases-json>'`
-Phases must be added separately via `upsert`.
+If `plan_manager` MCP tool is available (Rosetta MCP connected): `plan_manager(command="upsert", plan_name="rosetta-session", data=<phases-json>)`
+Otherwise use npx: `npx rosettify plan create agents/TEMP/rosetta-session/plan.json '<phases-json>'`.
+Phases must be added separately via `upsert`!
 
 Standard session plan — register these phases on initialization:
 
