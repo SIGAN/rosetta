@@ -74,6 +74,7 @@ For detailed change history, use git history and PRs instead of expanding this f
   - Jira loader recovery after upstream API changes
   - shared type-validation entrypoint
 - Some GitHub Pages actions remain upstream-limited and may still depend on older Node runtimes until upstream changes.
+- Script existence checks added before `chmod` calls in CI workflows (`rosetta-mcp-dockerhub.yaml`, `publish-ims-mcp.yml`, `validate-test-cases.yml`) to surface missing scripts as clear errors rather than permission failures. See CTORNDGAIN-1178.
 
 ### Documentation and Public Surface
 
