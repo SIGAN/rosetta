@@ -42,6 +42,44 @@ Prep Step 1:
 14. Rosetta is a source of handcrafted skills/subagents/commands/workflows that user EXPECTS you to follow EXACTLY.
 15. Once ALL PREP STEPS 1, 2, and 3 ARE FULLY completed orchestrator must load and enter workflow to process request and activities (including and limited to planning, questioning, execution).
 
+Plan Manager Session Bootstrap:
+
+After `get_context_instructions` returns, immediately register the session execution plan. All remaining prep steps, guardrails, HITL gates, risk assessment, implementation, documentation, and review phases become explicit plan_manager phases and steps. The plan is the source of truth — MUST call `next` to know what to do; never decide free-form.
+
+Use `plan-manager`: `npx rosettify plan create agents/TEMP/rosetta-session/plan.json '<phases-json>'`
+Phases must be added separately via `upsert`.
+
+Standard session plan — register these phases on initialization:
+
+Phase 0 - Preparation (id: phase-0):
+  p0-read-context: Read docs/CONTEXT.md + docs/ARCHITECTURE.md in full; grep ^#{1,3} headers of agents/IMPLEMENTATION.md + agents/MEMORY.md
+  p0-classify:     Classify request as SMALL/MEDIUM/LARGE per bootstrap-core-policy.md Prep Step 2
+  p0-workflow:     ACQUIRE and integrate the best-matching workflow; upsert its phases into Phase 3 before marking Phase 0 complete
+
+Phase 1 — Guardrails (id: phase-1, depends_on: [phase-0]):
+  p1-guardrails:   Apply scope management, transparency, and sensitive data rules (bootstrap-guardrails.md)
+  p1-risk:         Assign risk level; output "AI Risk Assessment: {LEVEL}"; block execution on CRITICAL
+
+Phase 2 — HITL Gate (id: phase-2, depends_on: [phase-1]):
+  p2-hitl:         Present plan and specs to user; wait for explicit approval per bootstrap-hitl-questioning.md
+
+Phase 3 — Implementation (id: phase-3, depends_on: [phase-2]):
+  [Upsert workflow-specific steps here during the p0-workflow step; placeholder only at init time]
+
+Phase 4 — Documentation (id: phase-4, depends_on: [phase-3]):
+  p4-docs:         Update agents/IMPLEMENTATION.md and any other relevant documentation
+
+Phase 5 — Review and Validation (id: phase-5, depends_on: [phase-4]):
+  p5-review:       Review implementation against specs; confirm validation passes; present final status to user
+
+Execution loop (MANDATORY — applies to orchestrators and subagents):
+  After plan registration: call `next` to receive Phase 0, Step 1 (p0-read-context).
+  MUST follow: `next` → read step prompt → execute → `update_status(complete)` → repeat `next`.
+  NEVER skip `next` — the plan is authoritative; never decide the next action free-form.
+  If context was compacted or session resumed: call `next` immediately — resume=true steps come first.
+  After p0-workflow completes: upsert workflow phases into Phase 3, then mark p0-workflow complete.
+
+
 Aliases:
 
 - `/rosetta` → engage only Rosetta flow.
