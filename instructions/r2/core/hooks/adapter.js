@@ -3,13 +3,16 @@
 // Normalizes stdin from any supported IDE to/from the Claude Code canonical format.
 // Exports: detectIDE, normalize, formatOutput, readStdin
 
-// Claude Code sends all three of these fields on every hook event
+// Fields present on every Claude Code and Codex hook event
 const CC_SIGNATURE = ['hook_event_name', 'tool_input', 'session_id'];
+// Extra fields Codex adds that Claude Code does not send
+const CODEX_EXTRA = ['model', 'turn_id'];
 
 /**
  * Detect which IDE sent the input based on field shape heuristics.
+ * Codex is checked first (more specific superset of CC_SIGNATURE).
  * @param {object} rawInput
- * @returns {'claude-code'}
+ * @returns {'claude-code' | 'codex'}
  * @throws {Error} for null/non-object input or unrecognized IDE shape
  */
 function detectIDE(rawInput) {
@@ -18,6 +21,10 @@ function detectIDE(rawInput) {
   }
   if (typeof rawInput !== 'object' || Array.isArray(rawInput)) {
     throw new Error('Invalid input: expected a plain object');
+  }
+  // Codex: shares CC_SIGNATURE but also adds model + turn_id at top level
+  if (CC_SIGNATURE.every((f) => f in rawInput) && CODEX_EXTRA.every((f) => f in rawInput)) {
+    return 'codex';
   }
   if (CC_SIGNATURE.every((field) => field in rawInput)) {
     return 'claude-code';
@@ -34,7 +41,8 @@ function detectIDE(rawInput) {
  */
 function normalize(rawInput) {
   const ide = detectIDE(rawInput); // throws for unsupported
-  if (ide === 'claude-code') {
+  if (ide === 'claude-code' || ide === 'codex') {
+    // Both are already in canonical format; Codex extras (model, turn_id) are preserved as-is
     return rawInput;
   }
   // Future IDEs: add field-mapping branches here when real fixtures are captured

@@ -22,7 +22,7 @@ const ccEdit      = fx('claude-code-post-tool-use-edit.json');
 const ccBash      = fx('claude-code-pre-tool-use-bash.json');
 const ccSubagent  = fx('claude-code-post-tool-use-write-subagent.json');
 const fxCursor    = fx('cursor-post-tool-use-write.json');
-const fxCodex     = fx('codex-post-tool-use-write.json');
+const fxCodex     = fx('codex-post-tool-use-bash.json');
 const fxWindsurf  = fx('windsurf-post-tool-use-write.json');
 const fxCopilot   = fx('copilot-post-tool-use-write.json');
 const fxUnknown   = fx('unknown-ide-input.json');
@@ -49,8 +49,7 @@ describe('detectIDE', () => {
     assert.equal(detectIDE(fxCursor), 'cursor');
   });
 
-  // 🔴 RED until real Codex fixture captured
-  test('returns "codex" for Codex stub fixture', { todo: 'Replace stub with real Codex stdin capture' }, () => {
+  test('returns "codex" for Codex PostToolUse Bash input', () => {
     assert.equal(detectIDE(fxCodex), 'codex');
   });
 
@@ -122,12 +121,13 @@ describe('normalize', () => {
     assert.ok(result.tool_input);
   });
 
-  // 🔴 RED until real Codex fixture captured
-  test('Codex — transforms to canonical format', { todo: 'Replace stub with real Codex stdin capture' }, () => {
+  test('Codex — identity pass-through, preserves model + turn_id', () => {
     const result = normalize(fxCodex);
-    assert.ok(result.hook_event_name);
-    assert.ok(result.tool_name);
-    assert.ok(result.tool_input);
+    assert.ok(result.hook_event_name, 'hook_event_name missing');
+    assert.ok(result.tool_name, 'tool_name missing');
+    assert.ok(result.tool_input, 'tool_input missing');
+    assert.equal(result.model, fxCodex.model, 'model not preserved');
+    assert.equal(result.turn_id, fxCodex.turn_id, 'turn_id not preserved');
   });
 
   // 🔴 RED until real Windsurf fixture captured
@@ -200,11 +200,10 @@ describe('formatOutput', () => {
     assert.ok(result);
   });
 
-  // 🔴 RED until real Codex fixture captured
-  test('Codex — transforms output to Codex format', { todo: 'Requires Codex output schema from real capture' }, () => {
+  test('Codex — output is identity pass-through (same schema as Claude Code)', () => {
     const canonical = { hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: 'x' } };
     const result = formatOutput(canonical, 'codex');
-    assert.ok(result);
+    assert.deepEqual(result, canonical);
   });
 
   // 🔴 RED until real Windsurf fixture captured
@@ -263,11 +262,12 @@ describe('round-trip', () => {
     assert.ok(output);
   });
 
-  // 🔴 RED until real Codex fixture captured
-  test('Codex round-trip', { todo: 'Requires real Codex capture' }, () => {
+  test('Codex round-trip: normalize → formatOutput, model+turn_id preserved', () => {
     const normalized = normalize(fxCodex);
     const output = formatOutput({ hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: 'x' } }, 'codex');
-    assert.ok(output);
+    assert.equal(normalized.model, fxCodex.model);
+    assert.equal(normalized.turn_id, fxCodex.turn_id);
+    assert.ok(output.hookSpecificOutput);
   });
 
   // 🔴 RED until real Windsurf fixture captured
