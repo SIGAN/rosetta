@@ -73,14 +73,20 @@ check_deps() {
   [[ "$TARGET_IDE" == "both" || "$TARGET_IDE" == "claude-code" ]] \
     && command -v claude &>/dev/null || { [[ "$TARGET_IDE" == "claude-code" || "$TARGET_IDE" == "both" ]] && missing+=("claude"); }
 
-  [[ "$TARGET_IDE" == "both" || "$TARGET_IDE" == "codex" ]] \
-    && command -v codex &>/dev/null || { [[ "$TARGET_IDE" == "codex" || "$TARGET_IDE" == "both" ]] && missing+=("codex"); }
+  # Codex: prefer npx @openai/codex (>=0.118, has hooks) over brew codex (0.39, no hooks)
+  if [[ "$TARGET_IDE" == "both" || "$TARGET_IDE" == "codex" ]]; then
+    if ! npx --yes @openai/codex --version &>/dev/null; then
+      missing+=("@openai/codex (npx)")
+    fi
+  fi
 
   if [[ ${#missing[@]} -gt 0 ]]; then
     log_error "Missing required commands: ${missing[*]}"
     exit 1
   fi
-  log_ok "Dependencies: node, python3$(command -v claude &>/dev/null && echo ", claude")$(command -v codex &>/dev/null && echo ", codex")"
+  local codex_ver
+  codex_ver=$(npx @openai/codex --version 2>/dev/null || echo "n/a")
+  log_ok "Dependencies: node, python3$(command -v claude &>/dev/null && echo ", claude")$(  [[ "$TARGET_IDE" == "both" || "$TARGET_IDE" == "codex" ]] && echo ", codex ($codex_ver via npx)")"
 }
 
 # ── Setup temp project ────────────────────────────────────────────────────────
@@ -249,22 +255,22 @@ capture_codex() {
   local prompt="Run exactly: echo codex_hook_test > /tmp/codex_hook_test.txt && echo done"
 
   if [[ "$DRY_RUN" == "true" ]]; then
-    log_warn "[DRY-RUN] Would run: cd $TEST_DIR && codex exec --full-auto \"$prompt\""
+    log_warn "[DRY-RUN] Would run: cd $TEST_DIR && npx @openai/codex exec --full-auto \"$prompt\""
     return 0
   fi
 
   local exit_code=0
-  (cd "$TEST_DIR" && codex exec --full-auto "$prompt" 2>&1) || exit_code=$?
+  (cd "$TEST_DIR" && npx @openai/codex exec --full-auto "$prompt" 2>&1) || exit_code=$?
 
   if [[ $exit_code -ne 0 ]]; then
-    log_warn "codex exec exited with code $exit_code (may be auth issue) — checking dump"
+    log_warn "npx codex exec exited with code $exit_code (may be auth issue) — checking dump"
   fi
 
   if [[ ! -f "$DUMP_FILE" ]]; then
     log_error "No dump captured. Possible causes:"
-    log_error "  1. Codex auth expired — run: codex login"
+    log_error "  1. Codex auth expired — run: npx @openai/codex login"
     log_error "  2. Hooks not firing — check .codex/hooks.json is in project root"
-    log_error "  3. Codex version mismatch — hooks require v0.38+"
+    log_error "  3. codex_hooks feature not enabled — add [features] codex_hooks=true to ~/.codex/config.toml"
     return 1
   fi
 

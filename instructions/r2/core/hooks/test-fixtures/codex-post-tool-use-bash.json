@@ -1,20 +1,15 @@
 {
-  "_note": "Schema-derived fixture from codex-rs/hooks/schema/generated/post-tool-use.command.input.schema.json. Replace with real capture via dump-stdin.js when Codex auth is available.",
-  "session_id": "codex-sess-abc123",
-  "transcript_path": null,
-  "cwd": "/Users/dev/my-project",
-  "permission_mode": "dontAsk",
+  "session_id": "sanitized-session_id",
+  "turn_id": "sanitized-turn_id",
+  "transcript_path": "/Users/dev/.codex/sessions/2026/04/10/rollout-2026-04-10T14-31-52-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.jsonl",
+  "cwd": "/private/tmp/hook-e2e-test",
   "hook_event_name": "PostToolUse",
-  "tool_name": "Bash",
-  "tool_use_id": "codex-tool-001",
   "model": "gpt-5-codex",
-  "turn_id": "turn-xyz789",
+  "permission_mode": "bypassPermissions",
+  "tool_name": "Bash",
   "tool_input": {
-    "command": "echo 'hello world' > /tmp/test.txt"
+    "command": "cd /private/tmp/hook-e2e-test && echo codex_hook_test > /tmp/codex_hook_test.txt && echo done"
   },
-  "tool_response": {
-    "exit_code": 0,
-    "stdout": "",
-    "stderr": ""
-  }
+  "tool_response": "done\n",
+  "tool_use_id": "sanitized-tool_use_id"
 }
