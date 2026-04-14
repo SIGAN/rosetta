@@ -1,18 +1,30 @@
 'use strict';
-// adapter.js — IDE input normalization adapter for Rosetta hooks
-// Normalizes stdin from any supported IDE to/from the Claude Code canonical format.
-// Exports: detectIDE, normalize, formatOutput, readStdin
+// adapter.js — Abstract IDE adapter orchestrator for Rosetta hooks
+//
+// Loads IDE-specific adapters from ./adapters/ and delegates detection,
+// normalization, and output formatting to the matching adapter.
+//
+// Detection order (most specific → least specific):
+//   1. codex        — CC fields + model + turn_id
+//   2. cursor       — CC fields + conversation_id + cursor_version
+//   3. claude-code  — CC fields (hook_event_name + tool_input + session_id)
+//   4. windsurf     — agent_action_name + trajectory_id + tool_info
+//   5. copilot      — toolName + timestamp + cwd (no hook_event_name)
+//
+// Exports (for testability): detectIDE, normalize, formatOutput, readStdin
 
-// Fields present on every Claude Code and Codex hook event
-const CC_SIGNATURE = ['hook_event_name', 'tool_input', 'session_id'];
-// Extra fields Codex adds that Claude Code does not send
-const CODEX_EXTRA = ['model', 'turn_id'];
+const ADAPTERS = [
+  require('./adapters/codex'),
+  require('./adapters/cursor'),
+  require('./adapters/claude-code'),
+  require('./adapters/windsurf'),
+  require('./adapters/copilot'),
+];
 
 /**
- * Detect which IDE sent the input based on field shape heuristics.
- * Codex is checked first (more specific superset of CC_SIGNATURE).
+ * Detect which IDE sent the input.
  * @param {object} rawInput
- * @returns {'claude-code' | 'codex'}
+ * @returns {string} IDE name
  * @throws {Error} for null/non-object input or unrecognized IDE shape
  */
 function detectIDE(rawInput) {
@@ -22,44 +34,35 @@ function detectIDE(rawInput) {
   if (typeof rawInput !== 'object' || Array.isArray(rawInput)) {
     throw new Error('Invalid input: expected a plain object');
   }
-  // Codex: shares CC_SIGNATURE but also adds model + turn_id at top level
-  if (CC_SIGNATURE.every((f) => f in rawInput) && CODEX_EXTRA.every((f) => f in rawInput)) {
-    return 'codex';
+  const adapter = ADAPTERS.find((a) => a.detect(rawInput));
+  if (!adapter) {
+    throw new Error(`Unsupported IDE: ${JSON.stringify(Object.keys(rawInput))}`);
   }
-  if (CC_SIGNATURE.every((field) => field in rawInput)) {
-    return 'claude-code';
-  }
-  throw new Error(`Unsupported IDE: ${JSON.stringify(Object.keys(rawInput))}`);
+  return adapter.name;
 }
 
 /**
  * Normalize any IDE input to Claude Code canonical format.
- * Claude Code input is already canonical — identity pass-through.
  * @param {object} rawInput
  * @returns {object} canonical input
  * @throws {Error} for unsupported IDE shapes
  */
 function normalize(rawInput) {
   const ide = detectIDE(rawInput); // throws for unsupported
-  if (ide === 'claude-code' || ide === 'codex') {
-    // Both are already in canonical format; Codex extras (model, turn_id) are preserved as-is
-    return rawInput;
-  }
-  // Future IDEs: add field-mapping branches here when real fixtures are captured
-  throw new Error(`Unsupported IDE: ${ide}`);
+  const adapter = ADAPTERS.find((a) => a.name === ide);
+  return adapter.normalize(rawInput);
 }
 
 /**
  * Convert canonical output to IDE-specific output format.
- * Claude Code output is already canonical — identity pass-through.
  * @param {object} canonicalOutput
  * @param {string} ide
  * @returns {object}
  */
 function formatOutput(canonicalOutput, ide) {
-  // claude-code: identity pass-through
-  // other IDEs: identity until real output schemas are captured from real stdin dumps
-  return canonicalOutput;
+  const adapter = ADAPTERS.find((a) => a.name === ide);
+  if (!adapter) return canonicalOutput; // unknown IDE: identity pass-through
+  return adapter.formatOutput(canonicalOutput);
 }
 
 /**
