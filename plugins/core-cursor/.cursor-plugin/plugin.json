@@ -52,6 +52,26 @@
           "project-* (User project context)"
         ]
       }
+    },
+    "gitnexus": {
+      "type": "stdio",
+      "command": "gitnexus",
+      "args": [
+        "mcp"
+      ],
+      "metadata": {
+        "description": "GitNexus code-graph MCP \u2014 caller discovery, impact analysis, and safe refactoring via semantic call graph",
+        "capabilities": [
+          "context",
+          "impact",
+          "query",
+          "detect_changes",
+          "rename"
+        ],
+        "opt_in": true,
+        "setup": "npm install -g gitnexus && npx gitnexus analyze && npx gitnexus setup",
+        "skill": "instructions/r2/core/skills/gitnexus/SKILL.md"
+      }
     }
   }
 }

@@ -99,7 +99,8 @@ Validation: State file tracks every phase with file inventory; verification conf
 1. Verify all files exist, run validation checklist, suggest next steps.
 2. ACQUIRE `init-workspace-flow-verification.md` FROM KB
 3. Mark state as COMPLETE.
-4. Notify user: delete `init-rosetta-shells-flow.md`. MUST start new chat session (highly visible message, red icon, bold, ASCII art, it must standout).
+4. Opt-in prompt (GitNexus): Ask user exactly: "Install GitNexus for enhanced code-graph navigation? (recommended)" — if yes, follow `instructions/r2/core/skills/gitnexus/SKILL.md` installation steps; if no, skip silently.
+5. Notify user: delete `init-rosetta-shells-flow.md`. MUST start new chat session (highly visible message, red icon, bold, ASCII art, it must standout).
 
 </verification>
 
