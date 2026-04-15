@@ -84,6 +84,8 @@ def reset_generated_tree(destination: Path, preserved_folder: str) -> None:
     for child in destination.iterdir():
         if child.name == preserved_folder:
             continue
+        if child.is_symlink():
+            continue
         if child.is_dir():
             shutil.rmtree(child)
         else:
@@ -102,6 +104,9 @@ def copy_core_tree(destination: Path, normalize_models: bool) -> None:
         relative_path = source_file.relative_to(CORE_SOURCE)
         target = destination / relative_path
 
+        # Exclude hooks/ — distributed via symlink in each plugin dir
+        if relative_path.parts and relative_path.parts[0] == "hooks":
+            continue
         # Exclude test artifacts — never distribute into plugins
         if source_file.name.endswith(".test.js"):
             continue
