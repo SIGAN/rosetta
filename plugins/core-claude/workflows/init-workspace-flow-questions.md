@@ -30,9 +30,26 @@ Validation: Every accumulated gap has a resolution; each answer traces to at lea
 4. Map answers to affected files
 5. Spawn one built-in subagent per affected file: answer content, target path, update instructions, preserve-human-content
 6. Verify subagent updates
-7. Update state — clear resolved gaps, note unresolved
+7. Prompt for optional LSP installation (see lsp_prompt section)
+8. Update state — clear resolved gaps, note unresolved, record LSP decision
 
 </phase_steps>
+
+<lsp_prompt step="7" optional="true">
+
+LSP servers provide AI coding agents with IDE-grade intelligence: type info, cross-references, diagnostics, refactoring.
+
+1. Read TECHSTACK.md to identify detected languages
+2. If languages detected that have LSP support (TypeScript/JS, Python, Go, Rust, Java, C#, Kotlin):
+   a. Prompt user: "Install LSP servers for [detected languages]? This improves AI code quality. (recommended) [Y/n]"
+   b. If user accepts:
+      - ACQUIRE `lsp-install/SKILL.md` FROM KB
+      - Execute skill with detected languages
+      - Report results: installed, skipped, failed
+   c. If user declines: log as "LSP installation skipped by user choice"
+3. Update state with LSP status (installed/skipped/not-applicable)
+
+</lsp_prompt>
 
 <pitfalls>
 

@@ -59,6 +59,9 @@ For detailed change history, use git history and PRs instead of expanding this f
 - Skill assets: `plan_manager.js` (CLI, no npm deps), `pm-schema.md` (data structure reference), `plan_manager.test.js` (60 unit tests).
 - Key behaviors: resume-safe `next` command returns `in_progress` steps with `resume: true` before `open` steps; plans stored at `plans/<name>/plan.json`; self-describing `help` command.
 - Converted `adhoc-flow-with-plan-manager` workflow to `USE SKILL plan-manager`; data structure externalized to `pm-schema.md`.
+- Added `lsp-install` skill under `instructions/r2/core/skills/lsp-install/` — detects tech stack from TECHSTACK.md (via init-workspace-discovery) and installs Language Server Protocol servers.
+- LSP skill assets: `li-detection-map.md` (language-to-LSP mapping), `li-install-scripts.md` (installation commands), `li-readme-section.md` (documentation).
+- Key behaviors: opt-in via interactive prompt during init-workspace-flow (silent mode via `ROSETTA_ENABLE_LSP=true`), idempotent installation, prerequisite checking, supports TypeScript/JavaScript, Python, Go, Rust, Java, C#, Kotlin.
 - Plugins (`core-claude`, `core-cursor`) are auto-synced from core by `scripts/pre_commit.py`.
 
 ### Workflows and Automation
